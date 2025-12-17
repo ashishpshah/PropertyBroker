@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Broker.Models;
+
+public partial class Lead : EntitiesBase
+{
+	[NotMapped] public override long Id { get; set; }
+
+	public long LeadId { get; set; }
+
+    public string? Name { get; set; }
+
+    public string? Mobile { get; set; }
+
+    public string? Email { get; set; }
+
+    public string? Requirement { get; set; }
+
+    public string? PreferredAreaId { get; set; }
+
+    public long? PropertyType { get; set; }
+
+    public string? Status { get; set; }
+
+    public long? AssignedTo { get; set; }
+
+    public long? PreferredCityId { get; set; }
+
+    public string? Landmark { get; set; }
+
+    public long? LeadSourceId { get; set; }
+
+    public decimal? BudgetMin { get; set; }
+
+    public decimal? BudgetMax { get; set; }
+
+    public virtual User? AssignedToNavigation { get; set; }
+
+    public virtual ICollection<LeadFollowup> LeadFollowups { get; set; } = new List<LeadFollowup>();
+
+    public virtual LeadSource? LeadSource { get; set; }
+
+    public virtual ICollection<LeadTimeline> LeadTimelines { get; set; } = new List<LeadTimeline>();
+
+    public virtual City? PreferredCity { get; set; }
+
+    public virtual PropertyType? PropertyTypeNavigation { get; set; }
+}
