@@ -16,9 +16,9 @@ public partial class Area : EntitiesBase
 
     public virtual City City { get; set; } = null!;
 
-    public virtual ICollection<LocationPropertyMap> LocationPropertyMaps { get; set; } = new List<LocationPropertyMap>();
+    //public virtual ICollection<LocationPropertyMap> LocationPropertyMaps { get; set; } = new List<LocationPropertyMap>();
 
-    public virtual ICollection<Location> Locations { get; set; } = new List<Location>();
+    //public virtual ICollection<Location> Locations { get; set; } = new List<Location>();
 
-    public virtual ICollection<Property> Properties { get; set; } = new List<Property>();
+    //public virtual ICollection<Properties> Properties { get; set; } = new List<Property>();
 }

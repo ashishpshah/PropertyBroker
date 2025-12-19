@@ -14,9 +14,9 @@ public partial class City : EntitiesBase
 
     public string? State { get; set; }
 
-    public virtual ICollection<Area> Areas { get; set; } = new List<Area>();
+    //public virtual ICollection<Area> Areas { get; set; } = new List<Area>();
 
-    public virtual ICollection<Lead> Leads { get; set; } = new List<Lead>();
+    //public virtual ICollection<Lead> Leads { get; set; } = new List<Lead>();
 
-    public virtual ICollection<Property> Properties { get; set; } = new List<Property>();
+    //public virtual ICollection<Properties> Properties { get; set; } = new List<Properties>();
 }
