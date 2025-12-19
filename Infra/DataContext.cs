@@ -76,9 +76,11 @@ namespace Broker.Infra
 		{
 			modelBuilder.Entity<Area>(entity =>
 			{
-				entity.HasKey(e => e.AreaId).HasName("PK__Areas__70B82048FFACB275");
+				entity.HasKey(e => e.Id).HasName("PK__Areas__70B8204855D6F241");
 
-				entity.Property(e => e.AreaName).HasMaxLength(50);
+				entity.ToTable("Areas", "dbo");
+
+				entity.Property(e => e.Name).HasMaxLength(50);
 
 				entity.HasOne(d => d.City).WithMany(p => p.Areas)
 					.HasForeignKey(d => d.CityId)
@@ -88,13 +90,14 @@ namespace Broker.Infra
 
 			modelBuilder.Entity<City>(entity =>
 			{
-				entity.HasKey(e => e.CityId).HasName("PK__Cities__F2D21B76DBFC2BA6");
+				entity.HasKey(e => e.Id).HasName("PK__Cities__F2D21B7658D7BCB1");
 
-				entity.Property(e => e.CityName).HasMaxLength(100);
+				entity.ToTable("Cities", "dbo");
+
+				entity.Property(e => e.Name).HasMaxLength(100);
 				entity.Property(e => e.State)
 					.HasMaxLength(100)
-					.HasDefaultValue("Gujarat")
-					.HasColumnName("state");
+					.HasDefaultValue("Gujarat");
 			});
 
 			modelBuilder.Entity<EmailQueue>(entity =>
@@ -216,10 +219,6 @@ namespace Broker.Infra
 				entity.HasOne(d => d.LeadSource).WithMany(p => p.Leads)
 					.HasForeignKey(d => d.LeadSourceId)
 					.HasConstraintName("FK_Leads_LeadSource");
-
-				entity.HasOne(d => d.PreferredCity).WithMany(p => p.Leads)
-					.HasForeignKey(d => d.PreferredCityId)
-					.HasConstraintName("FK_Leads_PreferredCity");
 
 			});
 

@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ResponseModel<LoginViewModel>
+@{
 	ViewData["Title"] = "Home Page";
 }
 
@@ -18,10 +19,10 @@
 							<p class="para-desc text-white title-dark mb-0">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
 						</div>
 					</div>
-				</div><!--end row-->
-			</div><!--end container-->
+				</div>
+			</div>
 		</div>
-	</div><!--end container-->
+	</div>
 </section><!--end section-->
 
 <section class="section pt-5">
@@ -33,20 +34,14 @@
 						<li class="nav-item m-1">
 							<a class="nav-link py-2 px-4 active rounded-3 fw-medium" id="buy-login" data-bs-toggle="pill" href="#buy" role="tab" aria-controls="buy" aria-selected="false">
 								Buy
-							</a><!--end nav link-->
-						</li><!--end nav item-->
-
-						<li class="nav-item m-1">
-							<a class="nav-link py-2 px-4 rounded-3 fw-medium" id="sold-login" data-bs-toggle="pill" href="#sold" role="tab" aria-controls="sold" aria-selected="false">
-								Sell
-							</a><!--end nav link-->
-						</li><!--end nav item-->
+							</a>
+						</li>
 
 						<li class="nav-item m-1">
 							<a class="nav-link py-2 px-4 rounded-3 fw-medium" id="rent-login" data-bs-toggle="pill" href="#rent" role="tab" aria-controls="rent" aria-selected="false">
 								Rent
-							</a><!--end nav link-->
-						</li><!--end nav item-->
+							</a>
+						</li>
 					</ul>
 
 					<div class="bg-white rounded-bottom-3 rounded-end-3 sm-rounded-0 shadow">
@@ -56,100 +51,87 @@
 									<div class="row g-lg-0">
 										<div class="col-lg-3 col-md-6 col-12">
 											<div class="mb-3 text-start">
-												<label class="form-label fs-6">Search :</label>
+												<label class="form-label fs-6">Location</label>
 												<div class="filter-search-form position-relative filter-border">
 													<i data-feather="location" class="fea icon-ex-md icons"></i>
 													<select class="form-select" id="choices-location">
-														<option>Shyamal Cross Road, Ahmedabad</option>
-														<option>Isanpur, Ahmedabad</option>
-														<option selected>Ambawadi, Ahmedabad</option>
-														<option>Shivranjani Cross Road, Ahmedabad</option>
-														<option>Motera, Ahmedabad</option>
-														<option>Sherkotda, Ahmedabad</option>
-														<option>Nava Naroda, Ahmedabad</option>
-														<option>Memnagar, Ahmedabad</option>
-														<option>Chandkheda, Ahmedabad</option>
-														<option>Kalupur, Ahmedabad</option>
-														<option>Navrangpura, Ahmedabad</option>
-														<option>Gupta Nagar, Ahmedabad</option>
-														<option>Gandhinagar Road, Ahmedabad</option>
-														<option>Bodakdev, Ahmedabad</option>
-														<option>Shela, Ahmedabad</option>
-														<option>Chharodi, Ahmedabad</option>
-														<option>Ambawadi, Ahmedabad</option>
-														<option>Chandra Nagar, Ahmedabad</option>
-														<option>Ellisbridge, Ahmedabad</option>
+														@if (Model.SelectListItems != null)
+														{
+															foreach (var item in Model.SelectListItems.Where(x => x.Group == "L"))
+															{
+																<option value="@item.Value">@item.Text</option>
+															}
+														}
 													</select>
 												</div>
 											</div>
-										</div><!--end col-->
+										</div>
 
 										<div class="col-lg-3 col-md-6 col-12">
 											<div class="mb-3 text-start">
-												<label class="form-label fs-6">Select Categories:</label>
+												<label class="form-label fs-6">Category</label>
 												<div class="filter-search-form position-relative filter-border">
 													<i data-feather="home" class="fea icon-ex-md icons"></i>
 													<select class="form-select" id="choices-catagory-rent">
-														<option>Houses</option>
-														<option>Apartment</option>
-														<option>Offices</option>
-														<option>Townhome</option>
+														@if (Model.SelectListItems != null)
+														{
+															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PC"))
+															{
+																<option value="@item.Value">@item.Text</option>
+															}
+														}
 													</select>
 												</div>
 											</div>
-										</div><!--end col-->
+										</div>
 
 										<div class="col-lg-3 col-md-6 col-12">
 											<div class="mb-3 text-start">
-												<label class="form-label fs-6">Min Price :</label>
+												<label class="form-label fs-6">&nbsp;</label>
 												<div class="filter-search-form position-relative filter-border">
-													<i data-feather="dollar-sign" class="fea icon-ex-md icons"></i>
 													<select class="form-select" id="choices-min-price-rent">
-														<option>Min Price</option>
-														<option>500</option>
-														<option>1000</option>
-														<option>2000</option>
-														<option>3000</option>
-														<option>4000</option>
-														<option>5000</option>
-														<option>6000</option>
+														@if (Model.SelectListItems != null)
+														{
+															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z <= 0))
+															{
+																<option value="@item.Value">@item.Text</option>
+															}
+														}
 													</select>
 												</div>
 											</div>
-										</div><!--end col-->
+										</div>
 
 										<div class="col-lg-3 col-md-6 col-12">
 											<div class="mb-3 text-start">
-												<label class="form-label fs-6">Max Price :</label>
+												<label class="form-label fs-6">&nbsp;</label>
 												<div class="filter-search-form position-relative">
-													<i data-feather="dollar-sign" class="fea icon-ex-md icons"></i>
 													<select class="form-select" id="choices-max-price-rent">
-														<option>Max Price</option>
-														<option>500</option>
-														<option>1000</option>
-														<option>2000</option>
-														<option>3000</option>
-														<option>4000</option>
-														<option>5000</option>
-														<option>6000</option>
+														@if (Model.SelectListItems != null)
+														{
+															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0))
+															{
+																<option value="@item.Value">@item.Text</option>
+															}
+														}
 													</select>
 												</div>
 											</div>
-										</div><!--end col-->
+										</div>
 
 										<div class="col-lg-3 col-md-6 col-12">
 											@* <input type="submit" id="search" name="search" style="height: 48px;" class="btn btn-primary searchbtn w-100" value="Search"> *@
 											<a href="@Url.Action("Features", "Home", new { area = "" })" class="btn btn-primary searchbtn w-100">Search</a>
-										</div><!--end col-->
-									</div><!--end row-->
+										</div>
+									</div>
 								</div>
-							</form><!--end form-->
-						</div><!--end teb pane-->
-					</div><!--end tab content-->
+							</form>
+						</div>
+					</div>
 				</div>
-			</div><!--end col-->
-		</div><!--end row-->
-	</div><!--end container-->
+			</div>
+		</div>
+	</div>
 
 	<div class="container mt-100 mt-60">
 		<div class="row align-items-center">
@@ -157,21 +139,21 @@
 				<div class="row g-3 align-items-center">
 					<div class="col-lg-7 col-6">
 						<img src="images/hero.jpg" class="img-fluid rounded-3" alt="work-image">
-					</div><!--end col-->
+					</div>
 
 					<div class="col-lg-5 col-6">
 						<div class="row g-3">
 							<div class="col-lg-12 col-md-12">
 								<img src="images/1.jpg" class="img-fluid rounded-3" alt="work-image">
-							</div><!--end col-->
+							</div>
 
 							<div class="col-lg-12 col-md-12">
 								<img src="images/logo-icon.png" class="img-fluid" alt="work-image">
-							</div><!--end col-->
-						</div><!--end row-->
-					</div><!--end col-->
-				</div><!--end row-->
-			</div><!--end col-->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
 			<div class="col-lg-6 col-md-6 mt-4 mt-sm-0 pt-2 pt-sm-0">
 				<div class="section-title ms-lg-5">
@@ -183,9 +165,9 @@
 						<a href="aboutus.html" class="btn btn-pills btn-primary">Read More <i class="mdi mdi-arrow-right align-middle"></i></a>
 					</div>
 				</div>
-			</div><!--end col-->
-		</div><!--end row-->
-	</div><!--end container-->
+			</div>
+		</div>
+	</div>
 
 	<div class="container mt-100 mt-60">
 		<div class="row justify-content-center">
@@ -194,8 +176,8 @@
 					<h4 class="title mb-3">Listing Categories</h4>
 					<p class="text-muted para-desc mb-0">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
 				</div>
-			</div><!--end col-->
-		</div><!--end row-->
+			</div>
+		</div>
 
 		<div class="row row-cols-lg-5 row-cols-md-3 row-cols-sm-2 row-cols-1 g-4 mt-0">
 			<div class="col">
@@ -207,7 +189,7 @@
 						<p class="text-muted small mb-0">46 Listings</p>
 					</div>
 				</div>
-			</div><!--end col-->
+			</div>
 
 			<div class="col">
 				<div class="categories position-relative overflow-hidden rounded-3 shadow">
@@ -218,7 +200,7 @@
 						<p class="text-muted small mb-0">124 Listings</p>
 					</div>
 				</div>
-			</div><!--end col-->
+			</div>
 
 			<div class="col">
 				<div class="categories position-relative overflow-hidden rounded-3 shadow">
@@ -229,7 +211,7 @@
 						<p class="text-muted small mb-0">265 Listings</p>
 					</div>
 				</div>
-			</div><!--end col-->
+			</div>
 
 			<div class="col">
 				<div class="categories position-relative overflow-hidden rounded-3 shadow">
@@ -240,7 +222,7 @@
 						<p class="text-muted small mb-0">452 Listings</p>
 					</div>
 				</div>
-			</div><!--end col-->
+			</div>
 
 			<div class="col">
 				<div class="categories position-relative overflow-hidden rounded-3 shadow">
@@ -251,9 +233,9 @@
 						<p class="text-muted small mb-0">12 Listings</p>
 					</div>
 				</div>
-			</div><!--end col-->
-		</div><!--end row-->
-	</div><!--end container-->
+			</div>
+		</div>
+	</div>
 
 	<div class="container mt-100 mt-60">
 		<div class="row justify-content-center">
@@ -262,8 +244,8 @@
 					<h4 class="title mb-3">How It Works</h4>
 					<p class="text-muted para-desc mb-0 mx-auto">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
 				</div>
-			</div><!--end col-->
-		</div><!--end row-->
+			</div>
+		</div>
 
 		<div class="row g-4 mt-0">
 			<div class="col-md-4">
@@ -280,7 +262,7 @@
 						<p class="text-muted mt-3 mb-0">If the distribution of letters and 'words' is random, the reader will not be distracted from making.</p>
 					</div>
 				</div>
-			</div><!--end col-->
+			</div>
 
 			<div class="col-md-4">
 				<div class="position-relative features text-center mx-lg-4 px-md-1">
@@ -296,7 +278,7 @@
 						<p class="text-muted mt-3 mb-0">If the distribution of letters and 'words' is random, the reader will not be distracted from making.</p>
 					</div>
 				</div>
-			</div><!--end col-->
+			</div>
 
 			<div class="col-md-4">
 				<div class="position-relative features text-center mx-lg-4 px-md-1">
@@ -312,9 +294,9 @@
 						<p class="text-muted mt-3 mb-0">If the distribution of letters and 'words' is random, the reader will not be distracted from making.</p>
 					</div>
 				</div>
-			</div><!--end col-->
-		</div><!--end row-->
-	</div><!--end container-->
+			</div>
+		</div>
+	</div>
 
 	<div class="container mt-100 mt-60">
 		<div class="row justify-content-center">
@@ -326,8 +308,8 @@
 						<a href="contactus.html" class="btn btn-pills btn-primary"><span class="h5 mb-0 me-1"><i data-feather="mail" class="fea icon-sm"></i></span> Contact us</a>
 					</div>
 				</div>
-			</div><!--end col-->
-		</div><!--end row-->
-	</div><!--end container-->
+			</div>
+		</div>
+	</div>
 </section><!--end section-->
 <!-- End -->
