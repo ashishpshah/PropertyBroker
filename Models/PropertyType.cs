@@ -6,13 +6,13 @@ namespace Broker.Models;
 
 public partial class PropertyType : EntitiesBase
 {
-	[NotMapped] public override long Id { get; set; }
-	public long TypeId { get; set; }
+	public override long Id { get; set; }
+	public long ParentId { get; set; }
 
-    public string? TypeName { get; set; }
+    public string? Name { get; set; }
 
 
-    public virtual ICollection<Lead> Leads { get; set; } = new List<Lead>();
+    //public virtual ICollection<Lead> Leads { get; set; } = new List<Lead>();
 
-    public virtual ICollection<Property> Properties { get; set; } = new List<Property>();
+    //public virtual ICollection<Property> Properties { get; set; } = new List<Property>();
 }
