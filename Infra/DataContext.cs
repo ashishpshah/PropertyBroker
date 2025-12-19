@@ -221,9 +221,6 @@ namespace Broker.Infra
 					.HasForeignKey(d => d.PreferredCityId)
 					.HasConstraintName("FK_Leads_PreferredCity");
 
-				entity.HasOne(d => d.PropertyTypeNavigation).WithMany(p => p.Leads)
-					.HasForeignKey(d => d.PropertyType)
-					.HasConstraintName("FK_Leads_PropertyTypes");
 			});
 
 			modelBuilder.Entity<LeadFollowup>(entity =>
@@ -302,10 +299,6 @@ namespace Broker.Infra
 					.HasForeignKey(d => d.AreaId)
 					.HasConstraintName("FK_LPM_Area");
 
-				entity.HasOne(d => d.Property).WithMany(p => p.LocationPropertyMaps)
-					.HasForeignKey(d => d.PropertyId)
-					.OnDelete(DeleteBehavior.Cascade)
-					.HasConstraintName("FK_LPM_Property");
 			});
 
 			modelBuilder.Entity<LovMaster>(entity =>
@@ -430,10 +423,6 @@ namespace Broker.Infra
 					.IsUnicode(false);
 				entity.Property(e => e.IsPrimary).HasDefaultValue(false);
 
-				entity.HasOne(d => d.Property).WithMany(p => p.PropertyImages)
-					.HasForeignKey(d => d.PropertyId)
-					.OnDelete(DeleteBehavior.Cascade)
-					.HasConstraintName("FK_PropertyImages");
 			});
 
 			modelBuilder.Entity<Role>(entity =>
