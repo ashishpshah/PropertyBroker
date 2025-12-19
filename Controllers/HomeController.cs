@@ -13,8 +13,8 @@ namespace Broker.Controllers
 
 		public IActionResult Index()
 		{
-			if (Common.LoggedUser_Id() <= 0)
-				return RedirectToAction("Account", "Home", new { Area = "Admin" });
+			//if (Common.LoggedUser_Id() <= 0)
+			//	return RedirectToAction("Account", "Home", new { Area = "Admin" });
 
 			var list = _context.Using<User>().GetAll().ToList();
 
@@ -96,7 +96,17 @@ namespace Broker.Controllers
 			return View();
 		}
 
-		public IActionResult Privacy()
+		public IActionResult Features()
+		{
+			return View();
+		}
+
+		public IActionResult AboutUs()
+		{
+			return View();
+		}
+
+		public IActionResult ContactUs()
 		{
 			return View();
 		}
