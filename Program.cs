@@ -10,14 +10,7 @@ internal class Program
 		var builder = WebApplication.CreateBuilder(args);
 
 		// Add services to the container.
-		builder.Services.AddControllersWithViews();//.AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
-
-		builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
-		{
-			options.SerializerOptions.PropertyNameCaseInsensitive = false;
-			options.SerializerOptions.PropertyNamingPolicy = null;
-			options.SerializerOptions.WriteIndented = true;
-		});
+		builder.Services.AddControllersWithViews().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
 		builder.Services.AddHttpClient();
 

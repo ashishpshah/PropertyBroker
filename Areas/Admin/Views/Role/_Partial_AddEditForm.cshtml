@@ -55,7 +55,7 @@
 						var selectedValue = Model.Obj.CreatedDate_Text.Split(',').ToList();
 
 						<div class="form-group row">
-							<label class="col-sm-2 col-form-label text-right">Select Menu(s)</label>
+							<label class="col-sm-2 col-form-label text-end">Select Menu(s)</label>
 							<div class="col-sm-8 d-flex flex-column">
 
 								@if (Model.SelectListItems != null && Model.SelectListItems.Where(x => x.Group == "M").Count() > 0)
@@ -67,7 +67,7 @@
 										{
 											if (Model.SelectListItems.Where(x => x.Group == "M").Any(x => Convert.ToDecimal(x.Value2) == menu.Key.Id))
 											{
-												<dt class="d-flex gap-1">
+												<dt class="d-flex gap-1 my-2">
 													@menu.Key.Display_Name &nbsp;
 													<div class="icheck-primary">
 														<input type="checkbox" id="checkboxPrimary_@menu.Key.Id"

@@ -54,7 +54,7 @@ namespace Broker.Areas.Admin.Controllers
 
 			CommonViewModel.SelectListItems = new List<SelectListItem_Custom>();
 
-			var listRole = _context.Using<Role>().GetByCondition(x => x.Id > 1 && (Logged_In_VendorId > 0 ? x.IsAdmin == false && x.Name.ToUpper() != "VENDOR" && x.Name.ToUpper() != "EMPLOYEE" : x.Name.ToUpper() == "VENDOR")).Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name, "R")).Distinct().ToList();
+			var listRole = _context.Using<Role>().GetByCondition(x => x.Id > 1).Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name, "R")).Distinct().ToList();
 
 			if (listRole != null && listRole.Count() > 0) CommonViewModel.SelectListItems.AddRange(listRole);
 
@@ -154,7 +154,7 @@ namespace Broker.Areas.Admin.Controllers
 							//User obj = _context.Using<User>().Where(x => x.UserName.ToLower().Replace(" ", "") == viewModel.Obj.UserName.ToLower().Replace(" ", "")).FirstOrDefault();
 							User obj = _context.Using<User>().GetByCondition(x => x.Id == Decrypt_Id).FirstOrDefault();
 
-							if (obj != null && (Common.IsAdmin() || Logged_In_VendorId > 0))
+							if (obj != null && Common.IsAdmin())
 							{
 								obj.UserName = viewModel.Obj.UserName;
 
@@ -169,7 +169,7 @@ namespace Broker.Areas.Admin.Controllers
 								//_context.SaveChanges();
 
 							}
-							else if (Common.IsAdmin() || Logged_In_VendorId > 0)
+							else if (Common.IsAdmin())
 							{
 								var _user = _context.Using<User>().Add(viewModel.Obj);
 								viewModel.Obj.Id = _user.Id;
@@ -327,8 +327,7 @@ namespace Broker.Areas.Admin.Controllers
 		{
 			try
 			{
-				//if (_context.Using<User>().GetAll().ToList().Any(x => x.Id == Id))
-				if (_context.Using<User>().GetAll().ToList().Any(x => x.Id == Id) && (Logged_In_VendorId > 0 ? _context.Using<UserVendorMapping>().Any(x => x.UserId == Id && x.VendorId == Logged_In_VendorId) : true))
+				if (_context.Using<User>().GetAll().ToList().Any(x => x.Id == Id) && _context.Using<UserVendorMapping>().Any(x => x.UserId == Id))
 				{
 					var UserRole = _context.Using<UserRoleMapping>().GetByCondition(x => x.UserId == Id).ToList();
 
