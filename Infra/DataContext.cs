@@ -372,6 +372,22 @@ namespace Broker.Infra
 				entity.Property(e => e.Title)
 					.HasMaxLength(200)
 					.IsUnicode(false);
+
+				entity.HasOne(d => d.Area).WithMany(p => p.Properties)
+					.HasForeignKey(d => d.AreaId)
+					.HasConstraintName("FK_Properties_Area");
+
+				//entity.HasOne(d => d.Category).WithMany(p => p.Properties)
+				//	.HasForeignKey(d => d.CategoryId)
+				//	.HasConstraintName("FK_Properties_Category");
+
+				entity.HasOne(d => d.City).WithMany(p => p.Properties)
+					.HasForeignKey(d => d.CityId)
+					.HasConstraintName("FK_Properties_City");
+
+				//entity.HasOne(d => d.Type).WithMany(p => p.Properties)
+				//	.HasForeignKey(d => d.TypeId)
+				//	.HasConstraintName("FK_Properties_Type");
 			});
 
 			modelBuilder.Entity<PropertyAmenity>(entity =>
@@ -404,6 +420,9 @@ namespace Broker.Infra
 				entity.Property(e => e.Name).HasMaxLength(50);
 			});
 
+			//modelBuilder.Entity<PropertyCategory>(entity =>
+			//{
+			//	entity.HasKey(e => e.Id).HasName("PK__Property__19093A0B860F425A");
 			modelBuilder.Entity<PropertyType>(entity =>
 			{
 				entity.HasKey(e => e.Id).HasName("PK__Property__516F03B5F79FAECA");
@@ -1005,7 +1024,188 @@ namespace Broker.Infra
 			return (false, ResponseStatusMessage.Error, 0);
 		}
 
-		public static (bool, string) Employee_Status(long Id = 0, long Logged_In_VendorId = 0, bool IsActive = false, bool IsDelete = false)
+        public static List<PropertyCategory> PropertyCategory_Get(long id = 0)
+        {
+            DateTime? nullDateTime = null;
+            var listObj = new List<PropertyCategory>();
+
+            try
+            {
+                var parameters = new List<SqlParameter>();
+                parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = id, Direction = ParameterDirection.Input, IsNullable = true });
+                
+                var dt = ExecuteStoredProcedure_DataTable("SP_PropertyCategories_Get", parameters.ToList());
+
+                if (dt != null && dt.Rows.Count > 0)
+                    foreach (DataRow dr in dt.Rows)
+                        listObj.Add(new PropertyCategory()
+                        {
+                            Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
+                            Name = dr["Name"] != DBNull.Value ? Convert.ToString(dr["Name"]) : "",
+                            IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false                         
+                        });
+            }
+            catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return listObj;
+        }
+
+        public static List<PropertyType> PropertyType_Get(long id = 0)
+        {
+            DateTime? nullDateTime = null;
+            var listObj = new List<PropertyType>();
+
+            try
+            {
+                var parameters = new List<SqlParameter>();
+                parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = id, Direction = ParameterDirection.Input, IsNullable = true });
+
+                var dt = ExecuteStoredProcedure_DataTable("SP_PropertyTypes_Get", parameters.ToList());
+
+                if (dt != null && dt.Rows.Count > 0)
+                    foreach (DataRow dr in dt.Rows)
+                        listObj.Add(new PropertyType()
+                        {
+                            Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
+                            ParentId = dr["ParentId"] != DBNull.Value ? Convert.ToInt64(dr["ParentId"]) : 0,
+                            Name = dr["Name"] != DBNull.Value ? Convert.ToString(dr["Name"]) : "",
+                            IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
+                        });
+            }
+            catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return listObj;
+        }
+        public static List<PropertyType> Property_Sub_Type_Get(long id = 0 , long Parent_Id = 0)
+        {
+            DateTime? nullDateTime = null;
+            var listObj = new List<PropertyType>();
+
+            try
+            {
+                var parameters = new List<SqlParameter>();
+                parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = id, Direction = ParameterDirection.Input, IsNullable = true });
+                parameters.Add(new SqlParameter("Parent_Id", SqlDbType.BigInt) { Value = Parent_Id, Direction = ParameterDirection.Input, IsNullable = true });
+
+                var dt = ExecuteStoredProcedure_DataTable("SP_Property_Sub_Type_Get", parameters.ToList());
+
+                if (dt != null && dt.Rows.Count > 0)
+                    foreach (DataRow dr in dt.Rows)
+                        listObj.Add(new PropertyType()
+                        {
+                            Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
+                            ParentId = dr["ParentId"] != DBNull.Value ? Convert.ToInt64(dr["ParentId"]) : 0,
+                            Name = dr["Name"] != DBNull.Value ? Convert.ToString(dr["Name"]) : "",
+                            IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
+                        });
+            }
+            catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return listObj;
+        }
+
+        public static (bool, string, long) PropertyCategory_Save(PropertyCategory obj = null)
+        {
+            if (obj != null)
+                try
+                {
+                    var parameters = new List<SqlParameter>();
+
+                    parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = obj.Id, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Name", SqlDbType.VarChar) { Value = obj.Name, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("IsActive", SqlDbType.NVarChar) { Value = obj.IsActive, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.Id > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });
+
+                    var response = ExecuteStoredProcedure("SP_PropertyCategories_Save", parameters.ToArray());
+
+                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+
+                    return (msgtype.Contains("S"), message, Convert.ToInt64(strid));
+
+                }
+                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return (false, ResponseStatusMessage.Error, 0);
+        }
+        public static (bool, string) PropertyCategory_Delete(long Id = 0)
+        {
+            if (Id > 0)
+                try
+                {
+                    var parameters = new List<SqlParameter>();
+
+                    parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = Id, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+                    
+                    var response = ExecuteStoredProcedure("sp_PropertyCategories_Delete", parameters.ToArray());
+
+                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+
+                    return (msgtype.Contains("S"), message);
+
+                }
+                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return (false, ResponseStatusMessage.Error);
+        }
+
+        public static (bool, string, long) PropertyType_Save(PropertyType obj = null)
+        {
+            if (obj != null)
+                try
+                {
+                    var parameters = new List<SqlParameter>();
+
+                    parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = obj.Id, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Parent_Id", SqlDbType.BigInt) { Value = obj.ParentId, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Name", SqlDbType.VarChar) { Value = obj.Name, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("IsActive", SqlDbType.NVarChar) { Value = obj.IsActive, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.Id > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });
+
+                    var response = ExecuteStoredProcedure("SP_PropertyTypes_Save", parameters.ToArray());
+
+                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+
+                    return (msgtype.Contains("S"), message, Convert.ToInt64(strid));
+
+                }
+                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return (false, ResponseStatusMessage.Error, 0);
+        }
+        public static (bool, string) PropertyType_Delete(long Id = 0 , long ParentId = 0)
+        {
+            if (Id > 0)
+                try
+                {
+                    var parameters = new List<SqlParameter>();
+
+                    parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = Id, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Parent_Id", SqlDbType.BigInt) { Value = ParentId, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+
+                    var response = ExecuteStoredProcedure("sp_PropertyTypes_Delete", parameters.ToArray());
+
+                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+
+                    return (msgtype.Contains("S"), message);
+
+                }
+                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return (false, ResponseStatusMessage.Error);
+        }
+        public static (bool, string) Employee_Status(long Id = 0, long Logged_In_VendorId = 0, bool IsActive = false, bool IsDelete = false)
 		{
 			if (Id > 0)
 				try
