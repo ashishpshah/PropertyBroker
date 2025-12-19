@@ -6,11 +6,9 @@ namespace Broker.Models;
 
 public partial class Property : EntitiesBase
 {
-	[NotMapped] public override long Id { get; set; }
+	public override long Id { get; set; }
 
-	public long PropertyId { get; set; }
-
-    public string Title { get; set; } = null!;
+	public string Title { get; set; } = null!;
 
     public string? Description { get; set; }
 
@@ -37,18 +35,4 @@ public partial class Property : EntitiesBase
     public string? Landmark { get; set; }
 
     public string? Remark { get; set; }
-
-    public virtual Area? Area { get; set; }
-
-    public virtual PropertyCategory? Category { get; set; }
-
-    public virtual City? City { get; set; }
-
-    public virtual ICollection<LocationPropertyMap> LocationPropertyMaps { get; set; } = new List<LocationPropertyMap>();
-
-    public virtual ICollection<PropertyAmenityMap> PropertyAmenityMaps { get; set; } = new List<PropertyAmenityMap>();
-
-    public virtual ICollection<PropertyImage> PropertyImages { get; set; } = new List<PropertyImage>();
-
-    public virtual PropertyType? Type { get; set; }
 }

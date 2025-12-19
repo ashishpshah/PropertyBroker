@@ -1,0 +1,248 @@
+//
+// menu.scss
+//
+
+/*********************************/
+/*         Menu                  */
+/*===============================*/
+#topnav {
+    .logo {
+        color: $dark !important;
+        .l-dark,
+        .logo-light-mode {
+            display: none !important;
+        }
+        .l-light,
+        .logo-dark-mode {
+            display: inline-block !important;
+        }
+    }
+    
+    .has-submenu {
+        &.active {
+            a {
+                color: $dark;
+            }
+        }
+    }
+    .has-submenu {
+        .submenu {
+            .submenu-arrow {
+                border: solid $dark;
+                border-width: 0 2px 2px 0;
+            }
+        }
+    }
+    .navbar-toggle {
+        span {
+            background-color: $dark;
+        }
+    }
+    
+    //Buy button
+    .buy-button {
+        &.menu-social {
+            li {
+                a {
+                    color: $dark;
+                }
+            }
+        }
+    }
+    .navigation-menu {
+        > li {
+            > a {
+                color: $dark;
+            }
+            .submenu {
+                &.megamenu {
+                    li {
+                        .megamenu-head {
+                            color: $dark !important;
+                        }
+                    }
+                }
+            }
+        }
+        .has-submenu {
+            .menu-arrow {
+                border: solid $dark;
+                border-width: 0 2px 2px 0;
+            }
+        }
+    }
+    
+    &.scroll {
+        background-color: $white;
+        box-shadow: $shadow;
+        .navigation-menu {
+            > li {
+                > a {
+                    color: $dark;
+                }
+                
+                > .menu-arrow {
+                    border-color: $dark;
+                }
+            } 
+        }
+    }
+    
+    &.nav-sticky{
+        background: $white;
+        box-shadow: $shadow;
+        .navigation-menu {
+            &.nav-light {
+                > li {
+                    > a {
+                        color: $dark;
+                    }
+                } 
+                .has-submenu {
+                    .menu-arrow {
+                        border-color: $dark; 
+                    }
+                }
+            }
+        }
+    }
+}
+.logo {
+    font-weight: 600;
+    font-size: 24px;
+    margin-right: 15px;
+    padding: 0 0 6px;
+    letter-spacing: 1px;
+    line-height: 68px;
+}
+
+@media (min-width: 992px) {
+    #topnav {
+        .navigation-menu {
+            > li {
+                .submenu {
+                    background-color: $white;
+                    box-shadow: $shadow;
+
+                    li {
+                        a {
+                            color: $dark !important;
+                        }
+                    }
+                }
+            }
+            &.nav-light {
+                > li {
+                    > a {
+                        color: rgba($dark, 0.5);
+                    }   
+                    &.active {
+                        > a {
+                            color: $dark !important;
+                        }      
+                    }           
+                    &:hover {
+                        > .menu-arrow {
+                            border-color: $dark !important;
+                        }
+                        > a {
+                            color: $dark !important;
+                        }
+                    }
+                } 
+                .has-submenu {
+                    .menu-arrow {
+                        border-color: rgba($dark, 0.5);
+                    }
+                    &.active {
+                        .menu-arrow{
+                            border-color: $dark !important;
+                        }
+                    }
+                }
+            }
+        }  
+    }
+}
+  
+@media (max-width: 991px) {
+    #topnav {
+        background-color: $white;
+        box-shadow: $shadow;
+        .navigation-menu {
+            > li {
+                .submenu {
+                    li {
+                        a {
+                            color: $dark !important;
+                        }
+                    }
+                    &.megamenu {
+                        > li {
+                            > ul {
+                                > li {
+                                    > span {
+                                        color: $muted;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                > a {
+                    color: $dark;
+                }
+            }
+        }
+        .menu-extras .menu-item {
+            border-color: $muted;
+        }
+    }
+
+    #navigation {
+        border-top: 1px solid darken($light,2%);
+        border-bottom: 1px solid darken($light,2%);
+        background-color: $white;
+    }
+}
+
+/*********************************/
+/*         Sidebar-nav            */
+/*===============================*/
+.sidebar-nav{
+    > .navbar-item {
+        .navbar-link {
+            color: $dark !important;
+        }
+    }
+}
+
+#navmenu-nav {
+    li {
+        &.active {
+            a {
+                color: $primary !important;
+            }
+        }
+        &.account-menu {
+            &.active,
+            &:hover {
+                .navbar-link {
+                    color: $white !important;
+                    background-color: $primary !important;
+                }
+            }
+        }
+    }
+}
+
+/*********************************/
+/*         Search Bar            */
+/*===============================*/
+.search-bar {
+    .searchform {
+        .search-icon {
+            color: $dark;
+        }
+    }
+}

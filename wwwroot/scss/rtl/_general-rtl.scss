@@ -1,0 +1,22 @@
+//
+// general.scss
+//
+
+html {
+    direction: rtl !important;
+}
+
+body {
+    text-align: right;
+    overflow-x: hidden !important;
+}
+
+//Switcher
+#style-switcher {
+    .t-rtl-light {
+        display: none;
+    }
+    .t-ltr-light {
+        display: inline-block;
+    }
+}

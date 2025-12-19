@@ -1,0 +1,101 @@
+//
+// helper.scss
+//
+.bg-overlay {
+    background-color: $overlay !important;
+}
+
+.bg-linear-gradient {
+    background: $linear-gradient;
+}
+
+.bg-linear-gradient-2 {
+    background: $linear-gradient-2;
+}
+
+.bg-gradient-overlay {
+    background: $gradient-overlay;
+}
+
+.bg-gradient-overlay-2 {
+    background: $gradient-overlay-2;
+}
+
+.bg-primary-gradient-overlay {
+    background: $primary-gradient-overlay;
+}
+
+//Shapes
+.shape {
+    &.marketing-hero {
+        background: $white;
+    }
+    &.text-white {
+        color: $black !important;
+    }
+}
+
+.home-shape-arrow {
+    i {
+        background: $light;
+        box-shadow: $shadow;
+    }
+}
+
+//CTA
+.play-icon {
+    i {
+        -webkit-text-stroke: 2px $primary;
+        -webkit-text-fill-color: transparent;  
+        &:hover {
+            -webkit-text-stroke: 2px $primary;
+            -webkit-text-fill-color: $primary;
+        }
+    }
+    &.bottom {
+        box-shadow: 0 0 45px rgba($primary, 0.9) !important;
+        i {
+            background: $primary !important;
+            -webkit-text-stroke: 2px $dark;
+            -webkit-text-fill-color: transparent;
+            &:hover {
+                -webkit-text-stroke: 2px $dark;
+                -webkit-text-fill-color: $dark;
+            }
+        }
+    }
+}
+
+//Resume
+
+.timeline-page {
+    &:after {
+        border-right: 2px dashed $gray-300 !important;
+    }
+    .timeline-item {
+        .date-label-left, .duration-right {
+            &:before {
+                border: 2px dashed $gray-300;
+                background-color: $white;
+            }
+        }
+    }
+}
+
+//Title
+.title-dark {
+    color: $dark !important;
+}
+.para-dark {
+    color: $muted !important;
+}
+.title-white {
+    color: $white !important;
+}
+.title-bg-dark {
+    background: $dark !important;
+}
+
+.bg-dark.bg-white-dark {
+    background-color: $white !important;
+}

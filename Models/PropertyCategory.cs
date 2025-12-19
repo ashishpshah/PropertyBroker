@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Broker.Models;
 
@@ -11,4 +10,16 @@ public partial class PropertyCategory : EntitiesBase
     public string? Name { get; set; }
 
    
+
+    public virtual ICollection<Property> Properties { get; set; } = new List<Property>();
+
+    public virtual ICollection<Property> Properties { get; set; } = new List<Property>();
+
+    public virtual ICollection<Property> Properties { get; set; } = new List<Property>();
+
+    public virtual ICollection<Property> Properties { get; set; } = new List<Property>();
+
+    public virtual ICollection<Property> Properties { get; set; } = new List<Property>();
+
+    public virtual ICollection<Property> Properties { get; set; } = new List<Property>();
 }
