@@ -1,0 +1,103 @@
+/*********************************/
+/*         About Us              */
+/*===============================*/
+.about-left {
+    .img-one {
+        .cta-video {
+            left: 5%;
+            right: auto;
+        }
+    }
+
+    .img-two {
+        left: 0;
+        right: auto;
+    }
+}
+
+.about-right {
+    justify-content: end;
+    .img-one {
+        .cta-video {
+            left: auto;
+            right: 5%;
+        }
+    }
+
+    .img-two {
+        left: auto;
+        right: 0;
+    }
+}
+
+/*********************************/
+/*         Property Listing      */
+/*===============================*/
+.property {
+    .property-image {
+        .property-icon {
+            left: 15px;
+            right: auto;
+        }
+    }
+}
+
+/*********************************/
+/*         choices Select        */
+/*===============================*/
+.filter-search-form {
+    .icons {
+        right: 12px;
+        left: auto;
+    }
+}
+@media (min-width:992px) {
+    .filter-border {
+        &:before {
+            left: 0px;
+            right: auto;
+        }
+    }
+    .registration-form {
+        .submit-btn {
+            border-radius: 0px 0 6px 6px;
+        }
+        .form-control {
+            border-radius: 6px 6px 0px 0px;
+        }
+    }
+}
+.filter-input-box,
+.filter-input-box.form-select,
+.filter-search-form .choices__inner {
+    padding: 13px 45px 15px 6px;
+}
+
+.choices[data-type*=select-one]::after {
+    left: 11.5px;
+    right: auto;
+}
+
+.form-floating>label {
+    right: 0;
+    left: auto;
+    // text-align: start;
+}
+
+.form-floating>.form-control-plaintext~label, 
+.form-floating>.form-control:focus~label, 
+.form-floating>.form-control:not(:placeholder-shown)~label, 
+.form-floating>.form-select~label {
+    transform: scale(.85) translateY(-.5rem) translateX(1.20rem);
+}
+
+
+//Testimonial
+.swiper-slider-hero, .tns-inner, .tns-nav {
+    direction: ltr;
+}
+
+.tns-visually-hidden {
+    left: 0 !important;
+    visibility: hidden;
+}

@@ -52,9 +52,9 @@ namespace Broker.Infra
 
 		public virtual DbSet<PropertyCategory> PropertyCategories { get; set; }
 
-		public virtual DbSet<PropertyImage> PropertyImages { get; set; }
-
 		public virtual DbSet<PropertyType> PropertyTypes { get; set; }
+
+		public virtual DbSet<PropertyImage> PropertyImages { get; set; }
 
 		public virtual DbSet<Role> Roles { get; set; }
 
@@ -350,7 +350,9 @@ namespace Broker.Infra
 
 			modelBuilder.Entity<Models.Property>(entity =>
 			{
-				entity.HasKey(e => e.PropertyId).HasName("PK__Properti__70C9A7351A597973");
+				entity.HasKey(e => e.Id).HasName("PK__Properti__70C9A7351A597973");
+
+				entity.ToTable("Properties", "dbo");
 
 				entity.Property(e => e.AreaSqft).HasColumnType("decimal(10, 2)");
 				entity.Property(e => e.BuilderName)
@@ -378,59 +380,45 @@ namespace Broker.Infra
 				entity.Property(e => e.Title)
 					.HasMaxLength(200)
 					.IsUnicode(false);
-
-				entity.HasOne(d => d.Area).WithMany(p => p.Properties)
-					.HasForeignKey(d => d.AreaId)
-					.HasConstraintName("FK_Properties_Area");
-
-				entity.HasOne(d => d.Category).WithMany(p => p.Properties)
-					.HasForeignKey(d => d.CategoryId)
-					.HasConstraintName("FK_Properties_Category");
-
-				entity.HasOne(d => d.City).WithMany(p => p.Properties)
-					.HasForeignKey(d => d.CityId)
-					.HasConstraintName("FK_Properties_City");
-
-				entity.HasOne(d => d.Type).WithMany(p => p.Properties)
-					.HasForeignKey(d => d.TypeId)
-					.HasConstraintName("FK_Properties_Type");
 			});
 
 			modelBuilder.Entity<PropertyAmenity>(entity =>
 			{
-				entity.HasKey(e => e.AmenityId).HasName("PK__Property__842AF50B127D012E");
+				entity.HasKey(e => e.Id).HasName("PK__Property__3214EC071193879A");
 
-				entity.Property(e => e.AmenityName)
+				entity.ToTable("PropertyAmenities", "dbo");
+
+				entity.Property(e => e.Name)
 					.HasMaxLength(100)
 					.IsUnicode(false);
-				entity.Property(e => e.IsActive).HasDefaultValue(true);
-				entity.Property(e => e.IsDeleted).HasDefaultValue(false);
 			});
 
 			modelBuilder.Entity<PropertyAmenityMap>(entity =>
 			{
-				entity.HasKey(e => new { e.PropertyId, e.AmenityId }).HasName("PK__Property__D88B08655E417404");
+				entity.HasKey(e => e.Id).HasName("PK__Property__3214EC073F93806D");
 
-				entity.ToTable("PropertyAmenityMap");
+				entity.ToTable("PropertyAmenityMap", "dbo");
 
 				entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 				entity.Property(e => e.LastModifiedDate).HasColumnType("datetime");
-
-				entity.HasOne(d => d.Amenity).WithMany(p => p.PropertyAmenityMaps)
-					.HasForeignKey(d => d.AmenityId)
-					.OnDelete(DeleteBehavior.ClientSetNull)
-					.HasConstraintName("FK_Map_Amenity");
-
-				entity.HasOne(d => d.Property).WithMany(p => p.PropertyAmenityMaps)
-					.HasForeignKey(d => d.PropertyId)
-					.HasConstraintName("FK_Map_Property");
 			});
 
 			modelBuilder.Entity<PropertyCategory>(entity =>
 			{
-				entity.HasKey(e => e.CategoryId).HasName("PK__Property__19093A0B860F425A");
+				entity.HasKey(e => e.Id).HasName("PK__Property__3214EC07B26087DB");
 
-				entity.Property(e => e.CategoryName).HasMaxLength(50);
+				entity.ToTable("PropertyCategories", "dbo");
+
+				entity.Property(e => e.Name).HasMaxLength(50);
+			});
+
+			modelBuilder.Entity<PropertyType>(entity =>
+			{
+				entity.HasKey(e => e.Id).HasName("PK__Property__516F03B5F79FAECA");
+
+				entity.ToTable("PropertyTypes", "dbo");
+
+				entity.Property(e => e.Name).HasMaxLength(50);
 			});
 
 			modelBuilder.Entity<PropertyImage>(entity =>
@@ -446,13 +434,6 @@ namespace Broker.Infra
 					.HasForeignKey(d => d.PropertyId)
 					.OnDelete(DeleteBehavior.Cascade)
 					.HasConstraintName("FK_PropertyImages");
-			});
-
-			modelBuilder.Entity<PropertyType>(entity =>
-			{
-				entity.HasKey(e => e.TypeId).HasName("PK__Property__516F03B5C7D2EB62");
-
-				entity.Property(e => e.TypeName).HasMaxLength(50);
 			});
 
 			modelBuilder.Entity<Role>(entity =>

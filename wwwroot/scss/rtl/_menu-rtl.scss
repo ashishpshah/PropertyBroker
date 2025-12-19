@@ -1,0 +1,317 @@
+//
+// menu.scss
+//
+
+/*********************************/
+/*         Menu                  */
+/*===============================*/
+#topnav {
+    .logo {
+        float: right;
+    }
+    .has-submenu {
+        .submenu {
+            .submenu-arrow {
+                // border-right-color: transparent !important;
+                left: 20px;
+                right: auto;
+                rotate: 180deg;
+            }
+        }
+    }
+    .navbar-toggle {
+        .lines {
+            margin: 30px 10px 26px 0;
+        }
+    }
+    
+    //Buy button
+    .buy-button {
+        float: left;
+        &.menu-social {
+            li {
+                margin-right: auto;
+                margin-left: 10px;
+                &:last-child {
+                    margin-right: auto;
+                    margin-left: 0;
+                }
+            }
+        }
+    }
+  
+    .navigation-menu {
+        > li {
+            float: right;
+        }
+        .has-submenu {
+            .menu-arrow {
+                // border-right-color: transparent !important;
+                left: -3px;
+                right: auto;
+            }
+        }
+    }
+    .menu-extras {
+        float: left;
+    }
+    
+    // &.scroll {
+    //     .navigation-menu {
+    //         > li {
+    //             &:hover, 
+    //             &.active {
+    //                 > .menu-arrow {
+    //                     border-right-color: transparent !important;
+    //                 }
+    //             } 
+    //         } 
+    //     }
+    // }
+    
+    // &.nav-sticky{
+    //     .navigation-menu {
+    //         &.nav-light {
+    //             > li {
+    //                 &:hover, 
+    //                 &.active {
+    //                     > .menu-arrow {
+    //                         border-right-color: transparent !important;
+    //                     }
+    //                 }
+    //             } 
+    //         }
+    //     }
+    // }
+}
+.logo {
+    margin-left: 15px;
+    margin-right: auto;
+}
+
+@media (min-width: 992px) {
+    #topnav {
+        .navigation-menu {
+            > li {
+                .submenu {
+                    right: 0;
+                    left: auto;
+                    li {
+                        ul {
+                            padding-right: 0;
+                        }
+                    }
+                    &.megamenu {
+                        left: auto;
+                        right: 50%;
+                        transform: translateX(50%);
+                        > li {
+                            .submenu {
+                                left: auto;
+                                right: 100%;
+                                margin-left: auto;
+                                margin-right: 10px;
+                            }
+                        }
+                    }
+                    > li {
+                        .submenu {
+                            left: auto;
+                            right: 101%;
+                                margin-left: auto;
+                                margin-right: 10px;
+                        }
+                    }
+                }
+                // &:hover {
+                //     > .menu-arrow {
+                //         border-right-color: transparent !important;
+                //     }
+                // }
+                
+                &.last-elements {
+                    .submenu {
+                        left: 0;
+                        right: auto;
+                        &:before {
+                            left: 10px;
+                            right: auto;
+                        }
+                        > li.has-submenu .submenu {
+                            left: 100%;
+                            right: auto;
+                            margin-left: 10px;
+                            margin-right: 0;
+                        }
+                    }
+                }
+            }
+            // &.nav-light {
+            //     > li {
+            //         &:hover {
+            //             > .menu-arrow {
+            //                 border-right-color: transparent !important;
+            //             }
+            //         }
+            //     } 
+            //     .has-submenu {
+            //         &.active {
+            //             .menu-arrow{
+            //                 border-right-color: transparent !important;
+            //             }
+            //         }
+            //     }
+            // }
+
+            &.nav-right {
+                justify-content: flex-end !important;
+                >li {
+                    &:last-child {
+                        margin-left: 0;
+                    }
+                }
+            }
+
+            &.nav-left {
+                justify-content: flex-start !important;
+                > li {
+                    &.last-elements {
+                        .submenu {
+                            left: auto !important;
+                            right: 0 !important;
+                            &:before {
+                                left: auto !important;
+                                right: 45px !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }  
+        .buy-button {
+            padding-right: 15px;
+            padding-left: 0;
+        }      
+    }
+}
+  
+@media (max-width: 991px) {
+    #topnav {
+        .navigation-menu {
+            > li {
+                .submenu {
+                    padding-right: 20px;
+                    padding-left: 0;
+                    &.megamenu {
+                        > li {
+                            > ul {
+                                padding-right: 0;
+                                padding-left: 0;
+                            }
+                        }
+                    }
+                }
+                > a {
+                    &:after {
+                        left: 15px;
+                        right: auto;
+                    }
+                }
+            }
+        }
+        .navbar-header {
+            float: right;
+        }
+    }
+    #topnav {
+        .has-submenu{
+            .submenu {
+                .submenu-arrow {
+                    transform: rotate(45deg);
+                    left: 20px;
+                    right: auto;
+                }
+            }
+        }
+    }
+
+    #navigation {
+        left: auto;
+        right: 0;
+    }
+}
+@media (max-width: 768px) {
+    #topnav {
+        .navigation-menu {
+            .has-submenu {
+                .menu-arrow {
+                    left: 8px;
+                    right: auto;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    #topnav {
+        .navigation-menu {
+            > li{
+                &.has-submenu{
+                    &:hover {
+                        > .submenu {
+                            > li{
+                                &.has-submenu{
+                                    &:hover {
+                                        > .submenu {
+                                            margin-left: 0;
+                                            margin-right: 0;
+                                            > li{
+                                                &:hover {
+                                                    > .submenu {
+                                                        margin-left: 0;
+                                                        margin-right: 0;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/*********************************/
+/*         Sidebar-nav            */
+/*===============================*/
+.sidebar-nav{
+    > .navbar-item {
+        .navbar-link {
+            .navbar-icon {
+                margin-left: 6px;
+                margin-right: auto;
+            }
+        }
+    }
+}
+
+/*********************************/
+/*         Search Bar            */
+/*===============================*/
+.search-bar {
+    .searchform {
+        input[type="text"] {
+            padding-left: 45px;
+            padding-right: 12px;
+        }
+        .search-icon {
+            right: auto;
+            left: 14px;
+        }
+    }
+}

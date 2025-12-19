@@ -1,0 +1,289 @@
+//
+// components.scss
+//
+//Buttons
+@each $name,
+$value in $colors {
+    .btn-#{$name} {
+        background-color: #{$value} !important;
+        border: 1px solid #{$value} !important;
+        color: $dark !important;
+        box-shadow: 0 3px 5px 0 rgba($value, 0.1);
+        &:hover, &:focus, &:active, &.active, &.focus{
+            background-color: darken($value, 10%) !important;
+            border-color: darken($value, 10%) !important;
+            color: $dark !important;
+        }
+    }
+
+    .btn-soft-#{$name} {
+        background-color: rgba($value, 0.1) !important;
+        border: 1px solid rgba($value, 0.1) !important;
+        color: #{$value} !important;
+        box-shadow: 0 3px 5px 0 rgba($value, 0.1);
+        &:hover, &:focus, &:active, &.active, &.focus{
+            background-color: #{$value} !important;
+            border-color: #{$value} !important;
+            color: $dark !important;
+        }
+    }
+
+    .btn-outline-#{$name} {
+        border: 1px solid #{$value};
+        color: #{$value};
+        background-color: transparent;    
+        &:hover, &:focus, &:active, &.active, &.focus, &:not(:disabled):not(.disabled):active{
+            background-color: #{$value};
+            border-color: #{$value};
+            color: $dark !important;
+            box-shadow: 0 3px 5px 0 rgba($value, 0.1);
+        }
+    }
+
+    .btn-link {
+        &.#{$name} {
+            padding: 0 !important;
+            color: $dark;
+            position: relative;
+            &:hover, &:focus, &:active, &.active, &.focus, &:not(:disabled):not(.disabled):active{
+                color: $value !important;
+            }
+            &:after {
+                background-color: $value !important;
+            }
+        }
+    }
+}
+.btn {
+    &.btn-dark {
+        color: $white !important;
+        background: $dark;
+        border: 1px solid $gray-100 !important;
+        &:hover, &:focus, &:active, &.active, &.focus {
+            background-color: darken($dark, 5%) !important;
+            color: $white !important; 
+        }
+    }   
+    &.btn-outline-dark {
+        border: 1px solid $gray-100 !important;
+        color: $dark !important;
+        background-color: transparent;    
+        &:hover, &:focus, &:active, &.active, &.focus {
+            background-color: $dark !important;
+            color: $white !important;
+        }
+    }
+    &.btn-light {
+        color: $dark !important;
+        border-color: $gray-200 !important;
+        &:hover, &:focus, &:active, &.active, &.focus{
+            background-color: lighten($light, 10%) !important;
+            color: $dark !important;
+        }
+    }    
+    &.btn-outline-light {
+        border-color: $gray-200 !important;
+        color: $dark !important;
+        &:hover, &:focus, &:active, &.active, &.focus{
+            background-color: lighten($light, 10%) !important;
+            color: $dark !important;
+        }
+    }
+}
+
+/*********************************/
+/*         Nav-tabs            */
+/*===============================*/
+.nav-pills {
+    background: darken($light, 1%);
+    .nav-link {
+        color: $gray-700 !important;
+        &.nav-link-alt {
+            color: $dark !important;
+            &.active {
+                background: $dark !important;
+            }
+        }
+        &.active {
+            background: $primary;
+            color: $dark !important;
+            .tab-para {
+                color: rgba($dark, 0.65) !important;
+            }
+        }
+    }
+}
+
+//Breadcrumb
+.page-next-level{
+    .page-next {
+        li {
+            &:after {
+                color: $dark; 
+            }     
+        }
+    }
+}
+
+.progress {
+    background-color: $gray-100 !important;
+}
+
+//Form
+.form-control {
+    color: $dark !important;
+    border: 1px solid $gray-100;
+    background-color: transparent;
+    &:focus {
+        border-color: $primary;
+        box-shadow: none;
+        background-color: $white;
+    }
+    &::placeholder{
+        color: $muted;
+    }
+    &[readonly] {
+        background-color: $white;
+    }
+    &:disabled {
+        background-color: $gray-300;
+    }
+}
+
+.form-check-input {
+    border: 1px solid $gray-200;
+    background-color: transparent;
+    &:focus {
+        border-color: $primary;
+        box-shadow: none;
+    }
+    &.form-check-input:checked {
+        background-color: $primary;
+        border-color: $primary;
+    }
+}
+
+.input-group {
+    .input-group-text {
+        background-color: $light !important;
+        color: $dark;
+    }
+}
+
+//Subscribe form
+.subcribe-form {
+    input {
+        color: $dark !important;
+        background-color: rgba($white, 0.8);
+
+        &::placeholder{
+            color: $muted;
+        }
+
+        &[readonly] {
+            background-color: $white;
+        }
+
+        &:disabled {
+            background-color: $gray-300;
+        }
+    }
+}
+
+/*********************************/
+/*         Processbar            */
+/*===============================*/
+.progress-box {
+    .progress {
+        background: $gray-100;
+    }
+}
+
+//Pagination
+.pagination {
+    .page-item {
+        .page-link {
+            color: $dark;
+            border: 1px solid $gray-100;
+            background-color: $black;
+            &:focus,
+            &:hover {
+                color: $dark;
+                background: rgba($primary, 0.9);
+                border-color: rgba($primary, 0.9);
+            }
+        }
+        &.active {
+            .page-link {
+                color: $dark;
+                background: $primary;
+                border-color: $primary;
+            }
+        }
+    }
+}
+
+/*********************************/
+/*         Subscribe form            */
+/*===============================*/
+.subscribe-form {
+    input {
+        color: $dark !important;
+        background-color: rgba($white, 0.8);
+    }
+}
+
+// Loader
+#preloader {
+    background-image: linear-gradient(45deg, $dark, $dark);
+}
+          
+//Social icons
+.social-icon {
+    li {
+        a {
+            color: $gray-400;
+            border: 1px solid $gray-100;
+            &:hover {
+                color: $dark !important;
+            }
+        }
+    }
+    &.social {
+        li {
+            a {
+                color: $muted;
+                border-color: $muted;
+            }
+        }
+    }
+}
+//back to top
+.back-to-top {
+    background: $primary;
+    color: $dark !important;
+    border: 2px solid darken($primary, 10%);
+}
+
+/*********************************/
+/*         Accordion            */
+/*===============================*/
+.accordion {
+    .accordion-item {
+        .accordion-button {
+            &:before {
+                color: $primary;
+            }
+            &:not(.collapsed) {
+                color: $primary;
+            }
+            &.collapsed {
+                background-color: $white;
+                color: $dark !important;
+                &:before {
+                    color: $dark !important;
+                }
+            }
+        }
+    }
+}

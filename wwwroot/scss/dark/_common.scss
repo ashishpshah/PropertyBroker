@@ -1,0 +1,212 @@
+// _blog.scss
+.blog {
+    .title,
+    .read-more {
+        &:hover{
+            color: $primary !important;
+        }
+    }
+}
+
+/*********************************/
+/*         Tagcloud              */
+/*===============================*/
+.tagcloud {
+    a {
+        background: $gray-100;
+        &:hover {
+            background: $primary;
+            color: $dark !important;
+        }
+    }
+}
+
+/*********************************/
+/*         choices Select        */
+/*===============================*/
+.filter-search-form {
+    .icons {
+        color: $primary;
+    }
+}
+@media (min-width:992px) {
+    .filter-border {
+        &:before {
+            border-right: 1px solid $gray-100;
+        }
+    }
+}
+.filter-input-box,
+.filter-input-box.form-select,
+.filter-search-form .choices__inner {
+    box-shadow: none !important;
+}
+
+.choices__inner {
+    background: $light !important;
+}
+
+.choices__list--dropdown,
+.choices[data-type*=select-one] .choices__input {
+    background: $white;
+    box-shadow: $shadow;
+    color: $dark;
+}
+
+.choices__list--dropdown .choices__item--selectable.is-highlighted {
+    background: $light;
+    color: $dark;
+}
+
+.choices__list--dropdown .choices__item--selectable,
+.choices__list--dropdown .choices__item--selectable.is-highlighted, 
+.choices__list[aria-expanded] .choices__item--selectable.is-highlighted {
+    color: $gray-200;
+}
+
+.choices__list--dropdown, .choices__list[aria-expanded] {
+    background-color: $white;
+    border: 1px solid $gray-100;
+}
+
+
+// _countdown.scss
+#countdown {
+    .count-down {
+        color: $dark;
+    }
+}
+
+#countdown {
+    .count-down {
+        .count-number {
+            box-shadow: $shadow-lg;
+            background-color: rgba($dark, 0.1);
+            border: 4px solid rgba($dark, 0.1);
+        }
+    }
+}
+
+.form-floating>label {
+    color: $gray-500 !important;
+}
+
+/*********************************/
+/*         Maintenance           */
+/*===============================*/
+#maintenance {
+    color: $dark;
+}
+
+/*********************************/
+/*         Features              */
+/*===============================*/
+.features {
+    .title {
+        &:hover {
+            color: $primary !important;
+        }
+    }
+    .feature-icon {
+        .hexagon {
+            fill: rgba($primary, 0.05) !important;
+        }
+    }
+}
+
+/*********************************/
+/*         Property Listing      */
+/*===============================*/
+.property {
+    &:hover {
+        box-shadow: $shadow-md !important;
+    }
+}
+
+.categories {
+    &:hover {
+        box-shadow: $shadow-md !important;
+    }
+}
+
+/*********************************/
+/*            Swiper slider      */
+/*===============================*/
+.swiper-slider-hero {
+    .swiper-container {        
+        .swiper-button-prev,
+        .swiper-button-next {
+            &:before {
+                color: $dark;
+            }
+            &:hover {
+                background: $primary;
+                border-color: $primary !important;
+            }
+        }
+        .swiper-button-prev {
+            border: 1px solid rgba($dark, 0.5);
+        }
+        .swiper-button-next {
+            border: 1px solid rgba($dark, 0.5);
+        }
+    }
+    .swiper-pagination-bullet {
+        color: $gray-100;
+        background: transparent;
+    }
+    .swiper-pagination-bullet-active {
+        color: $dark;
+    }
+}
+
+// _team.scss
+.team {
+    @each $name,
+    $value in $colors {
+        &.team-#{$name} {
+            .title {
+                &:hover {
+                    color: $value !important;
+                }
+            }
+            .btn {
+                background-color: #{$value} !important;
+                border: 1px solid #{$value} !important;
+                color: $dark !important;
+                box-shadow: 0 3px 5px 0 rgba($value, 0.1);
+                &:hover, &:focus, &:active, &.active, &.focus{
+                    background-color: darken($value, 10%) !important;
+                    border-color: darken($value, 10%) !important;
+                    color: $dark !important;
+                }
+            }
+        }
+    }
+}
+
+// testi.scss
+.tns-nav {
+    button {
+        background: rgba($dark, 0.15);
+        border: 2px solid rgba($dark, 0.15) !important;
+        &.tns-nav-active {
+            padding: 2px;
+            border-color: $primary !important;
+            background-color: $primary !important;
+        }
+    }
+}
+
+.tns-controls {
+    button[data-controls="prev"],
+    button[data-controls="next"] {
+        background: $white;
+        color: $dark;
+        box-shadow: $shadow-lg;
+        &:hover {
+            background: $primary;
+            color: $dark;
+        }
+    }
+}
