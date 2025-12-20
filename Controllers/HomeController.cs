@@ -3,6 +3,7 @@ using Broker.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NuGet.Protocol.Core.Types;
 using System.Diagnostics;
 
@@ -131,10 +132,24 @@ namespace Broker.Controllers
 		{
 			viewModel ??= new PropertySerch();
 
+			if (!string.IsNullOrEmpty(viewModel.Email) || !string.IsNullOrEmpty(viewModel.ContactNo))
+			{
+				var lead = new Lead()
+				{
+					Name = viewModel.FirstName + " " + viewModel.LastName,
+					Email = viewModel.Email,
+					Mobile = viewModel.ContactNo,
+					LeadSourceId = (long)_context.Using<LeadSource>().GetByCondition(x => x.LeadSourceName.ToLower().Contains("website")).Select(x => x.LeadSourceId).FirstOrDefault()
+				};
+
+				_context.Using<Lead>().Add(lead);
+			}
+
 			ResponseModel<Properties> responseModel = new ResponseModel<Properties>
 			{
 				ObjList = new List<Properties>() //_context.Using<Properties>().GetByCondition(x => x.IsActive == true).OrderByDescending(x => x.Id).ToList();
-				, Data1 = viewModel
+				,
+				Data1 = viewModel
 			};
 
 			responseModel.SelectListItems = new List<SelectListItem_Custom>();

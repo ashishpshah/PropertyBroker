@@ -37,6 +37,7 @@ namespace Broker
 		public string ContactNo { get; set; }
 		public int Location { get; set; }
 		public int PropertyCategory { get; set; }
+		public int PropertyType_Parent { get; set; }
 		public int PropertyType { get; set; }
 
 	}

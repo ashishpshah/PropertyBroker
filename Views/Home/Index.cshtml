@@ -59,7 +59,6 @@
 											<div class="mb-3 text-start">
 												<label class="form-label fs-6">Location</label>
 												<div class="filter-search-form position-relative filter-border">
-													<i data-feather="location" class="fea icon-ex-md icons"></i>
 													<select class="form-select choices-select" id="choices-PropertyLocation">
 														@if (Model.SelectListItems != null)
 														{
@@ -77,7 +76,6 @@
 											<div class="mb-3 text-start">
 												<label class="form-label fs-6">Category</label>
 												<div class="filter-search-form position-relative filter-border">
-													<i data-feather="home" class="fea icon-ex-md icons"></i>
 													<select class="form-select choices-select" id="choices-PropertyCategory">
 														@if (Model.SelectListItems != null)
 														{
@@ -377,7 +375,6 @@
 
 					var $form = $('#' + $id);
 
-
 						$form.validate({
 						  rules: {
 							Location: { required: true },
@@ -392,19 +389,19 @@
 
 						const location = $('#choices-PropertyLocation').val();
 						const category = $('#choices-PropertyCategory').val();
+						const type_Parent = $('#choices-PropertyType_Parent').val();
 						const type = $('#choices-PropertyType').val();
 
 						const url =
 						  `@Url.Action("Properties", "Home", new { area = "" })?${query}` +
 						  `&Location=${encodeURIComponent(location)}` +
 						  `&PropertyCategory=${encodeURIComponent(category)}` +
+						  `&PropertyType_Parent=${encodeURIComponent(type_Parent)}` +
 						  `&PropertyType=${encodeURIComponent(type)}`;
 
 						window.location.href = url;
 
 				}
-
-		let childChoices;
 
 		document.querySelectorAll('.choices-select:not([data-choices-init])')
 		  .forEach(el => {
@@ -417,6 +414,8 @@
 
 			el.setAttribute('data-choices-init', 'true');
 		  });
+
+		let childChoices;
 
 		const childSelect = document.getElementById('choices-PropertyType');
 		const originalOptions = Array.from(childSelect.options).map(o =>
