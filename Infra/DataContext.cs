@@ -1383,6 +1383,110 @@ namespace Broker.Infra
 			return (false, ResponseStatusMessage.Error);
 		}
 
-	}
+
+        public static List<ServicesMaster> ServicesMaster_Get(long id = 0)
+        {
+            DateTime? nullDateTime = null;
+            var listObj = new List<ServicesMaster>();
+
+            try
+            {
+                var parameters = new List<SqlParameter>();
+                parameters.Add(new SqlParameter("ServiceId", SqlDbType.BigInt) { Value = id, Direction = ParameterDirection.Input, IsNullable = true });
+
+                var dt = ExecuteStoredProcedure_DataTable("SP_ServiceMaster_Get", parameters.ToList());
+
+                if (dt != null && dt.Rows.Count > 0)
+                    foreach (DataRow dr in dt.Rows)
+                        listObj.Add(new ServicesMaster()
+                        {
+                            ServiceId = dr["ServiceId"] != DBNull.Value ? Convert.ToInt64(dr["ServiceId"]) : 0,
+                            ServiceTitle = dr["ServiceTitle"] != DBNull.Value ? Convert.ToString(dr["ServiceTitle"]) : "",
+                            ShortDescription = dr["ShortDescription"] != DBNull.Value ? Convert.ToString(dr["ShortDescription"]) : "",
+                            FullDescription = dr["FullDescription"] != DBNull.Value ? Convert.ToString(dr["FullDescription"]) : "",
+                            ImageName = dr["ImageName"] != DBNull.Value ? Convert.ToString(dr["ImageName"]) : "",
+                            DisplayOrder = dr["DisplayOrder"] != DBNull.Value ? Convert.ToInt32(dr["DisplayOrder"]) : 0,
+                            IsFeatured = dr["IsFeatured"] != DBNull.Value ? Convert.ToBoolean(dr["IsFeatured"]) : false,
+                            ResumeFile = dr["ResumeFile"] != DBNull.Value ? (byte[])dr["ResumeFile"] : null,
+                            IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
+                        });
+            }
+            catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return listObj;
+        }
+
+
+        public static (bool, string, long) ServicesMaster_Save(ServicesMaster obj = null)
+        {
+            if (obj != null)
+                try
+                {
+                    var parameters = new List<SqlParameter>();
+
+                    parameters.Add(new SqlParameter("ServiceId", SqlDbType.BigInt) { Value = obj.ServiceId, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("ServiceTitle", SqlDbType.VarChar) { Value = obj.ServiceTitle, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("ShortDescription", SqlDbType.VarChar) { Value = obj.ShortDescription, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("FullDescription", SqlDbType.VarChar) { Value = obj.FullDescription, Direction = ParameterDirection.Input, IsNullable = true });
+
+                    parameters.Add(new SqlParameter("ImageName", SqlDbType.VarChar, 255)
+                    {
+                        Value = (object)obj.ImageName ?? DBNull.Value
+                    });
+
+                    parameters.Add(new SqlParameter("ResumeFile", SqlDbType.VarBinary)
+                    {
+                        Value = (object)obj.ResumeFile ?? DBNull.Value
+                    });
+
+                    parameters.Add(new SqlParameter("DisplayOrder", SqlDbType.Int) { Value = obj.DisplayOrder, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("IsFeatured", SqlDbType.Bit)
+                    {
+                        Value = obj.IsFeatured
+                    });
+                    //parameters.Add(new SqlParameter("IsActive", SqlDbType.NVarChar) { Value = obj.IsActive, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.ServiceId > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });
+
+                    var response = ExecuteStoredProcedure("SP_ServicesMaster_Save", parameters.ToArray());
+
+                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+
+                    return (msgtype.Contains("S"), message, Convert.ToInt64(strid));
+
+                }
+                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return (false, ResponseStatusMessage.Error, 0);
+        }
+
+
+        public static (bool, string) ServicesMaster_Delete(long Id = 0)
+        {
+            if (Id > 0)
+                try
+                {
+                    var parameters = new List<SqlParameter>();
+
+                    parameters.Add(new SqlParameter("ServiceId", SqlDbType.BigInt) { Value = Id, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+
+                    var response = ExecuteStoredProcedure("sp_ServicesMaster_Delete", parameters.ToArray());
+
+                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+
+                    return (msgtype.Contains("S"), message);
+
+                }
+                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return (false, ResponseStatusMessage.Error);
+        }
+
+    }
 
 }

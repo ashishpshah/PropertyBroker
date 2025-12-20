@@ -6,8 +6,8 @@ namespace Broker.Models;
 
 public partial class ServicesMaster : EntitiesBase
 {
-	[NotMapped] public override long Id { get; set; }
-	public long ServiceId { get; set; }
+    [NotMapped] public override long Id { get; set; }
+    public long ServiceId { get; set; }
 
     public string ServiceTitle { get; set; } = null!;
 
@@ -22,4 +22,6 @@ public partial class ServicesMaster : EntitiesBase
     public bool IsFeatured { get; set; }
 
     public byte[]? ResumeFile { get; set; }
+
+    [NotMapped] public IFormFile? ImageFile { get; set; }
 }

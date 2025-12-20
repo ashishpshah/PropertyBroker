@@ -1,0 +1,111 @@
+﻿@model ResponseModel<ServicesMaster>
+
+@{
+	Layout = null;
+}
+
+<div class="col-md-12">
+	<div class="card card-info">
+
+		<div class="card-header">
+			<h3 class="card-title">@(Model.Obj != null && Model.Obj.ServiceId > 0 ? "Edit" : "Create") Property</h3>
+			<input type="text" class="form-control d-none" id="ServiceId" name="ServiceId" value="@(Model.Obj != null && Model.Obj.ServiceId > 0 ? Model.Obj.ServiceId.ToString() : "")">
+		</div>
+
+		<div class="card-body form-horizontal">
+			<div class="row no-gutters">
+				<div class="col-12">
+					<div class="form-group row" style=" padding-top: 20px;">
+						<label for="ServiceTitle" class="col-2 col-form-label text-end">ServiceTitle<span style="color:red">*</span></label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control " id="ServiceTitle" name="ServiceTitle" value="@Model.Obj.ServiceTitle"
+								   placeholder="ServiceTitle" autocomplete="off">
+						</div>
+						<label for="ShortDescription" class="col-2 col-form-label text-end">ShortDescription<span style="color:red">*</span></label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control " id="ShortDescription" name="ShortDescription" value="@Model.Obj.ShortDescription"
+								   placeholder="ShortDescription" autocomplete="off">
+						</div>
+					</div>
+
+					<div class="form-group row" style=" padding-top: 20px;">
+						<label for="FullDescription" class="col-2 col-form-label text-end">FullDescription<span style="color:red">*</span></label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control " id="FullDescription" name="FullDescription" value="@Model.Obj.FullDescription"
+								   placeholder="FullDescription" autocomplete="off">
+						</div>
+						<label for="DisplayOrder" class="col-2 col-form-label text-end">DisplayOrder<span style="color:red">*</span></label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control " id="DisplayOrder" name="DisplayOrder" value="@Model.Obj.DisplayOrder"
+								   placeholder="DisplayOrder" autocomplete="off">
+						</div>
+					</div>
+
+					
+					
+					<div class="form-group row" style=" padding-top: 20px;">
+						<label for="IsFeatured" class="col-2 col-form-label text-end">IsFeatured</label>
+						<div class="col-sm-4">
+							<div class="form-check form-check-inline form-control border-0">
+								<input type="checkbox" class="form-check-input"
+									   id="switch_Status" name="IsFeatured" @(Model.Obj == null || Model.Obj.IsFeatured == true || Model.Obj.ServiceId == 0 ? "checked" : "")
+									   onchange="fnChange_Switch(this, 'label_Switch_Status')">
+								<label class="form-check-label" for="switch_Status" id="label_Switch_Status" data-true="True" data-false="False">@((Model.Obj != null && Model.Obj.IsFeatured == true) || Model.Obj == null || Model.Obj.ServiceId == 0 ? "True" : "False")</label>
+							</div>
+						</div>
+					</div>
+
+					
+					<div class="form-group row pt-3">
+						<label class="col-2 col-form-label text-end">
+							Service Image
+						</label>
+						<div class="col-sm-4">
+							<input type="file"
+								   name="ImageFile"
+								   class="form-control"
+								   accept="image/*" />
+						</div>
+					</div>
+
+					
+					@if (Model.Obj?.ResumeFile != null)
+					{
+						var imgBase64 = "data:image/png;base64," +
+						Convert.ToBase64String(Model.Obj.ResumeFile);
+
+						<div class="form-group row pt-2">
+							<label class="col-2 col-form-label text-end"></label>
+							<div class="col-sm-4">
+								<img src="@imgBase64"
+									 style="height:80px;border-radius:6px;border:1px solid #ccc;" />
+							</div>
+						</div>
+					}
+
+					
+				</div>
+			</div>
+		</div>
+
+		<div class="card-footer">
+			<div class="row no-gutters">
+				<div class="col-sm-1">&nbsp;</div>
+				<div class="col-sm-6 text-left">
+					<button type="submit" class="btn btn-success btnSubmit">Save</button>
+					<button type="button" class="btn btn-danger" onclick="fnCloseParialView('divformSave', '#table_Common');">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script type="text/javascript">
+		$(document).ready(function () {
+
+		});
+
+
+	</script>
+}
