@@ -1,4 +1,4 @@
-﻿@model ResponseModel<PropertyCategory>
+﻿@model ResponseModel<Lead>
 
 @{
 	ViewBag.Title = "Index";
@@ -22,7 +22,7 @@
 			<div class="page-title-right">
 				
 					<button type="button" id="btnAddNewItem" class="btn btn-primary btn-md pull-right mr-2 divformSave_Hide"
-							onclick="fnLoadParialView('divformSave', '@Url.Action("Partial_AddEditForm", "PropertyCategory", new { area = "Admin" })');">
+						onclick="fnLoadParialView('divformSave', '@Url.Action("Partial_AddEditForm", "Lead", new { area = "Admin" })');">
 						<i class="fas fa-plus"></i> &nbsp; Add new
 					</button>
 				
@@ -30,7 +30,7 @@
 					<i class="fas fa-arrow-left"></i> &nbsp; Back To List
 				</button>
 			</div>
-			<h4 class="page-title">Property Category</h4>
+			<h4 class="page-title">Lead</h4>
 		</div>
 	</div>
 </div>
@@ -40,7 +40,7 @@
 	<div class="col-12">
 		<div class="card">
 			<div class="card-header p-0 divformSave_Display d-none">
-				<form id="formSave" action="@Url.Action("Save", "PropertyCategory", new { area = "Admin" })" method="post">
+				<form id="formSave" action="@Url.Action("Save", "Lead", new { area = "Admin" })" method="post">
 					<div class="row no-gutters" id="divformSave"></div>
 				</form>
 			</div>
@@ -55,6 +55,11 @@
 											<tr>
 												<th>#</th>
 												<th>Name</th>
+												<th>Mobile No</th>
+												<th>Email</th>
+												<th>Requirement</th>
+												<th>Assigned To</th>
+												<th>Lead Source</th>																					
 												<th>Action</th>
 											</tr>
 										</thead>
@@ -66,19 +71,20 @@
 													<tr>
 														<td></td>
 														<td>@item.Name</td>
-													    <td>
+														<td>@item.Mobile</td>
+														<td>@item.Email</td>
+														@* <td>@item.Description</td> *@
+														<td>@item.Requirement</td>
+														<td>@item.AssignedTo_Text</td>
+														<td>@item.LeadSource_TEXT</td>
+														<td>
 															<div class="btn-group">
 																
 																	<button type="button" class="btn btn-info btn-sm btn-flat" data-toggle="tooltip" data-placement="top" title="Edit"
-																			onclick="fnLoadParialView('divformSave', '@Url.Action("Partial_AddEditForm", "PropertyCategory", new { area = "Admin" })?Id=@item.Id');">
+																		onclick="fnLoadParialView('divformSave', '@Url.Action("Partial_AddEditForm", "Lead", new { area = "Admin" })?Id=@item.Id');">
 																		<i class="ri-pencil-fill"></i>
-																	</button>
-																
-																	<button type="button" class="btn btn-danger btn-sm btn-flat ml-2" data-toggle="tooltip" data-placement="top" title="Delete"
-																			onclick="fnDelete_Confirm('@Url.Action("DeleteConfirmed", "PropertyCategory", new { area = "Admin" })?Id=@item.Id');">
-																		<i class="ri-delete-bin-2-line"></i>
-																	</button>
-																
+																	</button>																
+																	
 															</div>
 														</td>
 													</tr>
@@ -105,7 +111,53 @@
 		});
 
 
-	
+		function fnChange_Area($this,$selector) {
+
+			if (typeof $selector != 'undefined' && $selector != null && $selector.length > 0) {
+				ShowLoader(true);
+
+				 // if (typeof $type != 'undefined' && $type != null && $type.length > 0 && $type == 'STATE') {
+					// $('#District_Id').empty().append('<option value="0">-- Select --</option>');
+					// $('#Taluka_Id').empty().append('<option value="0">-- Select --</option>');
+					// $('#Village_Id').empty().append('<option value="0">-- Select --</option>');
+				 // }
+				 // else if (typeof $type != 'undefined' && $type != null && $type.length > 0 && $type == 'DISTRICT') {
+					// $('#Taluka_Id').empty().append('<option value="0">-- Select --</option>');
+					// $('#Village_Id').empty().append('<option value="0">-- Select --</option>');
+
+				 // }
+				 // else if (typeof $type != 'undefined' && $type != null && $type.length > 0 && $type == 'TALUKA') {
+					// $('#Village_Id').empty().append('<option value="0">-- Select --</option>');
+				 // }
+
+
+
+
+				var Dropdown = $($selector);
+				Dropdown.empty();
+				Dropdown.append('<option value="0">-- Select --</option>');
+
+				var $url = '@Url.Action("GetArea", "Property")?&Id=' + $($this).val();
+
+				$.ajax({
+					url: $url,
+					type: 'GET',
+					data: {},
+					dataType: "json",
+					success: function (response) {
+						debugger;
+						ShowLoader(false);
+						$.each(response, function (index, state) {
+							Dropdown.append('<option value="' + state.Value + '">' + state.Text + '</option>');
+						});
+
+					},
+					failure: function () { ShowLoader(false); CommonAlert_Error(null); },
+					error: function () { ShowLoader(false); CommonAlert_Error(null); }
+				});
+			}
+
+		}
 
 		// function fnChange_Select($id) {
 

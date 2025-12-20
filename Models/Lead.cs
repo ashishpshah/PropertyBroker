@@ -6,9 +6,7 @@ namespace Broker.Models;
 
 public partial class Lead : EntitiesBase
 {
-	[NotMapped] public override long Id { get; set; }
-
-	public long LeadId { get; set; }
+	public override long Id { get; set; }	
 
     public string? Name { get; set; }
 
@@ -18,7 +16,7 @@ public partial class Lead : EntitiesBase
 
     public string? Requirement { get; set; }
 
-    public string? PreferredAreaId { get; set; }
+    public long? Preferred_Area_Id { get; set; }
 
     public long? PropertyType { get; set; }
 
@@ -26,11 +24,14 @@ public partial class Lead : EntitiesBase
 
     public long? AssignedTo { get; set; }
 
-    public long? PreferredCityId { get; set; }
+    public long? Preferred_City_Id { get; set; }
 
     public string? Landmark { get; set; }
 
-    public long? LeadSourceId { get; set; }
+    public string? LeadSource_Value { get; set; }
+    public string? LeadSource_TEXT { get; set; }
+    public string? Property_Type_TEXT { get; set; }
+    public string? AssignedTo_Text { get; set; }
 
     public decimal? BudgetMin { get; set; }
 

@@ -72,60 +72,57 @@ namespace Broker.Infra.Services
         }
 
         public static bool IsValidEmail(string email)
-		{
-			if (string.IsNullOrWhiteSpace(email))
-				return false;
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
 
-			try
-			{
-				// Normalize the domain
-				email = Regex.Replace(email, @"(@)(.+)$", DomainMapper, RegexOptions.None, TimeSpan.FromMilliseconds(200));
+            // ❌ Reject capital letters
+            if (email.Any(char.IsUpper))
+                return false;
 
-				// Examines the domain part of the email and normalizes it.
-				string DomainMapper(Match match)
-				{
-					// Use IdnMapping class to convert Unicode domain names.
-					var idn = new IdnMapping();
+            try
+            {
+                email = Regex.Replace(email, @"(@)(.+)$", DomainMapper, RegexOptions.None, TimeSpan.FromMilliseconds(200));
 
-					// Pull out and process domain name (throws ArgumentException on invalid)
-					string domainName = idn.GetAscii(match.Groups[2].Value);
+                string DomainMapper(Match match)
+                {
+                    var idn = new IdnMapping();
+                    string domainName = idn.GetAscii(match.Groups[2].Value);
+                    return match.Groups[1].Value + domainName;
+                }
+            }
+            catch
+            {
+                return false;
+            }
 
-					return match.Groups[1].Value + domainName;
-				}
-			}
-			catch (RegexMatchTimeoutException e)
-			{
-				return false;
-			}
-			catch (ArgumentException e)
-			{
-				return false;
-			}
+            try
+            {
+                if (email.Contains(","))
+                {
+                    foreach (var item in email.Split(','))
+                    {
+                        if (!Regex.IsMatch(item,
+                            @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z",
+                            RegexOptions.None, TimeSpan.FromMilliseconds(250)))
+                            return false;
+                    }
+                    return true;
+                }
+                else
+                {
+                    return Regex.IsMatch(email,
+                        @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z",
+                        RegexOptions.None, TimeSpan.FromMilliseconds(250));
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
-			try
-			{
-				if (email.Contains(","))
-				{
-					foreach (var item in email.Split(','))
-					{
-						if (Regex.IsMatch(item,
-						@"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z",
-						RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250))) continue;
-						else { break; return false; }
-					}
-					return true;
-				}
-				else
-					return Regex.IsMatch(email,
-						@"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z",
-						RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
-			}
-			catch (RegexMatchTimeoutException)
-			{
-				return false;
-			}
-		}
-		public static bool IsValidGST(string strIn) => Regex.IsMatch((strIn.ToUpper() ?? ""), @"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$");
+        public static bool IsValidGST(string strIn) => Regex.IsMatch((strIn.ToUpper() ?? ""), @"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$");
 		public static bool IsValidPanNo(string strIn) => Regex.IsMatch((strIn.ToUpper() ?? ""), @"^[A-Z]{5}\d{4}[A-Z]{1}$");
 		public static List<SelectListItem> ToSelectList(DataTable table, string valueField, string textField)
 		{

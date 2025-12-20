@@ -185,7 +185,7 @@ namespace Broker.Infra
 
 			modelBuilder.Entity<Lead>(entity =>
 			{
-				entity.HasKey(e => e.LeadId).HasName("PK__Leads__73EF78FAF5903568");
+				entity.HasKey(e => e.Id).HasName("PK__Leads__73EF78FAF5903568");
 
 				entity.Property(e => e.BudgetMax).HasColumnType("decimal(12, 2)");
 				entity.Property(e => e.BudgetMin).HasColumnType("decimal(12, 2)");
@@ -201,7 +201,7 @@ namespace Broker.Infra
 				entity.Property(e => e.Name)
 					.HasMaxLength(100)
 					.IsUnicode(false);
-				entity.Property(e => e.PreferredAreaId)
+				entity.Property(e => e.Preferred_Area_Id)
 					.HasMaxLength(200)
 					.IsUnicode(false);
 				entity.Property(e => e.Requirement)
@@ -216,9 +216,9 @@ namespace Broker.Infra
 					.HasForeignKey(d => d.AssignedTo)
 					.HasConstraintName("FK_Leads_User");
 
-				entity.HasOne(d => d.LeadSource).WithMany(p => p.Leads)
-					.HasForeignKey(d => d.LeadSourceId)
-					.HasConstraintName("FK_Leads_LeadSource");
+				//entity.HasOne(d => d.LeadSource).WithMany(p => p.Leads)
+				//	.HasForeignKey(d => d)
+				//	.HasConstraintName("FK_Leads_LeadSource");
 
 			});
 
@@ -1104,11 +1104,87 @@ namespace Broker.Infra
 
 			return listObj;
 		}
-		public static List<PropertyType> Property_Sub_Type_Get(long id = 0, long Parent_Id = 0)
+
+        public static List<Lead> Lead_Get(long id = 0)
+        {
+            DateTime? nullDateTime = null;
+            var listObj = new List<Lead>();
+
+            try
+            {
+                var parameters = new List<SqlParameter>();
+                parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = id, Direction = ParameterDirection.Input, IsNullable = true });
+
+                var dt = ExecuteStoredProcedure_DataTable("SP_Leads_Get", parameters.ToList());
+
+                if (dt != null && dt.Rows.Count > 0)
+                    foreach (DataRow dr in dt.Rows)
+                        listObj.Add(new Lead()
+                        {
+                            Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
+                            Name = dr["Name"] != DBNull.Value ? Convert.ToString(dr["Name"]) : "",
+                            Mobile = dr["Mobile"] != DBNull.Value ? Convert.ToString(dr["Mobile"]) : "",
+                            Email = dr["Email"] != DBNull.Value ? Convert.ToString(dr["Email"]) : "",
+                            Requirement = dr["Requirement"] != DBNull.Value ? Convert.ToString(dr["Requirement"]) : "",
+                            Preferred_City_Id = dr["Preferred_City_Id"] != DBNull.Value ? Convert.ToInt64(dr["Preferred_City_Id"]) : 0,
+                            Preferred_Area_Id = dr["Preferred_Area_Id"] != DBNull.Value ? Convert.ToInt64(dr["Preferred_Area_Id"]) : 0,
+                            Landmark = dr["Landmark"] != DBNull.Value ? Convert.ToString(dr["Landmark"]) : "",
+                            AssignedTo_Text = dr["AssignedTo_Text"] != DBNull.Value ? Convert.ToString(dr["AssignedTo_Text"]) : "",
+                            AssignedTo = dr["AssignedTo"] != DBNull.Value ? Convert.ToInt64(dr["AssignedTo"]) : 0,
+                            PropertyType = dr["PropertyType"] != DBNull.Value ? Convert.ToInt64(dr["PropertyType"]) : 0,
+                            Property_Type_TEXT = dr["Property_Type_TEXT"] != DBNull.Value ? Convert.ToString(dr["Property_Type_TEXT"]) : "",
+                            LeadSource_Value = dr["LeadSource"] != DBNull.Value ? Convert.ToString(dr["LeadSource"]) : "",
+                            LeadSource_TEXT = dr["LeadSource_TEXT"] != DBNull.Value ? Convert.ToString(dr["LeadSource_TEXT"]) : "",
+                            BudgetMin = dr["BudgetMin"] != DBNull.Value ? Convert.ToDecimal(dr["BudgetMin"]) : 0,
+                            BudgetMax = dr["BudgetMax"] != DBNull.Value ? Convert.ToDecimal(dr["BudgetMax"]) : 0,
+                            IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
+                        });
+            }
+            catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return listObj;
+        }
+        public static (bool, string, long) Leads_Save(Lead obj = null)
+        {
+            if (obj != null)
+                try
+                {
+                    var parameters = new List<SqlParameter>();
+
+                    parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = obj.Id, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Name", SqlDbType.VarChar) { Value = obj.Name, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Mobile", SqlDbType.VarChar) { Value = obj.Mobile, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Email", SqlDbType.VarChar) { Value = obj.Email, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Requirement", SqlDbType.VarChar) { Value = obj.Requirement, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Preferred_City_Id", SqlDbType.BigInt) { Value = obj.Preferred_City_Id, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Preferred_Area_Id", SqlDbType.BigInt) { Value = obj.Preferred_Area_Id, Direction = ParameterDirection.Input, IsNullable = true });
+                    //parameters.Add(new SqlParameter("AssignedTo", SqlDbType.BigInt) { Value = obj.AssignedTo, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("PropertyType", SqlDbType.BigInt) { Value = obj.PropertyType, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Landmark", SqlDbType.VarChar) { Value = obj.Landmark, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("LeadSource", SqlDbType.VarChar) { Value = obj.LeadSource_Value, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("BudgetMin", SqlDbType.Decimal) { Value = obj.BudgetMin, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("BudgetMax", SqlDbType.Decimal) { Value = obj.BudgetMax, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.Id > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });
+
+                    var response = ExecuteStoredProcedure("SP_Leads_Save", parameters.ToArray());
+
+                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+
+                    return (msgtype.Contains("S"), message, Convert.ToInt64(strid));
+
+                }
+                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return (false, ResponseStatusMessage.Error, 0);
+        }
+        public static List<PropertyType> Property_Sub_Type_Get(long id = 0, long Parent_Id = 0)
 		{
 			DateTime? nullDateTime = null;
 			var listObj = new List<PropertyType>();
-
+			  
 			try
 			{
 				var parameters = new List<SqlParameter>();
@@ -1224,7 +1300,7 @@ namespace Broker.Infra
 					parameters.Add(new SqlParameter("AreaId", SqlDbType.BigInt) { Value = obj.AreaId, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("CategoryId", SqlDbType.BigInt) { Value = obj.CategoryId, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("TypeId", SqlDbType.BigInt) { Value = obj.TypeId, Direction = ParameterDirection.Input, IsNullable = true });
-					parameters.Add(new SqlParameter("Landmark", SqlDbType.VarChar) { Value = obj.Description, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Landmark", SqlDbType.VarChar) { Value = obj.Landmark, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("Price", SqlDbType.Decimal) { Value = obj.Price, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("AreaSqft", SqlDbType.Decimal) { Value = obj.AreaSqft, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("OwnerName", SqlDbType.VarChar) { Value = obj.OwnerName, Direction = ParameterDirection.Input, IsNullable = true });
