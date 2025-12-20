@@ -18,5 +18,4 @@ public partial class Area : EntitiesBase
 
     public virtual ICollection<Location> Locations { get; set; } = new List<Location>();
 
-    public virtual ICollection<Property> Properties { get; set; } = new List<Property>();
 }

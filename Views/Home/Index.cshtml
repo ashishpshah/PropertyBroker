@@ -4,7 +4,6 @@
 }
 
 
-<!-- Hero -->
 <section class="position-relative mt-5 pt-4">
 	<div class="container-fluid px-md-4 px-2 mt-2">
 		<div class="bg-home-one d-table w-100 shadow rounded-3 overflow-hidden" id="home">
@@ -23,7 +22,7 @@
 			</div>
 		</div>
 	</div>
-</section><!--end section-->
+</section>
 
 <section class="section pt-5">
 	<div class="container">
@@ -54,7 +53,7 @@
 												<label class="form-label fs-6">Location</label>
 												<div class="filter-search-form position-relative filter-border">
 													<i data-feather="location" class="fea icon-ex-md icons"></i>
-													<select class="form-select" id="choices-location">
+													<select class="form-select choices-select" id="choices-location">
 														@if (Model.SelectListItems != null)
 														{
 															foreach (var item in Model.SelectListItems.Where(x => x.Group == "L"))
@@ -72,7 +71,7 @@
 												<label class="form-label fs-6">Category</label>
 												<div class="filter-search-form position-relative filter-border">
 													<i data-feather="home" class="fea icon-ex-md icons"></i>
-													<select class="form-select" id="choices-PropertyCategory">
+													<select class="form-select choices-select" id="choices-PropertyCategory">
 														@if (Model.SelectListItems != null)
 														{
 															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PC"))
@@ -89,7 +88,7 @@
 											<div class="mb-3 text-start">
 												<label class="form-label fs-6">&nbsp;</label>
 												<div class="filter-search-form position-relative filter-border">
-													<select class="form-select" id="choices-PropertyType_Parent">
+													<select class="form-select choices-select" id="choices-PropertyType_Parent">
 														@if (Model.SelectListItems != null)
 														{
 															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z <= 0))
@@ -106,7 +105,7 @@
 											<div class="mb-3 text-start">
 												<label class="form-label fs-6">&nbsp;</label>
 												<div class="filter-search-form position-relative">
-													<select class="form-select" id="choices-PropertyType">
+													<select class="form-select choices-select" id="choices-PropertyType">
 														@if (Model.SelectListItems != null)
 														{
 															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0))
@@ -121,7 +120,8 @@
 
 										<div class="col-lg-3 col-md-6 col-12">
 											@* <input type="submit" id="search" name="search" style="height: 48px;" class="btn btn-primary searchbtn w-100" value="Search"> *@
-											<a href="@Url.Action("Features", "Home", new { area = "" })" class="btn btn-primary searchbtn w-100">Search</a>
+											@* <a href="@Url.Action("Features", "Home", new { area = "" })" class="btn btn-primary searchbtn w-100">Search</a> *@
+											<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable">Search</button>
 										</div>
 									</div>
 								</div>
@@ -313,3 +313,167 @@
 	</div>
 </section><!--end section-->
 <!-- End -->
+
+<div class="modal fade" id="exampleModalCenteredScrollable" tabindex="-1" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalCenteredScrollableTitle">Modal title</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="formUserData" action="@Url.Action("Search", "Home", new { area = "" })" class="needs-validation" novalidate="">
+					<div class="row g-3">
+						<div class="col-sm-6">
+							<label for="firstName" class="form-label">First name</label>
+							<input type="text" class="form-control" name="FirstName" id="firstName" data-required data-msg="Please enter First name">
+						</div>
+						<div class="col-sm-6">
+							<label for="lastName" class="form-label">Last name</label>
+							<input type="text" class="form-control" name="LastName" id="lastName" data-required data-msg="Please enter Last name">
+						</div>
+						<div class="col-12">
+							<label for="email" class="form-label">Email <span class="text-body-secondary">(Optional)</span></label>
+							<input type="email" class="form-control" name="Email" id="email" placeholder="you@example.com" data-required data-msg="Please enter Email">
+						</div>
+						<div class="col-12">
+							<label for="ContactNo" class="form-label">Contact No.</label>
+							<input type="text" class="form-control isNumberKey" name="ContactNo" id="ContactNo" maxlength="11" data-required data-msg="Please enter Contact No.">
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" onclick="fnSubmitFormHere('formUserData')">Submit</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section Scripts {
+	<script type="text/javascript">
+
+				function fnSubmitFormHere($id){
+					//ShowLoader(true);
+
+					var $form = $('#' + $id);
+
+						let formData = new FormData();
+
+						let array = $form.serializeArray();
+
+						$.each(array, function (key, input) {
+							if (typeof input.name != 'undefined' && input.name != null && input.name.length > 0 && input.name != "__RequestVerificationToken")
+								formData.append(input.name, input.value);
+						});
+						debugger;
+						formData.append("Location", $('#choices-location option:selected').val());
+						formData.append("PropertyCategory", $('#choices-PropertyCategory option:selected').val());
+						formData.append("PropertyType", $('#choices-PropertyType option:selected').val());
+
+						$.ajax({
+							type: 'POST',
+							url: $form.attr('action'),
+							data: formData,
+							cache: false,
+							contentType: false,
+							processData: false,
+							dataType: "json",
+							success: function (response) {
+								debugger;
+								try {
+									//ShowLoader(false);
+									if (response.StatusCode === 1) {
+										if (typeof response.IsConfirm != 'undefined' && response.IsConfirm != '' && response.IsConfirm != null && response.IsConfirm == true)
+											if (typeof response.Data5 != 'undefined' && response.Data5 != '' && response.Data5 != null)
+												if (typeof response.RedirectURL != 'undefined' && response.RedirectURL != '' && response.RedirectURL != null)
+													CommonConfirmed_Success_Print(response.Message, response.Data5, response.RedirectURL, null);
+												else
+													CommonConfirmed_Success_Print(response.Message, response.Data5, fnSubmitForm_Success, [response]);
+											else
+												if (typeof response.RedirectURL != 'undefined' && response.RedirectURL != '' && response.RedirectURL != null)
+													CommonConfirmed_Success(response.Message, response.RedirectURL, null);
+												else
+													CommonConfirmed_Success(response.Message, fnSubmitForm_Success, [response, $id]);
+										else
+											if (typeof response.RedirectURL != 'undefined' && response.RedirectURL != '' && response.RedirectURL != null)
+												window.location = response.RedirectURL;
+											else try { fnSubmitForm_Success(response, $id); } catch { }
+
+									}
+									else {
+										CommonAlert_Error(response.Message, null)
+									}
+								} catch {
+									window.location.reload();
+								}
+							},
+							//xhr: function () {
+							//    var fileXhr = $.ajaxSettings.xhr();
+							//    if (fileXhr.upload) {
+							//        $("progress").show();
+							//        fileXhr.upload.addEventListener("progress", function (e) {
+							//            if (e.lengthComputable) {
+							//                $("#fileProgress").attr({
+							//                    value: e.loaded,
+							//                    max: e.total
+							//                });
+							//            }
+							//        }, false);
+							//    }
+							//    return fileXhr;
+							//},
+							failure: function (response) { ShowLoader(false); CommonAlert_Error(null) },
+							error: function (response) { ShowLoader(false); CommonAlert_Error(null) }
+						});
+
+				}
+
+		let childChoices;
+
+		document.querySelectorAll('.choices-select:not([data-choices-init])')
+		  .forEach(el => {
+			new Choices(el, {
+			  searchEnabled: true,
+			  removeItemButton: true,
+			});
+			el.setAttribute('data-choices-init', 'true');
+		  });
+
+		const childSelect = document.getElementById('choices-PropertyType');
+		const originalOptions = Array.from(childSelect.options).map(o =>
+		  o.cloneNode(true)
+		);
+
+		document
+		  .getElementById('choices-PropertyType_Parent')
+		  .addEventListener('change', function () {
+			const selectedParent = this.value;
+
+			// Destroy existing Choices instance safely
+			if (childChoices) {
+			  childChoices.destroy();
+			  childChoices = null;
+			}
+
+			// Reset options
+			childSelect.innerHTML = '';
+
+			originalOptions
+			  .filter(o => o.dataset.parent === selectedParent)
+			  .forEach(o => childSelect.appendChild(o.cloneNode(true)));
+
+			// Re-initialize Choices
+			childChoices = new Choices(childSelect, {
+			  shouldSort: false,
+			  searchEnabled: true,
+			  removeItemButton: true,
+			});
+
+			// Clear selection properly
+			childChoices.removeActiveItems();
+		  });
+	</script>
+}
