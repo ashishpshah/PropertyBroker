@@ -373,17 +373,17 @@ namespace Broker.Infra
 					.HasMaxLength(200)
 					.IsUnicode(false);
 
-				entity.HasOne(d => d.Area).WithMany(p => p.Properties)
-					.HasForeignKey(d => d.AreaId)
-					.HasConstraintName("FK_Properties_Area");
+				//entity.HasOne(d => d.Area).WithMany(p => p.Properties)
+				//	.HasForeignKey(d => d.AreaId)
+				//	.HasConstraintName("FK_Properties_Area");
 
 				//entity.HasOne(d => d.Category).WithMany(p => p.Properties)
 				//	.HasForeignKey(d => d.CategoryId)
 				//	.HasConstraintName("FK_Properties_Category");
 
-				entity.HasOne(d => d.City).WithMany(p => p.Properties)
-					.HasForeignKey(d => d.CityId)
-					.HasConstraintName("FK_Properties_City");
+				//entity.HasOne(d => d.City).WithMany(p => p.Properties)
+				//	.HasForeignKey(d => d.CityId)
+				//	.HasConstraintName("FK_Properties_City");
 
 				//entity.HasOne(d => d.Type).WithMany(p => p.Properties)
 				//	.HasForeignKey(d => d.TypeId)

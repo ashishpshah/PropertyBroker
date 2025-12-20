@@ -72,7 +72,7 @@
 												<label class="form-label fs-6">Category</label>
 												<div class="filter-search-form position-relative filter-border">
 													<i data-feather="home" class="fea icon-ex-md icons"></i>
-													<select class="form-select" id="choices-catagory-rent">
+													<select class="form-select" id="choices-PropertyCategory">
 														@if (Model.SelectListItems != null)
 														{
 															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PC"))
@@ -89,7 +89,7 @@
 											<div class="mb-3 text-start">
 												<label class="form-label fs-6">&nbsp;</label>
 												<div class="filter-search-form position-relative filter-border">
-													<select class="form-select" id="choices-min-price-rent">
+													<select class="form-select" id="choices-PropertyType_Parent">
 														@if (Model.SelectListItems != null)
 														{
 															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z <= 0))
@@ -106,12 +106,12 @@
 											<div class="mb-3 text-start">
 												<label class="form-label fs-6">&nbsp;</label>
 												<div class="filter-search-form position-relative">
-													<select class="form-select" id="choices-max-price-rent">
+													<select class="form-select" id="choices-PropertyType">
 														@if (Model.SelectListItems != null)
 														{
 															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0))
 															{
-																<option value="@item.Value">@item.Text</option>
+																<option value="@item.Value" data-parent="@item.Value2">@item.Text</option>
 															}
 														}
 													</select>
