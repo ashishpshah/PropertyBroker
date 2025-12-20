@@ -1,6 +1,7 @@
 using Broker.Infra;
 using Broker.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Core.Types;
 using System.Diagnostics;
@@ -123,6 +124,37 @@ namespace Broker.Controllers
 		public IActionResult AboutUs()
 		{
 			return View();
+		}
+
+		[HttpGet]
+		public IActionResult Properties([FromQuery] PropertySerch viewModel)
+		{
+			viewModel ??= new PropertySerch();
+
+			ResponseModel<Properties> responseModel = new ResponseModel<Properties>
+			{
+				ObjList = new List<Properties>() //_context.Using<Properties>().GetByCondition(x => x.IsActive == true).OrderByDescending(x => x.Id).ToList();
+				, Data1 = viewModel
+			};
+
+			responseModel.SelectListItems = new List<SelectListItem_Custom>();
+
+			var list = _context.Using<Area>().GetByCondition(x => x.Id > 1, x => x.City).OrderBy(x => x.Id)
+						.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name + ", " + x.City.Name, "L")).Distinct().ToList();
+
+			if (list != null && list.Count() > 0) responseModel.SelectListItems.AddRange(list);
+
+			list = _context.Using<PropertyCategory>().GetByCondition(x => x.IsActive == true).OrderBy(x => x.Name)
+						.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name, "PC")).Distinct().ToList();
+
+			if (list != null && list.Count() > 0) responseModel.SelectListItems.AddRange(list);
+
+			list = _context.Using<PropertyType>().GetByCondition(x => x.IsActive == true).OrderBy(x => x.Name)
+						.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name, x.ParentId.ToString(), 1, "PT")).Distinct().ToList();
+
+			if (list != null && list.Count() > 0) responseModel.SelectListItems.AddRange(list);
+
+			return View(responseModel);
 		}
 
 		public IActionResult ContactUs()

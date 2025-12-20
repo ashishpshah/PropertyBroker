@@ -3,8 +3,14 @@
 	ViewData["Title"] = "Home Page";
 }
 
+@section Styles{
+	<style type="text/css">
+		.error{
+			display: block !important;
+		}
+	</style>
+}
 
-<!-- Hero -->
 <section class="position-relative mt-5 pt-4">
 	<div class="container-fluid px-md-4 px-2 mt-2">
 		<div class="bg-home-one d-table w-100 shadow rounded-3 overflow-hidden" id="home">
@@ -23,7 +29,7 @@
 			</div>
 		</div>
 	</div>
-</section><!--end section-->
+</section>
 
 <section class="section pt-5">
 	<div class="container">
@@ -32,13 +38,13 @@
 				<div class="features-absolute">
 					<ul class="nav nav-pills bg-white shadow border-bottom p-3 flex-row d-md-inline-flex nav-justified mb-0 rounded-top-3 position-relative overflow-hidden" id="pills-tab" role="tablist">
 						<li class="nav-item m-1">
-							<a class="nav-link py-2 px-4 active rounded-3 fw-medium" id="buy-login" data-bs-toggle="pill" href="#buy" role="tab" aria-controls="buy" aria-selected="false">
+							<a class="nav-link py-2 px-4 active rounded-3 fw-medium" id="Buy" data-bs-toggle="pill" href="#buy" role="tab" aria-controls="buy" aria-selected="false">
 								Buy
 							</a>
 						</li>
 
 						<li class="nav-item m-1">
-							<a class="nav-link py-2 px-4 rounded-3 fw-medium" id="rent-login" data-bs-toggle="pill" href="#rent" role="tab" aria-controls="rent" aria-selected="false">
+							<a class="nav-link py-2 px-4 rounded-3 fw-medium" id="Rent" data-bs-toggle="pill" href="#rent" role="tab" aria-controls="rent" aria-selected="false">
 								Rent
 							</a>
 						</li>
@@ -54,7 +60,7 @@
 												<label class="form-label fs-6">Location</label>
 												<div class="filter-search-form position-relative filter-border">
 													<i data-feather="location" class="fea icon-ex-md icons"></i>
-													<select class="form-select" id="choices-location">
+													<select class="form-select choices-select" id="choices-PropertyLocation">
 														@if (Model.SelectListItems != null)
 														{
 															foreach (var item in Model.SelectListItems.Where(x => x.Group == "L"))
@@ -72,7 +78,7 @@
 												<label class="form-label fs-6">Category</label>
 												<div class="filter-search-form position-relative filter-border">
 													<i data-feather="home" class="fea icon-ex-md icons"></i>
-													<select class="form-select" id="choices-catagory-rent">
+													<select class="form-select choices-select" id="choices-PropertyCategory">
 														@if (Model.SelectListItems != null)
 														{
 															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PC"))
@@ -89,7 +95,7 @@
 											<div class="mb-3 text-start">
 												<label class="form-label fs-6">&nbsp;</label>
 												<div class="filter-search-form position-relative filter-border">
-													<select class="form-select" id="choices-min-price-rent">
+													<select class="form-select choices-select" id="choices-PropertyType_Parent">
 														@if (Model.SelectListItems != null)
 														{
 															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z <= 0))
@@ -106,12 +112,12 @@
 											<div class="mb-3 text-start">
 												<label class="form-label fs-6">&nbsp;</label>
 												<div class="filter-search-form position-relative">
-													<select class="form-select" id="choices-max-price-rent">
+													<select class="form-select choices-select" id="choices-PropertyType">
 														@if (Model.SelectListItems != null)
 														{
 															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0))
 															{
-																<option value="@item.Value">@item.Text</option>
+																<option value="@item.Value" data-parent="@item.Value2">@item.Text</option>
 															}
 														}
 													</select>
@@ -120,8 +126,10 @@
 										</div>
 
 										<div class="col-lg-3 col-md-6 col-12">
+											<input type="hidden" name="PropertyFor" id="ListingType" value="Buy" style="display:none" />
 											@* <input type="submit" id="search" name="search" style="height: 48px;" class="btn btn-primary searchbtn w-100" value="Search"> *@
-											<a href="@Url.Action("Features", "Home", new { area = "" })" class="btn btn-primary searchbtn w-100">Search</a>
+											@* <a href="@Url.Action("Features", "Home", new { area = "" })" class="btn btn-primary searchbtn w-100">Search</a> *@
+											<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable">Search</button>
 										</div>
 									</div>
 								</div>
@@ -313,3 +321,119 @@
 	</div>
 </section><!--end section-->
 <!-- End -->
+
+<div class="modal fade" id="exampleModalCenteredScrollable" tabindex="-1" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalCenteredScrollableTitle">Modal title</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="formUserData" action="@Url.Action("Search", "Home", new { area = "" })" class="needs-validation" novalidate="">
+					<div class="row g-3">
+						<div class="col-sm-6">
+							<label for="firstName" class="form-label">First name</label>
+							<input type="text" class="form-control" name="FirstName" id="firstName" data-required data-msg="Please enter First name">
+						</div>
+						<div class="col-sm-6">
+							<label for="lastName" class="form-label">Last name</label>
+							<input type="text" class="form-control" name="LastName" id="lastName" data-required data-msg="Please enter Last name">
+						</div>
+						<div class="col-12">
+							<label for="email" class="form-label">Email <span class="text-body-secondary">(Optional)</span></label>
+							<input type="email" class="form-control" name="Email" id="email" placeholder="you@example.com" data-required data-msg="Please enter Email">
+						</div>
+						<div class="col-12">
+							<label for="ContactNo" class="form-label">Contact No.</label>
+							<input type="text" class="form-control isNumberKey" name="ContactNo" id="ContactNo" maxlength="11" data-required data-msg="Please enter Contact No.">
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" onclick="fnSubmitFormHere('formUserData')">Submit</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section Scripts {
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+	<script type="text/javascript">
+			  document
+		.querySelectorAll('#pills-tab .nav-link')
+		.forEach(tab => {
+		  tab.addEventListener('shown.bs.tab', function (e) {
+			document.getElementById('ListingType').value = e.target.id;
+		  });
+		});
+
+				function fnSubmitFormHere($id){
+					//ShowLoader(true);
+
+					var $form = $('#' + $id);
+
+
+						$form.validate({
+						  rules: {
+							Location: { required: true },
+							PropertyCategory: { required: true },
+							PropertyType: { required: true }
+						  }
+						});
+
+						const query = $form.serialize();
+
+						if (!$form.valid()) { return; }
+
+						const location = $('#choices-PropertyLocation').val();
+						const category = $('#choices-PropertyCategory').val();
+						const type = $('#choices-PropertyType').val();
+
+						const url =
+						  `@Url.Action("Properties", "Home", new { area = "" })?${query}` +
+						  `&Location=${encodeURIComponent(location)}` +
+						  `&PropertyCategory=${encodeURIComponent(category)}` +
+						  `&PropertyType=${encodeURIComponent(type)}`;
+
+						window.location.href = url;
+
+				}
+
+		let childChoices;
+
+		document.querySelectorAll('.choices-select:not([data-choices-init])')
+		  .forEach(el => {
+			const instance = new Choices(el, {
+			  searchEnabled: true,
+			  removeItemButton: true,
+			});
+
+			el._choicesInstance = instance;
+
+			el.setAttribute('data-choices-init', 'true');
+		  });
+
+		const childSelect = document.getElementById('choices-PropertyType');
+		const originalOptions = Array.from(childSelect.options).map(o =>
+		  o.cloneNode(true)
+		);
+	
+		document
+		.getElementById('choices-PropertyType_Parent')
+		.addEventListener('change', function () {
+		  const selectedParent = this.value;
+
+			const choices = childSelect._choicesInstance;
+
+			choices.clearChoices();
+			choices.setChoices(originalOptions.filter(o => o.dataset.parent === selectedParent).map(o => ({ value: o.value, label: o.text, })), 'value', 'label', true );
+
+			choices.removeActiveItems();
+		});
+	</script>
+}

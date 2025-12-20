@@ -15,6 +15,7 @@
 
 	<ItemGroup>
 	  <Compile Remove="Areas\Admin\Controllers\WarehousesController.cs" />
+	  <Compile Remove="Models\Property.cs" />
 	</ItemGroup>
 
 	
