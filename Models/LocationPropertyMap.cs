@@ -12,7 +12,7 @@ public partial class LocationPropertyMap : EntitiesBase
 
     public long? AreaId { get; set; }
 
-    public virtual Area? Area { get; set; }
+    public virtual AreasMaster? Area { get; set; }
 
     public virtual Property? Property { get; set; }
 }

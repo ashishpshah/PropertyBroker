@@ -1,0 +1,89 @@
+﻿@model ResponseModel<AreasMaster>
+
+@{
+    Layout = null;
+}
+
+<div class="col-md-12">
+    <div class="card card-info">
+
+        <div class="card-header">
+            <h3 class="card-title">@(Model.Obj != null && Model.Obj.Id > 0 ? "Edit" : "Create") Areas</h3>
+            <input type="text" class="form-control d-none" id="Id" name="Id" value="@(Model.Obj != null && Model.Obj.Id > 0 ? Model.Obj.Id.ToString() : "")">
+            <input type="text" class="form-control d-none" id="CityId" name="CityId" value="@(Model.Obj != null && Model.Obj.CityId > 0 ? Model.Obj.CityId.ToString() : "")">
+        </div>
+
+        <div class="card-body">
+            <div class="row no-gutters">
+                <div class="col-12">
+                    <div class="form-group row align-items-center">
+                        <!-- ✅ added align-items-center -->
+                        @* <label for="CityName" class="col-sm-2 col-form-label text-right">City Name</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="CityName" name="CityName" class="form-control" value="@Model.Obj.CityName" readonly />
+                        </div> *@
+
+                        <label for="Obj.AreaName" class="col-sm-2 col-form-label text-right">
+                            Area Name<span style="color:red">*</span>
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control form-control-sm"
+                                   id="AreaName" name="AreaName"
+                                   value="@Model.Obj.AreaName"
+                                   placeholder="Area Name" autocomplete="off">
+                        </div>
+                        
+                        <label class="col-sm-2 col-form-label text-right mb-0">
+                            Status
+                        </label>
+                        <div class="col-sm-4 d-flex align-items-center">
+
+                            <div class="custom-control custom-radio mr-6">
+                                <!-- ✅ spacing -->
+                                <input type="radio" id="statusActive" name="IsActive" value="true"
+                                       class="custom-control-input"
+                                       @(Model.Obj.IsActive ? "checked" : "") />
+                                <label class="custom-control-label" for="statusActive">Active</label>
+                            </div>
+
+                            <div class="custom-control custom-radio mr-6">
+                                <!-- ✅ spacing -->
+                                <input type="radio" id="statusInactive" name="IsActive" value="false"
+                                       class="custom-control-input"
+                                       @(!Model.Obj.IsActive ? "checked" : "") />
+                                <label class="custom-control-label" for="statusInactive">Inactive</label>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- ✅ ONLY spacing & alignment fixes below -->
+                    @* <div class="form-group row align-items-center">
+                        
+                    </div> *@
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card-footer">
+
+
+            <div class="col-sm-12 text-center">
+                <button type="submit" class="btn btn-success btnSubmit">Save</button>
+                <a href="@Url.Action("Index", "AreasMaster")" class="btn btn-danger">Cancel</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+    </script>
+}

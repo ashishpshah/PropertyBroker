@@ -1,0 +1,92 @@
+﻿@model ResponseModel<City>
+
+@{
+    Layout = null;
+}
+
+<div class="col-md-12">
+    <div class="card card-info">
+
+        <div class="card-header">
+            <h3 class="card-title">@(Model.Obj != null && Model.Obj.Id > 0 ? "Edit" : "Create") City</h3>
+            <input type="text" class="form-control d-none" id="Id" name="Id" value="@(Model.Obj != null && Model.Obj.Id > 0 ? Model.Obj.Id.ToString() : "")">
+        </div>
+
+        <div class="card-body">
+            <div class="row no-gutters">
+                <div class="col-12">
+                    <div class="form-group row align-items-center">
+                        <!-- ✅ added align-items-center -->
+
+                        <label for="Obj.CityName" class="col-sm-2 col-form-label text-right">
+                            City Name<span style="color:red">*</span>
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control form-control-sm"
+                                   id="CityName" name="CityName"
+                                   value="@Model.Obj.CityName"
+                                   placeholder="City Name" autocomplete="off">
+                        </div>
+
+                        <label for="Obj.State" class="col-sm-2 col-form-label text-right">
+                            State Name<span style="color:red">*</span>
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control form-control-sm"
+                                   id="State" name="State"
+                                   value="@Model.Obj.State"
+                                   placeholder="State Name" autocomplete="off">
+                        </div>
+
+                    </div>
+
+                    <!-- ✅ ONLY spacing & alignment fixes below -->
+                    <div class="form-group row align-items-center">
+                        <label class="col-sm-2 col-form-label text-right mb-0">
+                            Status
+                        </label>
+                        <div class="col-sm-4 d-flex align-items-center">
+
+                            <div class="custom-control custom-radio mr-6">
+                                <!-- ✅ spacing -->
+                                <input type="radio" id="statusActive" name="IsActive" value="true"
+                                       class="custom-control-input"
+                                       @(Model.Obj.IsActive ? "checked" : "") />
+                                <label class="custom-control-label" for="statusActive">Active</label>
+                            </div>
+
+                            <div class="custom-control custom-radio mr-6">
+                                <!-- ✅ spacing -->
+                                <input type="radio" id="statusInactive" name="IsActive" value="false"
+                                       class="custom-control-input"
+                                       @(!Model.Obj.IsActive ? "checked" : "") />
+                                <label class="custom-control-label" for="statusInactive">Inactive</label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card-footer">
+
+
+            <div class="col-sm-12 text-center">
+                <button type="submit" class="btn btn-success btnSubmit">Save</button>
+                <a href="@Url.Action("Index", "City")" class="btn btn-danger">Cancel</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+    </script>
+}
