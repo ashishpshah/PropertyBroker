@@ -14,5 +14,5 @@ public partial class LocationPropertyMap : EntitiesBase
 
     public virtual AreasMaster? Area { get; set; }
 
-    public virtual Property? Property { get; set; }
+    public virtual Properties? Property { get; set; }
 }

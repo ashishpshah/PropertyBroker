@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Broker.Models;
 
-public partial class Property : EntitiesBase
+public partial class Properties : EntitiesBase
 {
 	public override long Id { get; set; }
 

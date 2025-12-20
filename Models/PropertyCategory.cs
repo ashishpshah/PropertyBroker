@@ -5,7 +5,7 @@ namespace Broker.Models;
 
 public partial class PropertyCategory : EntitiesBase
 {
-	public override long Id { get; set; }
+	public override long Id { get; set; }	
 
-	public string? Name { get; set; }
+    public string? Name { get; set; }
 }

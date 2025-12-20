@@ -6,13 +6,11 @@ namespace Broker.Models;
 
 public partial class City : EntitiesBase
 {
-	[NotMapped] public override long Id { get; set; }
+	public override long Id { get; set; }
 
-	public long CityId { get; set; }
+	public string Name { get; set; } = null!;
 
-    public string CityName { get; set; } = null!;
-
-    public string? State { get; set; }
+	public string? State { get; set; }
 
     public virtual ICollection<AreasMaster> Areas { get; set; } = new List<AreasMaster>();
 
