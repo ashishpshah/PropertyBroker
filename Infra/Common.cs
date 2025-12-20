@@ -11,6 +11,7 @@ namespace Broker.Infra
 
 
 		public static string DateTimeFormat_ddMMyyyy => "dd/MM/yyyy";
+		public static string DateTimeFormat_ddMMMyyyy => "dd-MMM-yyyy";
 		public static string DateTimeFormat_ddMMyyyy_HHmm => "dd/MM/yyyy HH:mm";
 		public static string DateTimeFormat_ddMMyyyy_hhmm => "dd/MM/yyyy hh:mm tt";
 		public static string DateTimeFormat_ddMMyyyy_HHmmss => "dd/MM/yyyy HH:mm:ss";

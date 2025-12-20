@@ -224,7 +224,7 @@ namespace Broker.Areas.Admin.Controllers
                     {
                         CommonViewModel.IsSuccess = false;
                         CommonViewModel.StatusCode = ResponseStatusCode.Error;
-                        CommonViewModel.Message = "Please select category.";
+                        CommonViewModel.Message = "Please select property category.";
 
                         return Json(CommonViewModel);
                     }

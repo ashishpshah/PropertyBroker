@@ -224,7 +224,7 @@ namespace Broker.Infra
 
 			modelBuilder.Entity<LeadFollowup>(entity =>
 			{
-				entity.HasKey(e => e.FollowupId).HasName("PK__LeadFoll__C6356211ADB9C0A7");
+				entity.HasKey(e => e.Id).HasName("PK__LeadFoll__C6356211ADB9C0A7");
 
 				entity.Property(e => e.IsActive).HasDefaultValue(true);
 				entity.Property(e => e.IsDeleted).HasDefaultValue(false);
@@ -1096,6 +1096,7 @@ namespace Broker.Infra
 							FurnishingStatus_TEXT = dr["FurnishingStatus_TEXT"] != DBNull.Value ? Convert.ToString(dr["FurnishingStatus_TEXT"]) : "",
 							AvailabilityStatus = dr["AvailabilityStatus"] != DBNull.Value ? Convert.ToString(dr["AvailabilityStatus"]) : "",
 							AvailabilityStatus_TEXT = dr["AvailabilityStatus_TEXT"] != DBNull.Value ? Convert.ToString(dr["AvailabilityStatus_TEXT"]) : "",
+							Remark = dr["Remark"] != DBNull.Value ? Convert.ToString(dr["Remark"]) : "",
 							IsFeatured = dr["IsFeatured"] != DBNull.Value ? Convert.ToBoolean(dr["IsFeatured"]) : false,
 							IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
 						});
@@ -1135,8 +1136,40 @@ namespace Broker.Infra
                             Property_Type_TEXT = dr["Property_Type_TEXT"] != DBNull.Value ? Convert.ToString(dr["Property_Type_TEXT"]) : "",
                             LeadSource_Value = dr["LeadSource"] != DBNull.Value ? Convert.ToString(dr["LeadSource"]) : "",
                             LeadSource_TEXT = dr["LeadSource_TEXT"] != DBNull.Value ? Convert.ToString(dr["LeadSource_TEXT"]) : "",
+                            Status = dr["Status"] != DBNull.Value ? Convert.ToString(dr["Status"]) : "",
+                            Status_TEXT = dr["Status_TEXT"] != DBNull.Value ? Convert.ToString(dr["Status_TEXT"]) : "",
                             BudgetMin = dr["BudgetMin"] != DBNull.Value ? Convert.ToDecimal(dr["BudgetMin"]) : 0,
                             BudgetMax = dr["BudgetMax"] != DBNull.Value ? Convert.ToDecimal(dr["BudgetMax"]) : 0,
+                            IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
+                        });
+            }
+            catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return listObj;
+        }
+
+        public static List<LeadFollowup> LeadFollowUp_Get(long id = 0, long LeadId = 0)
+        {
+            DateTime? nullDateTime = null;
+            var listObj = new List<LeadFollowup>();
+
+            try
+            {
+                var parameters = new List<SqlParameter>();
+                parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = id, Direction = ParameterDirection.Input, IsNullable = true });
+                parameters.Add(new SqlParameter("LeadId", SqlDbType.BigInt) { Value = LeadId, Direction = ParameterDirection.Input, IsNullable = true });
+
+                var dt = ExecuteStoredProcedure_DataTable("SP_LeadFollowups_Get", parameters.ToList());
+
+                if (dt != null && dt.Rows.Count > 0)
+                    foreach (DataRow dr in dt.Rows)
+                        listObj.Add(new LeadFollowup()
+                        {
+                            Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
+                            LeadId = dr["LeadId"] != DBNull.Value ? Convert.ToInt64(dr["LeadId"]) : 0,
+                            NextFollowupDate = dr["NextFollowupDate"] != DBNull.Value ? Convert.ToDateTime(dr["NextFollowupDate"]) : nullDateTime,
+                            ReminderDatetime = dr["ReminderDatetime"] != DBNull.Value ? Convert.ToDateTime(dr["ReminderDatetime"]) : nullDateTime,
+                            Remark = dr["Remark"] != DBNull.Value ? Convert.ToString(dr["Remark"]) : "",
                             IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
                         });
             }
@@ -1168,6 +1201,35 @@ namespace Broker.Infra
                     parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.Id > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });
 
                     var response = ExecuteStoredProcedure("SP_Leads_Save", parameters.ToArray());
+
+                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+
+                    return (msgtype.Contains("S"), message, Convert.ToInt64(strid));
+
+                }
+                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return (false, ResponseStatusMessage.Error, 0);
+        }
+
+        public static (bool, string, long) LeadFollowUp_Save(LeadFollowup obj = null)
+        {
+            if (obj != null)
+                try
+                {
+                    var parameters = new List<SqlParameter>();
+
+                    parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = obj.Id, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("LeadId", SqlDbType.BigInt) { Value = obj.LeadId, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("NextFollowupDate", SqlDbType.DateTime) { Value = obj.NextFollowupDate, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("ReminderDatetime", SqlDbType.DateTime) { Value = obj.ReminderDatetime, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Remark", SqlDbType.VarChar) { Value = obj.Remark, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.Id > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });
+
+                    var response = ExecuteStoredProcedure("SP_LeadFollowups_Save", parameters.ToArray());
 
                     var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
                     var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
@@ -1353,7 +1415,33 @@ namespace Broker.Infra
 
 			return (false, ResponseStatusMessage.Error);
 		}
-		public static (bool, string) Employee_Status(long Id = 0, long Logged_In_VendorId = 0, bool IsActive = false, bool IsDelete = false)
+
+        public static (bool, string) Lead_Status_Change(long Id = 0, string Remarks = "" , string Status = "")
+        {
+            if (Id > 0)
+                try
+                {
+                    var parameters = new List<SqlParameter>();
+
+                    parameters.Add(new SqlParameter("LeadId", SqlDbType.BigInt) { Value = Id, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Status", SqlDbType.VarChar) { Value = Status, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Remarks", SqlDbType.VarChar) { Value = Remarks, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+
+                    var response = ExecuteStoredProcedure("SP_LeadFollowUp_Status_Change", parameters.ToArray());
+
+                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+
+                    return (msgtype.Contains("S"), message);
+
+                }
+                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return (false, ResponseStatusMessage.Error);
+        }
+        public static (bool, string) Employee_Status(long Id = 0, long Logged_In_VendorId = 0, bool IsActive = false, bool IsDelete = false)
 		{
 			if (Id > 0)
 				try
@@ -1382,6 +1470,110 @@ namespace Broker.Infra
 			return (false, ResponseStatusMessage.Error);
 		}
 
-	}
+
+        public static List<ServicesMaster> ServicesMaster_Get(long id = 0)
+        {
+            DateTime? nullDateTime = null;
+            var listObj = new List<ServicesMaster>();
+
+            try
+            {
+                var parameters = new List<SqlParameter>();
+                parameters.Add(new SqlParameter("ServiceId", SqlDbType.BigInt) { Value = id, Direction = ParameterDirection.Input, IsNullable = true });
+
+                var dt = ExecuteStoredProcedure_DataTable("SP_ServiceMaster_Get", parameters.ToList());
+
+                if (dt != null && dt.Rows.Count > 0)
+                    foreach (DataRow dr in dt.Rows)
+                        listObj.Add(new ServicesMaster()
+                        {
+                            ServiceId = dr["ServiceId"] != DBNull.Value ? Convert.ToInt64(dr["ServiceId"]) : 0,
+                            ServiceTitle = dr["ServiceTitle"] != DBNull.Value ? Convert.ToString(dr["ServiceTitle"]) : "",
+                            ShortDescription = dr["ShortDescription"] != DBNull.Value ? Convert.ToString(dr["ShortDescription"]) : "",
+                            FullDescription = dr["FullDescription"] != DBNull.Value ? Convert.ToString(dr["FullDescription"]) : "",
+                            ImageName = dr["ImageName"] != DBNull.Value ? Convert.ToString(dr["ImageName"]) : "",
+                            DisplayOrder = dr["DisplayOrder"] != DBNull.Value ? Convert.ToInt32(dr["DisplayOrder"]) : 0,
+                            IsFeatured = dr["IsFeatured"] != DBNull.Value ? Convert.ToBoolean(dr["IsFeatured"]) : false,
+                            ResumeFile = dr["ResumeFile"] != DBNull.Value ? (byte[])dr["ResumeFile"] : null,
+                            IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
+                        });
+            }
+            catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return listObj;
+        }
+
+
+        public static (bool, string, long) ServicesMaster_Save(ServicesMaster obj = null)
+        {
+            if (obj != null)
+                try
+                {
+                    var parameters = new List<SqlParameter>();
+
+                    parameters.Add(new SqlParameter("ServiceId", SqlDbType.BigInt) { Value = obj.ServiceId, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("ServiceTitle", SqlDbType.VarChar) { Value = obj.ServiceTitle, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("ShortDescription", SqlDbType.VarChar) { Value = obj.ShortDescription, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("FullDescription", SqlDbType.VarChar) { Value = obj.FullDescription, Direction = ParameterDirection.Input, IsNullable = true });
+
+                    parameters.Add(new SqlParameter("ImageName", SqlDbType.VarChar, 255)
+                    {
+                        Value = (object)obj.ImageName ?? DBNull.Value
+                    });
+
+                    parameters.Add(new SqlParameter("ResumeFile", SqlDbType.VarBinary)
+                    {
+                        Value = (object)obj.ResumeFile ?? DBNull.Value
+                    });
+
+                    parameters.Add(new SqlParameter("DisplayOrder", SqlDbType.Int) { Value = obj.DisplayOrder, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("IsFeatured", SqlDbType.Bit)
+                    {
+                        Value = obj.IsFeatured
+                    });
+                    //parameters.Add(new SqlParameter("IsActive", SqlDbType.NVarChar) { Value = obj.IsActive, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.ServiceId > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });
+
+                    var response = ExecuteStoredProcedure("SP_ServicesMaster_Save", parameters.ToArray());
+
+                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+
+                    return (msgtype.Contains("S"), message, Convert.ToInt64(strid));
+
+                }
+                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return (false, ResponseStatusMessage.Error, 0);
+        }
+
+
+        public static (bool, string) ServicesMaster_Delete(long Id = 0)
+        {
+            if (Id > 0)
+                try
+                {
+                    var parameters = new List<SqlParameter>();
+
+                    parameters.Add(new SqlParameter("ServiceId", SqlDbType.BigInt) { Value = Id, Direction = ParameterDirection.Input, IsNullable = true });
+                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+
+                    var response = ExecuteStoredProcedure("sp_ServicesMaster_Delete", parameters.ToArray());
+
+                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+
+                    return (msgtype.Contains("S"), message);
+
+                }
+                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return (false, ResponseStatusMessage.Error);
+        }
+
+    }
 
 }
