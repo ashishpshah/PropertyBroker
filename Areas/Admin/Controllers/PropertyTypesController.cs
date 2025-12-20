@@ -85,7 +85,7 @@ namespace Broker.Areas.Admin.Controllers
                     {
                         CommonViewModel.IsSuccess = false;
                         CommonViewModel.StatusCode = ResponseStatusCode.Error;
-                        CommonViewModel.Message = "Please enter name.";
+                        CommonViewModel.Message = viewModel.ParentId >0? "Please enter property sub type name.": "Please enter property type name.";
 
                         return Json(CommonViewModel);
                     }

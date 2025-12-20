@@ -60,7 +60,7 @@ namespace Broker.Areas.Admin.Controllers
                     {
                         CommonViewModel.IsSuccess = false;
                         CommonViewModel.StatusCode = ResponseStatusCode.Error;
-                        CommonViewModel.Message = "Please enter name.";
+                        CommonViewModel.Message = "Please enter property category name.";
 
                         return Json(CommonViewModel);
                     }

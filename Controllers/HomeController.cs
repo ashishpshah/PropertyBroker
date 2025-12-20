@@ -98,7 +98,7 @@ namespace Broker.Controllers
 
 			CommonViewModel.SelectListItems = new List<SelectListItem_Custom>();
 
-			var list = _context.Using<Area>().GetByCondition(x => x.Id > 1, x => x.City).OrderBy(x => x.Id)
+			var list = _context.Using<AreasMaster>().GetByCondition(x => x.Id > 1, x => x.City).OrderBy(x => x.Id)
 						.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name + ", " + x.City.Name, "L")).Distinct().ToList();
 
 			if (list != null && list.Count() > 0) CommonViewModel.SelectListItems.AddRange(list);
@@ -139,7 +139,7 @@ namespace Broker.Controllers
 					Name = viewModel.FirstName + " " + viewModel.LastName,
 					Email = viewModel.Email,
 					Mobile = viewModel.ContactNo,
-					LeadSourceId = (long)_context.Using<LeadSource>().GetByCondition(x => x.LeadSourceName.ToLower().Contains("website")).Select(x => x.LeadSourceId).FirstOrDefault()
+					LeadSource_Value = (string)_context.Using<LovMaster>().GetByCondition(x => x.LovDesc.ToLower().Contains("website")).Select(x => x.LovCode).FirstOrDefault()
 				};
 
 				_context.Using<Lead>().Add(lead);
@@ -154,7 +154,7 @@ namespace Broker.Controllers
 
 			responseModel.SelectListItems = new List<SelectListItem_Custom>();
 
-			var list = _context.Using<Area>().GetByCondition(x => x.Id > 1, x => x.City).OrderBy(x => x.Id)
+			var list = _context.Using<AreasMaster>().GetByCondition(x => x.Id > 1, x => x.City).OrderBy(x => x.Id)
 						.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name + ", " + x.City.Name, "L")).Distinct().ToList();
 
 			if (list != null && list.Count() > 0) responseModel.SelectListItems.AddRange(list);

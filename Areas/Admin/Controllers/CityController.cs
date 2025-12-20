@@ -28,7 +28,7 @@ namespace Broker.Areas.Admin.Controllers
                         CommonViewModel.ObjList.Add(new City()
                         {
                             Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
-                            CityName = dr["Name"] != DBNull.Value ? Convert.ToString(dr["Name"]) : "",
+                            Name = dr["Name"] != DBNull.Value ? Convert.ToString(dr["Name"]) : "",
                             State = dr["State"] != DBNull.Value ? Convert.ToString(dr["State"]) : "",
                             IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
                         });
@@ -64,7 +64,7 @@ namespace Broker.Areas.Admin.Controllers
                         obj = new City()
                         {
                             Id = dt.Rows[0]["Id"] != DBNull.Value ? Convert.ToInt64(dt.Rows[0]["Id"]) : 0,
-                            CityName = dt.Rows[0]["Name"] != DBNull.Value ? Convert.ToString(dt.Rows[0]["Name"]) : "",
+                            Name = dt.Rows[0]["Name"] != DBNull.Value ? Convert.ToString(dt.Rows[0]["Name"]) : "",
                             State = dt.Rows[0]["State"] != DBNull.Value ? Convert.ToString(dt.Rows[0]["State"]) : "",
                             IsActive = dt.Rows[0]["IsActive"] != DBNull.Value ? Convert.ToBoolean(dt.Rows[0]["IsActive"]) : false
                         };
@@ -82,7 +82,7 @@ namespace Broker.Areas.Admin.Controllers
         {
             try
             {
-                if (string.IsNullOrEmpty(viewModel.CityName))
+                if (string.IsNullOrEmpty(viewModel.Name))
                 {
                     CommonViewModel.IsSuccess = false;
                     CommonViewModel.StatusCode = ResponseStatusCode.Error;
@@ -95,7 +95,7 @@ namespace Broker.Areas.Admin.Controllers
                 List<SqlParameter> oParams = new List<SqlParameter>();
 
                 oParams.Add(new SqlParameter("@CityId", SqlDbType.BigInt) { Value = viewModel.Id });
-                oParams.Add(new SqlParameter("@CityName", SqlDbType.VarChar) { Value = viewModel.CityName ?? "" });
+                oParams.Add(new SqlParameter("@CityName", SqlDbType.VarChar) { Value = viewModel.Name ?? "" });
                 oParams.Add(new SqlParameter("@State", SqlDbType.VarChar) { Value = viewModel.State ?? "" });
                 oParams.Add(new SqlParameter("@IsActive", SqlDbType.Bit) { Value = viewModel.IsActive});
                 oParams.Add(new SqlParameter("@Operated_By", SqlDbType.BigInt) { Value = AppHttpContextAccessor.GetSession(SessionKey.KEY_USER_ID) });
