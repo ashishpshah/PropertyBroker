@@ -9,5 +9,5 @@ public partial class PropertyAmenity : EntitiesBase
 
 	public string Name { get; set; } = null!;
 
-    public int? DisplayOrder { get; set; }
+    public int DisplayOrder { get; set; }
 }

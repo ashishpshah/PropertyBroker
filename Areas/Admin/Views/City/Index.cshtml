@@ -70,7 +70,7 @@
 																@if (@* Model.IsDelete ==  *@true && item.IsDeleted == false)
 																{
 																	<button type="button" class="btn btn-danger btn-sm btn-flat ml-2" data-toggle="tooltip" data-placement="top" title="Delete"
-																			onclick="fnDelete_Confirm('@Url.Action("DeleteConfirmed", "City", new { area = "Admin" })?Id=@item.Id');">
+																			onclick="fnDelete_Confirm('@Url.Action("DeleteConfirmed", "City", new { area = "Admin" })?Id=@item.Id=0&cityId=@item.Id');">
 																		<i class="ri-delete-bin-2-line"></i>
 																	</button>
 																}

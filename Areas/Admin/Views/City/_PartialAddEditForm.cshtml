@@ -42,27 +42,15 @@
 
                     <!-- ✅ ONLY spacing & alignment fixes below -->
                     <div class="form-group row align-items-center">
-                        <label class="col-sm-2 col-form-label text-right mb-0">
-                            Status
-                        </label>
-                        <div class="col-sm-4 d-flex align-items-center">
 
-                            <div class="custom-control custom-radio mr-6">
-                                <!-- ✅ spacing -->
-                                <input type="radio" id="statusActive" name="IsActive" value="true"
-                                       class="custom-control-input"
-                                       @(Model.Obj.IsActive ? "checked" : "") />
-                                <label class="custom-control-label" for="statusActive">Active</label>
+                        <label for="IsActive" class="col-2 col-form-label text-end">Status</label>
+                        <div class="col-sm-4">
+                            <div class="form-check form-check-inline form-control border-0">
+                                <input type="checkbox" class="form-check-input"
+                                       id="switch_Status" name="IsActive" @(Model.Obj == null || Model.Obj.IsActive == true || Model.Obj.Id == 0 ? "checked" : "")
+                                       onchange="fnChange_Switch(this, 'label_Switch_Status')">
+                                <label class="form-check-label" for="switch_Status" id="label_Switch_Status" data-true="Active" data-false="Inactive">@((Model.Obj != null && Model.Obj.IsActive == true) || Model.Obj == null || Model.Obj.Id == 0 ? "Active" : "Inactive")</label>
                             </div>
-
-                            <div class="custom-control custom-radio mr-6">
-                                <!-- ✅ spacing -->
-                                <input type="radio" id="statusInactive" name="IsActive" value="false"
-                                       class="custom-control-input"
-                                       @(!Model.Obj.IsActive ? "checked" : "") />
-                                <label class="custom-control-label" for="statusInactive">Inactive</label>
-                            </div>
-
                         </div>
                     </div>
 

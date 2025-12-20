@@ -1,4 +1,4 @@
-﻿@model ResponseModel<AreasMaster>
+﻿@model ResponseModel<PropertyAmenity>
 
 @{
     Layout = null;
@@ -8,9 +8,8 @@
     <div class="card card-info">
 
         <div class="card-header">
-            <h3 class="card-title">@(Model.Obj != null && Model.Obj.Id > 0 ? "Edit" : "Create") Area</h3>
+            <h3 class="card-title">@(Model.Obj != null && Model.Obj.Id > 0 ? "Edit" : "Create") Amenity</h3>
             <input type="text" class="form-control d-none" id="Id" name="Id" value="@(Model.Obj != null && Model.Obj.Id > 0 ? Model.Obj.Id.ToString() : "")">
-            <input type="text" class="form-control d-none" id="CityId" name="CityId" value="@(Model.Obj != null && Model.Obj.CityId > 0 ? Model.Obj.CityId.ToString() : "")">
         </div>
 
         <div class="card-body">
@@ -24,14 +23,32 @@
                         </div> *@
 
                         <label for="Obj.AreaName" class="col-sm-2 col-form-label text-right">
-                            Area Name<span style="color:red">*</span>
+                            Amenity Name<span style="color:red">*</span>
                         </label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control form-control-sm"
                                    id="Name" name="Name"
                                    value="@Model.Obj.Name"
-                                   placeholder="Area Name" autocomplete="off">
+                                   placeholder="Amenity Name" autocomplete="off">
                         </div>
+                        <label for="DisplayOrder" class="col-sm-2 col-form-label text-right">
+                            Display Order
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control form-control-sm isNumberKey"
+                                   id="DisplayOrder" name="DisplayOrder"
+                                   value="@(Model.Obj.DisplayOrder > 0 ? Model.Obj.DisplayOrder.ToString() : "")"
+                                   placeholder=""
+                                   autocomplete="off"
+                                   maxlength="10">
+                        </div>
+                        
+                        
+
+                    </div>
+
+                    <!-- ✅ ONLY spacing & alignment fixes below -->
+                    <div class="form-group row align-items-center">
 
                         <label for="IsActive" class="col-2 col-form-label text-end">Status</label>
                         <div class="col-sm-4">
@@ -42,13 +59,7 @@
                                 <label class="form-check-label" for="switch_Status" id="label_Switch_Status" data-true="Active" data-false="Inactive">@((Model.Obj != null && Model.Obj.IsActive == true) || Model.Obj == null || Model.Obj.Id == 0 ? "Active" : "Inactive")</label>
                             </div>
                         </div>
-
                     </div>
-
-                    <!-- ✅ ONLY spacing & alignment fixes below -->
-                    @* <div class="form-group row align-items-center">
-                        
-                    </div> *@
 
                 </div>
             </div>
@@ -60,7 +71,7 @@
 
             <div class="col-sm-12 text-center">
                 <button type="submit" class="btn btn-success btnSubmit">Save</button>
-                <a href="@Url.Action("Index", "AreasMaster")" class="btn btn-danger">Cancel</a>
+                <a href="@Url.Action("Index", "PropertyAmenity")" class="btn btn-danger">Cancel</a>
             </div>
 
         </div>
@@ -72,5 +83,6 @@
         $(document).ready(function () {
 
         });
+
     </script>
 }

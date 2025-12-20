@@ -1,4 +1,4 @@
-﻿@model ResponseModel<AreasMaster>
+﻿@model ResponseModel<PropertyAmenity>
 
 @{
 	ViewBag.Title = "Index";
@@ -13,15 +13,15 @@
 				@if (@* Model.IsCreate ==  *@true)
 				{
 					<button type="button" id="btnAddNewItem" class="btn btn-primary btn-md pull-right mr-2"
-							onclick="fnLoadParialView('divformSave', '@Url.Action("Partial_AddEditForm", "AreasMaster", new { area = "Admin" })?Id=@Model.Obj.Id&cityId=@Model.Obj.CityId');">
-						<i class="fas fa-plus"></i> &nbsp; Add New Areas
+							onclick="fnLoadParialView('divformSave', '@Url.Action("Partial_AddEditForm", "PropertyAmenity", new { area = "Admin" })');">
+						<i class="fas fa-plus"></i> &nbsp; Add New Amenity
 					</button>
 				}
 				<button type="button" id="btnBackToList" class="btn btn-warning btn-md pull-right mr-2 d-none" onclick="fnBackToList();">
 					<i class="fas fa-arrow-left"></i> &nbsp; Back To List
 				</button>
 			</div>
-			<h4 class="page-title">Areas</h4>
+			<h4 class="page-title">Amenity</h4>
 		</div>
 	</div>
 </div>
@@ -33,16 +33,12 @@
 	<div class="col-12">
 		<div class="card">
 			<div class="card-header p-0 divformSave_Display d-none">
-				<form id="formSave" action="@Url.Action("Save", "AreasMaster", new { area = "Admin" })" method="post">
+				<form id="formSave" action="@Url.Action("Save", "PropertyAmenity", new { area = "Admin" })" method="post">
 					<div class="row no-gutters" id="divformSave"></div>
 				</form>
 			</div>
 			<div class="card-header" style=" margin: 5px !important;">
 				<div class="form-group row">
-					<label for="CityName" class="col-sm-2 col-form-label text-right">City Name</label>
-					<div class="col-sm-4">
-						<input type="text" id="CityName" name="CityName" class="form-control" value="@Model.Obj.CityName" readonly />
-					</div>
 				</div>
 
 			</div>
@@ -54,7 +50,7 @@
 								<div class="table-responsive" data-pattern="priority-columns">
 									<table class="table table-sm table-bordered table-striped dt-responsive nowrap w-100 table_Common_SrNo">
 										<thead>
-											<tr><th>#</th><th>Area Name</th>@* <th>Status</th>*@<th>Action</th></tr>
+											<tr><th>#</th><th>Name</th>@* <th>Status</th>*@<th>Action</th></tr>
 										</thead>
 										<tbody>
 
@@ -70,14 +66,14 @@
 																@if (@* Model.IsUpdate ==  *@true)
 																{
 																	<button type="button" class="btn btn-info btn-sm btn-flat" data-toggle="tooltip" data-placement="top" title="Edit"
-																			onclick="fnLoadParialView('divformSave', '@Url.Action("Partial_AddEditForm", "AreasMaster", new { area = "Admin" })?Id=@item.Id&cityId=@item.CityId');">
+																			onclick="fnLoadParialView('divformSave', '@Url.Action("Partial_AddEditForm", "PropertyAmenity", new { area = "Admin" })?Id=@item.Id');">
 																		<i class="ri-pencil-fill"></i>
 																	</button>
 																}
 																@if (@* Model.IsDelete ==  *@true && item.IsDeleted == false)
 																{
 																	<button type="button" class="btn btn-danger btn-sm btn-flat ml-2" data-toggle="tooltip" data-placement="top" title="Delete"
-																			onclick="fnDelete_Confirm('@Url.Action("DeleteConfirmed", "AreasMaster", new { area = "Admin" })?Id=@item.Id&cityId=@item.CityId');">
+																			onclick="fnDelete_Confirm('@Url.Action("DeleteConfirmed", "PropertyAmenity", new { area = "Admin" })?Id=@item.Id');">
 																		<i class="ri-delete-bin-2-line"></i>
 																	</button>
 																}

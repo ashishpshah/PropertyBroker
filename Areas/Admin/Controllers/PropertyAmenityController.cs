@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+
 using Broker.Models;
 using Broker.Infra;
 using System.Data;
@@ -8,43 +9,45 @@ using Broker.Controllers;
 namespace Broker.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class CityController : BaseController<ResponseModel<City>>
+    public class PropertyAmenityController : BaseController<ResponseModel<PropertyAmenity>>
     {
-        public CityController(IRepositoryWrapper repository) : base(repository) { }
+        public PropertyAmenityController(IRepositoryWrapper repository) : base(repository) { }
         public IActionResult Index()
         {
             try
             {
                 var dt = new DataTable();
-                CommonViewModel.ObjList = new List<City>();
-                CommonViewModel.Obj = new City();
+                CommonViewModel.ObjList = new List<PropertyAmenity>();
+                CommonViewModel.Obj = new PropertyAmenity();
                 List<SqlParameter> oParam = new List<SqlParameter>();
-                oParam.Add(new SqlParameter("@CityId", SqlDbType.BigInt) { Value = 0 });
-                dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_Cities_Get", oParam, true);
+                oParam.Add(new SqlParameter("@AmenityId", SqlDbType.BigInt) { Value = 0 });
+
+                dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_PropertyAmenities_Get", oParam, true);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     foreach (DataRow dr in dt.Rows)
                     {
-                        CommonViewModel.ObjList.Add(new City()
+                        CommonViewModel.ObjList.Add(new PropertyAmenity()
                         {
                             Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
                             Name = dr["Name"] != DBNull.Value ? Convert.ToString(dr["Name"]) : "",
-                            State = dr["State"] != DBNull.Value ? Convert.ToString(dr["State"]) : "",
+                            DisplayOrder = dr["DisplayOrder"] != DBNull.Value ? Convert.ToInt32(dr["DisplayOrder"]) : 0,
                             IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
                         });
                     }
                 }
             }
+
             catch (Exception ex) { LogService.LogInsert(GetCurrentAction(), "", ex); }
+
             return View(CommonViewModel);
         }
-
         [HttpGet]
 
         public IActionResult Partial_AddEditForm(int Id = 0)
         {
 
-            var obj = new City();
+            var obj = new PropertyAmenity();
 
             var dt = new DataTable();
 
@@ -55,17 +58,17 @@ namespace Broker.Areas.Admin.Controllers
             {
                 if (Id > 0)
                 {
-                    oParam.Add(new SqlParameter("@CityId", SqlDbType.BigInt) { Value = Id == 0 ? null : Id });
+                    oParam.Add(new SqlParameter("@AmenityId", SqlDbType.BigInt) { Value = Id == 0 ? null : Id });
 
-                    dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_Cities_Get", oParam, true);
+                    dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_PropertyAmenities_Get", oParam, true);
 
                     if (dt != null && dt.Rows.Count > 0)
                     {
-                        obj = new City()
+                        obj = new PropertyAmenity()
                         {
                             Id = dt.Rows[0]["Id"] != DBNull.Value ? Convert.ToInt64(dt.Rows[0]["Id"]) : 0,
+                            DisplayOrder = dt.Rows[0]["DisplayOrder"] != DBNull.Value ? Convert.ToInt32(dt.Rows[0]["DisplayOrder"]) : 0,
                             Name = dt.Rows[0]["Name"] != DBNull.Value ? Convert.ToString(dt.Rows[0]["Name"]) : "",
-                            State = dt.Rows[0]["State"] != DBNull.Value ? Convert.ToString(dt.Rows[0]["State"]) : "",
                             IsActive = dt.Rows[0]["IsActive"] != DBNull.Value ? Convert.ToBoolean(dt.Rows[0]["IsActive"]) : false
                         };
                     }
@@ -76,9 +79,8 @@ namespace Broker.Areas.Admin.Controllers
             CommonViewModel.Obj = obj;
             return PartialView("_PartialAddEditForm", CommonViewModel);
         }
-        [HttpPost]
 
-        public JsonResult Save(City viewModel)
+        public JsonResult Save(PropertyAmenity viewModel)
         {
             try
             {
@@ -86,7 +88,7 @@ namespace Broker.Areas.Admin.Controllers
                 {
                     CommonViewModel.IsSuccess = false;
                     CommonViewModel.StatusCode = ResponseStatusCode.Error;
-                    CommonViewModel.Message = "Please enter City Name.";
+                    CommonViewModel.Message = "Please enter Area Name.";
 
                     return Json(CommonViewModel);
                 }
@@ -94,14 +96,14 @@ namespace Broker.Areas.Admin.Controllers
                 var (IsSuccess, response, Id) = (false, ResponseStatusMessage.Error, 0M);
                 List<SqlParameter> oParams = new List<SqlParameter>();
 
-                oParams.Add(new SqlParameter("@CityId", SqlDbType.BigInt) { Value = viewModel.Id });
-                oParams.Add(new SqlParameter("@CityName", SqlDbType.VarChar) { Value = viewModel.Name ?? "" });
-                oParams.Add(new SqlParameter("@State", SqlDbType.VarChar) { Value = viewModel.State ?? "" });
-                oParams.Add(new SqlParameter("@IsActive", SqlDbType.Bit) { Value = viewModel.IsActive});
+                oParams.Add(new SqlParameter("@AmenityId", SqlDbType.BigInt) { Value = viewModel.Id });
+                oParams.Add(new SqlParameter("@AmenityName", SqlDbType.VarChar) { Value = viewModel.Name ?? "" });
+                oParams.Add(new SqlParameter("@DisplayOrder", SqlDbType.BigInt) { Value = viewModel.DisplayOrder});
+                oParams.Add(new SqlParameter("@IsActive", SqlDbType.Bit) { Value = viewModel.IsActive });
                 oParams.Add(new SqlParameter("@Operated_By", SqlDbType.BigInt) { Value = AppHttpContextAccessor.GetSession(SessionKey.KEY_USER_ID) });
                 oParams.Add(new SqlParameter("@Action", SqlDbType.VarChar) { Value = viewModel.Id == 0 ? "INSERT" : "UPDATE" });
 
-                (IsSuccess, response, Id) = DataContext_Command.ExecuteStoredProcedure("SP_Cities_Save", oParams, true);
+                (IsSuccess, response, Id) = DataContext_Command.ExecuteStoredProcedure("SP_PropertyAmenities_Save", oParams, true);
 
                 CommonViewModel.IsConfirm = true;
                 CommonViewModel.IsSuccess = IsSuccess;
@@ -121,34 +123,29 @@ namespace Broker.Areas.Admin.Controllers
             }
             return Json(CommonViewModel);
         }
-        public ActionResult DeleteConfirmed(long Id = 0, long CityId = 0)
+        public ActionResult DeleteConfirmed(long Id = 0)
         {
             var parameters = new List<SqlParameter>();
-            parameters.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = Id, Direction = ParameterDirection.Input });
-            parameters.Add(new SqlParameter("@CityId", SqlDbType.Int) { Value = CityId, Direction = ParameterDirection.Input });
+            parameters.Add(new SqlParameter("@AmenityId", SqlDbType.Int) { Value = Id, Direction = ParameterDirection.Input });
             parameters.Add(new SqlParameter("@Operated_By", SqlDbType.Int) { Value = AppHttpContextAccessor.GetSession(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input });
 
-            var response = DataContext_Command.ExecuteStoredProcedure("sp_Cities_Delete", parameters.ToArray());
+            var response = DataContext_Command.ExecuteStoredProcedure("sp_PropertyAmenities_Delete", parameters.ToArray());
 
-            var msgtype = response.Split('|');   // 👈 added
+            var msgtype = response;
 
-            CommonViewModel.IsConfirm = true;
-            CommonViewModel.Message = msgtype.Length > 1 ? msgtype[1] : response; // 👈 clean message
-
-            if (msgtype[0] == "S")   // 👈 check only first part
+            if (msgtype.Contains("S"))
             {
+                CommonViewModel.IsConfirm = true;
                 CommonViewModel.IsSuccess = true;
+                CommonViewModel.Message = msgtype;
                 CommonViewModel.StatusCode = ResponseStatusCode.Success;
-                CommonViewModel.RedirectURL = Url.Action("Index", "City");
+                CommonViewModel.RedirectURL = Url.Action("Index", "PropertyAmenity");
+                return Json(CommonViewModel);
             }
-            else
-            {
-                CommonViewModel.IsSuccess = false;
-                CommonViewModel.StatusCode = ResponseStatusCode.Error;
-            }
-
+            CommonViewModel.IsConfirm = true;
+            CommonViewModel.IsSuccess = false;
+            CommonViewModel.StatusCode = ResponseStatusCode.Error;
             return Json(CommonViewModel);
-
         }
     }
 }
