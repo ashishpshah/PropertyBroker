@@ -83,7 +83,7 @@ namespace Broker.Areas.Admin.Controllers
                     {
                         CommonViewModel.IsSuccess = false;
                         CommonViewModel.StatusCode = ResponseStatusCode.Error;
-                        CommonViewModel.Message = "Please enter DisplayOrder.";
+                        CommonViewModel.Message = "Please enter Display Order.";
 
                         return Json(CommonViewModel);
                     }
@@ -98,7 +98,7 @@ namespace Broker.Areas.Admin.Controllers
                     }
 
 
-                    if (viewModel.ImageFile == null || viewModel.ImageFile.Length == 0)
+                    if (viewModel.ServiceId == 0 && (viewModel.ImageFile == null || viewModel.ImageFile.Length == 0))
                     {
                         CommonViewModel.IsSuccess = false;
                         CommonViewModel.StatusCode = ResponseStatusCode.Error;
