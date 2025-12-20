@@ -14,7 +14,7 @@ namespace Broker.Infra
 
 		public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
-		public virtual DbSet<Area> Areas { get; set; }
+		public virtual DbSet<AreasMaster> Areas { get; set; }
 
 		public virtual DbSet<City> Cities { get; set; }
 
@@ -74,7 +74,7 @@ namespace Broker.Infra
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<Area>(entity =>
+			modelBuilder.Entity<AreasMaster>(entity =>
 			{
 				entity.HasKey(e => e.Id).HasName("PK__Areas__70B8204855D6F241");
 

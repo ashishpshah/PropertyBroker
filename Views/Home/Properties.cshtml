@@ -66,25 +66,15 @@
 							<li class="list-inline-item mb-0 me-2">
 								<div class="custom-control custom-radio custom-control-inline">
 									<div class="form-check mb-0">
-										<input class="form-check-input" checked type="radio" name="flexRadioDefault" id="buy">
+										<input class="form-check-input" type="radio" name="flexRadioDefault" id="Buy" @(Model.Data1.PropertyFor == "Buy" ? "checked" : "")>
 										<label class="form-check-label" for="buy">For Buy</label>
 									</div>
 								</div>
 							</li>
-							@* 
-							<li class="list-inline-item mb-0">
-								<div class="custom-control custom-radio custom-control-inline">
-									<div class="form-check mb-0">
-										<input class="form-check-input" checked type="radio" name="flexRadioDefault" id="sell">
-										<label class="form-check-label" for="sell">For Sell</label>
-									</div>
-								</div>
-							</li>
- *@
 							<li class="list-inline-item mb-0 me-2">
 								<div class="custom-control custom-radio custom-control-inline">
 									<div class="form-check mb-0">
-										<input class="form-check-input" checked type="radio" name="flexRadioDefault" id="rent">
+										<input class="form-check-input" type="radio" name="flexRadioDefault" id="Rent" @(Model.Data1.PropertyFor == "Buy" ? "checked" : "")>
 										<label class="form-check-label" for="rent">For Rent</label>
 									</div>
 								</div>
@@ -96,29 +86,68 @@
 					<!-- Categories -->
 					<div class="mt-4">
 						<h6 class="mb-0">Categories</h6>
-						<select class="form-select form-control border mt-2" aria-label="Default select example">
-							<option value="re">Residential</option>
-							<option value="la">Land</option>
-							<option value="co">Commercial</option>
-							<option value="ind">Industrial</option>
-							<option value="inv">Investment</option>
+						<select class="form-select choices-select" id="choices-PropertyCategory">
+							@if (Model.SelectListItems != null)
+							{
+								foreach (var item in Model.SelectListItems.Where(x => x.Group == "PC"))
+								{
+									if (Convert.ToString(propertySerch.PropertyCategory) == item.Value)
+									{
+										<option value="@item.Value" selected>@item.Text</option>
+									}
+									else
+									{
+										<option value="@item.Value">@item.Text</option>
+									}
+								}
+							}
 						</select>
 					</div>
 					<!-- Categories -->
 					<!-- Location -->
 					<div class="mt-4">
-						<h6 class="mb-0">Location</h6>
-
-						<select class="form-select form-control border mt-2" aria-label="Default select example">
-							<option value="NY">New York</option>
-							<option value="MC">North Carolina</option>
-							<option value="SC">South Carolina</option>
+						<h6 class="mb-0">Property Type</h6>
+						<select class="form-select choices-select" id="choices-PropertyType_Parent">
+							@if (Model.SelectListItems != null)
+							{
+								foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z <= 0))
+								{
+									if (Convert.ToString(propertySerch.PropertyType_Parent) == item.Value)
+									{
+										<option value="@item.Value" selected>@item.Text</option>
+									}
+									else
+									{
+										<option value="@item.Value">@item.Text</option>
+									}
+								}
+							}
+						</select>
+					</div>
+					<div class="mt-4">
+						<h6 class="mb-0">&nbsp;</h6>
+						<select class="form-select choices-select" id="choices-PropertyType">
+							@if (Model.SelectListItems != null)
+							{
+								foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z <= 0))
+								{
+									if (Convert.ToString(propertySerch.PropertyType) == item.Value)
+									{
+										<option value="@item.Value" selected>@item.Text</option>
+									}
+									else
+									{
+										<option value="@item.Value">@item.Text</option>
+									}
+								}
+							}
 						</select>
 					</div>
 					<!-- Location -->
 
 					<div class="mt-4">
-						<a href="" class="btn btn-primary w-100">Apply Filter</a>
+						<input type="hidden" name="PropertyFor" id="ListingType" value="@Model.Data1.PropertyFor" style="display:none" />
+						<button role="button" class="btn btn-primary w-100" onclick="fnSubmitFormHere()">Search</button>
 					</div>
 				</div>
 			</div>
@@ -544,3 +573,61 @@
 	</div>
 </section><!--end section-->
 <!-- End -->
+@section Scripts {
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+	<script type="text/javascript">
+
+		document.querySelectorAll('.choices-select:not([data-choices-init])')
+		  .forEach(el => {
+			const instance = new Choices(el, {
+			  searchEnabled: true,
+			  removeItemButton: true,
+			});
+
+			el._choicesInstance = instance;
+
+			el.setAttribute('data-choices-init', 'true');
+		  });
+
+				function fnSubmitFormHere(){
+					const checkedId = $('input[name="flexRadioDefault"]:checked').attr('id');
+					const location = $('#choices-PropertyLocation').val();
+					const category = $('#choices-PropertyCategory').val();
+					const type_Parent = $('#choices-PropertyType_Parent').val();
+					const type = $('#choices-PropertyType').val();
+
+					const url =
+					  `@Url.Action("Properties", "Home", new { area = "" })?` +
+					  `&PropertyFor=${encodeURIComponent(checkedId)}` +
+					  `&Location=${encodeURIComponent(location)}` +
+					  `&PropertyCategory=${encodeURIComponent(category)}` +
+					  `&PropertyType_Parent=${encodeURIComponent(type_Parent)}` +
+					  `&PropertyType=${encodeURIComponent(type)}`;
+
+					window.location.href = url;
+
+				}
+
+
+		let childChoices;
+
+		const childSelect = document.getElementById('choices-PropertyType');
+		const originalOptions = Array.from(childSelect.options).map(o =>
+		  o.cloneNode(true)
+		);
+
+		document
+		.getElementById('choices-PropertyType_Parent')
+		.addEventListener('change', function () {
+		  const selectedParent = this.value;
+
+			const choices = childSelect._choicesInstance;
+
+			choices.clearChoices();
+			choices.setChoices(originalOptions.filter(o => o.dataset.parent === selectedParent).map(o => ({ value: o.value, label: o.text, })), 'value', 'label', true );
+
+			choices.removeActiveItems();
+		});
+	</script>
+}

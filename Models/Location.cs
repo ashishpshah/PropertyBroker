@@ -16,5 +16,5 @@ public partial class Location : EntitiesBase
 
     public string? Pincode { get; set; }
 
-    public virtual Area Area { get; set; } = null!;
+    public virtual AreasMaster Area { get; set; } = null!;
 }
