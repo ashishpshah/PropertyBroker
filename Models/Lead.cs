@@ -21,6 +21,7 @@ public partial class Lead : EntitiesBase
     public long? PropertyType { get; set; }
 
     public string? Status { get; set; }
+    public string? Status_TEXT { get; set; }
 
     public long? AssignedTo { get; set; }
 

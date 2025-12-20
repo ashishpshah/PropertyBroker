@@ -1485,11 +1485,11 @@ function fnDelete_Confirm(url) {
     });
 }
 
-function fnUpdateStatus_Confirm(url) {
+function fnUpdateStatus_Confirm(url , message) {
 
     Swal.fire({
         icon: "warning",
-        title: "Are you sure to complete this inquiry?",
+        title: message,
         //type: "error",
         showCancelButton: true,
         confirmButtonColor: '#3085d6',

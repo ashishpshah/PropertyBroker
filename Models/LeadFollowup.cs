@@ -6,15 +6,14 @@ namespace Broker.Models;
 
 public partial class LeadFollowup : EntitiesBase
 {
-	[NotMapped] public override long Id { get; set; }
-
-	public long FollowupId { get; set; }
+	public override long Id { get; set; }
 
     public long? LeadId { get; set; }
 
+    public string? Name { get; set; }
     public string? Remark { get; set; }
 
-    public DateOnly? NextFollowupDate { get; set; }
+    public DateTime? NextFollowupDate { get; set; }
 
     public DateTime? ReminderDatetime { get; set; }
 

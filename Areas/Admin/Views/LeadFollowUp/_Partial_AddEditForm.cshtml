@@ -1,0 +1,66 @@
+﻿@model ResponseModel<LeadFollowup>
+
+@{
+	Layout = null;
+}
+
+<div class="col-md-12">
+	<div class="card card-info">
+
+		<div class="card-header">
+			<h3 class="card-title">@(Model.Obj != null && Model.Obj.Id > 0 ? "Edit" : "Create") Property Sub Type</h3>
+			<input type="text" class="form-control d-none" id="Id" name="Id" value="@(Model.Obj != null && Model.Obj.Id > 0 ? Model.Obj.Id.ToString() : "")">
+			<input type="text" class="form-control d-none" id="LeadId" name="LeadId" value="@(Model.Obj != null && Model.Obj.LeadId > 0 ? Model.Obj.LeadId.ToString() : "")">
+		</div>
+
+		<div class="card-body form-horizontal">
+			<div class="row no-gutters">
+				<div class="col-12">
+					<div class="form-group row">
+						<label for="Name" class="col-2 col-form-label text-end">Next FollowUp Date</label>
+						<div class="col-sm-4">
+							<input type="date" class="form-control form-control-sm" id="NextFollowupDate" name="NextFollowupDate" value="@Model.Obj.NextFollowupDate?.ToString("yyyy-MM-dd")"
+								   placeholder="Next FollowUp Date" autocomplete="off">
+						</div>
+						<label for="Name" class="col-2 col-form-label text-end">Reminder Date</label>
+						<div class="col-sm-4">
+							<input type="date" class="form-control form-control-sm" id="ReminderDatetime" name="ReminderDatetime" value="@Model.Obj.ReminderDatetime?.ToString("yyyy-MM-dd")"
+								   placeholder="Reminder Date" autocomplete="off">
+						</div>
+					</div>
+					<div class="form-group row" style=" padding-top: 20px;">
+						<label for="Obj.DealerName" class="col-sm-2 col-form-label text-end">Remark</label>
+						<div class="col-sm-10">
+							<textarea class="form-control" rows="4" cols="40" id="Remark" name="Remark" value="@Model.Obj.Remark" placeholder="Remark" autocomplete="off">@Model.Obj.Remark</textarea>
+						</div>
+					</div>
+
+
+				
+
+
+				</div>
+			</div>
+		</div>
+
+		<div class="card-footer">
+			<div class="row no-gutters">
+				<div class="col-sm-1">&nbsp;</div>
+				<div class="col-sm-6 text-left">
+					<button type="submit" class="btn btn-success btnSubmit">Save</button>
+					<button type="button" class="btn btn-danger" onclick="fnCloseParialView('divformSave', '#table_Common');">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script type="text/javascript">
+		$(document).ready(function () {
+
+		});
+
+
+	</script>
+}
