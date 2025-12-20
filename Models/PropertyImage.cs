@@ -17,7 +17,7 @@ public partial class PropertyImage : EntitiesBase
 
     public byte[]? ResumeFile { get; set; }
 
-    public virtual Property? Property { get; set; }
+    public virtual Properties? Property { get; set; }
 
 	[NotMapped] public override long CreatedBy { get; set; }
 

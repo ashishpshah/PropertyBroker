@@ -1,0 +1,238 @@
+﻿@model ResponseModel<Properties>
+
+@{
+	Layout = null;
+}
+
+<div class="col-md-12">
+	<div class="card card-info">
+
+		<div class="card-header">
+			<h3 class="card-title">@(Model.Obj != null && Model.Obj.Id > 0 ? "Edit" : "Create") Property</h3>
+			<input type="text" class="form-control d-none" id="Id" name="Id" value="@(Model.Obj != null && Model.Obj.Id > 0 ? Model.Obj.Id.ToString() : "")">
+		</div>
+
+		<div class="card-body form-horizontal">
+			<div class="row no-gutters">
+				<div class="col-12">
+					<div class="form-group row" style=" padding-top: 20px;">
+						<label for="Name" class="col-2 col-form-label text-end">Title<span style="color:red">*</span></label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control " id="Title" name="Title" value="@Model.Obj.Title"
+								   placeholder="Title" autocomplete="off">
+						</div>
+						<label for="Name" class="col-2 col-form-label text-end">Description<span style="color:red">*</span></label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control " id="Description" name="Description" value="@Model.Obj.Description"
+								   placeholder="Description" autocomplete="off">
+						</div>
+					</div>
+
+					<div class="form-group row" style=" padding-top: 20px;">
+						<label for="Name" class="col-2 col-form-label text-end">City<span style="color:red">*</span></label>
+						<div class="col-sm-4">
+							<select class="form-control  show-tick select2" id="CityId" name="CityId" onchange="fnChange_Area(this , '#AreaId')">
+								<option value="0">-- Select --</option>
+								@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
+								{
+									foreach (SelectListItem_Custom item in Model.SelectListItems.Where(x => x.Group == "City"))
+									{
+										if (item.Value.ToString() == Model.Obj.CityId.ToString())
+										{
+											<option value="@item.Value" selected>@item.Text</option>
+										}
+										else
+										{
+											<option value="@item.Value">@item.Text</option>
+										}
+									}
+								}
+							</select>
+
+						</div>
+						<label for="Name" class="col-2 col-form-label text-end">Area<span style="color:red">*</span></label>
+						<div class="col-sm-4">
+							<select class="form-control  show-tick select2" id="AreaId" name="AreaId">
+								<option value="0">-- Select --</option>
+								@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
+								{
+									foreach (SelectListItem_Custom item in Model.SelectListItems.Where(x => x.Group == "Area"))
+									{
+										if (item.Value.ToUpper() == Model.Obj.AreaId.ToString())
+										{
+											<option value="@item.Value" selected>@item.Text</option>
+										}
+										else
+										{
+											<option value="@item.Value">@item.Text</option>
+										}
+									}
+								}
+							</select>
+
+						</div>
+					</div>
+
+					<div class="form-group row" style=" padding-top: 20px;">
+						<label for="Name" class="col-2 col-form-label text-end">Landmark</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control " id="Landmark" name="Landmark" value="@Model.Obj.Landmark"
+								   placeholder="Landmark" autocomplete="off">
+						</div>
+						<label for="Name" class="col-2 col-form-label text-end">Property Category<span style="color:red">*</span></label>
+						<div class="col-sm-4">
+							<select class="form-control  show-tick select2" id="CategoryId" name="CategoryId">
+								<option value="0">-- Select --</option>
+								@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
+								{
+									foreach (SelectListItem_Custom item in Model.SelectListItems.Where(x => x.Group == "PropertyCategory"))
+									{
+										if (item.Value.ToString() == Model.Obj.CategoryId.ToString())
+										{
+											<option value="@item.Value" selected>@item.Text</option>
+										}
+										else
+										{
+											<option value="@item.Value">@item.Text</option>
+										}
+									}
+								}
+							</select>
+						</div>						
+					</div>
+					<div class="form-group row" style=" padding-top: 20px;">
+						<label for="Name" class="col-2 col-form-label text-end">Property Type<span style="color:red">*</span></label>
+						<div class="col-sm-4">
+							<select class="form-control  show-tick select2" id="TypeId" name="TypeId">
+								<option value="0">-- Select --</option>
+								@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
+								{
+									foreach (SelectListItem_Custom item in Model.SelectListItems.Where(x => x.Group == "PropertyType"))
+									{
+										if (item.Value.ToUpper() == Model.Obj.TypeId.ToString())
+										{
+											<option value="@item.Value" selected>@item.Text</option>
+										}
+										else
+										{
+											<option value="@item.Value">@item.Text</option>
+										}
+									}
+								}
+							</select>
+
+						</div>
+						<label for="Name" class="col-2 col-form-label text-end">Price<span style="color:red">*</span></label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control  isNumberKey_Decimal" id="Price" name="Price" value="@Model.Obj.Price"
+								   placeholder="Price" maxlength="12" autocomplete="off">
+						</div>
+					</div>
+					<div class="form-group row" style=" padding-top: 20px;">
+						<label for="Name" class="col-2 col-form-label text-end">Area Square Ft<span style="color:red">*</span></label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control  isNumberKey_Decimal" id="AreaSqft" name="AreaSqft" value="@Model.Obj.AreaSqft"
+								   placeholder="Area Square Ft" autocomplete="off" maxlength="12">
+						</div>
+						<label for="Name" class="col-2 col-form-label text-end">Owner Name<span style="color:red">*</span></label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control  id="OwnerName" name="OwnerName" value="@Model.Obj.OwnerName"
+								   placeholder="Owner Name" autocomplete="off">
+						</div>
+					</div>
+					<div class="form-group row" style=" padding-top: 20px;">
+						<label for="Name" class="col-2 col-form-label text-end">Owner Mobile No<span style="color:red">*</span></label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control  isNumberKey" id="OwnerMobile" name="OwnerMobile" value="@Model.Obj.OwnerMobile"
+								   placeholder="Owner Mobile No" autocomplete="off" maxlength="10" >
+						</div>
+						<label for="Name" class="col-2 col-form-label text-end">Builder Name<span style="color:red">*</span></label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control " id="BuilderName" name="BuilderName" value="@Model.Obj.BuilderName"
+								   placeholder="Builder Name" autocomplete="off">
+						</div>
+					</div>
+					<div class="form-group row" style=" padding-top: 20px;">
+						<label for="Name" class="col-2 col-form-label text-end">Floor No</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control  isNumberKey" id="FloorNo" name="FloorNo" value="@Model.Obj.FloorNo"
+								   placeholder="Floor No" autocomplete="off" maxlength="10">
+						</div>
+						<label for="Name" class="col-2 col-form-label text-end">Total Floors</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control  isNumberKey" id="TotalFloors" name="TotalFloors" value="@Model.Obj.TotalFloors"
+								   placeholder="Total Floors" autocomplete="off">
+						</div>
+					</div>
+					<div class="form-group row" style=" padding-top: 20px;">
+						<label for="Name" class="col-2 col-form-label text-end">Facing</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control " id="Facing" name="Facing" value="@Model.Obj.Facing"
+								   placeholder="Facing" autocomplete="off" maxlength="10">
+						</div>
+						<label for="Name" class="col-2 col-form-label text-end">Furnishing Status</label>
+						<div class="col-sm-4">
+							<select class="form-control  show-tick select2" id="FurnishingStatus" name="FurnishingStatus">
+								<option value="0">-- Select --</option>
+								@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
+								{
+									foreach (SelectListItem_Custom item in Model.SelectListItems.Where(x => x.Group == "FURNISHINGSTATUS"))
+									{
+										if (item.Value.ToUpper() == Model.Obj.FurnishingStatus.ToString())
+										{
+											<option value="@item.Value" selected>@item.Text</option>
+										}
+										else
+										{
+											<option value="@item.Value">@item.Text</option>
+										}
+									}
+								}
+							</select>
+
+						</div>
+					</div>					
+					<div class="form-group row" style=" padding-top: 20px;">
+						<label for="Obj.DealerName" class="col-sm-2 col-form-label text-end">Remark</label>
+						<div class="col-sm-10">
+							<textarea class="form-control" rows="4" cols="40" id="Remark" name="Remark" value="@Model.Obj.Remark" placeholder="Remark" autocomplete="off">@Model.Obj.Remark</textarea>
+						</div>
+					</div>
+					<div class="form-group row" style=" padding-top: 20px;">
+						<label for="IsActive" class="col-2 col-form-label text-end">Status</label>
+						<div class="col-sm-4">
+							<div class="form-check form-check-inline form-control border-0">
+								<input type="checkbox" class="form-check-input"
+									   id="switch_Status" name="IsActive" @(Model.Obj == null || Model.Obj.IsActive == true || Model.Obj.Id == 0 ? "checked" : "")
+									   onchange="fnChange_Switch(this, 'label_Switch_Status')">
+								<label class="form-check-label" for="switch_Status" id="label_Switch_Status" data-true="Active" data-false="Inactive">@((Model.Obj != null && Model.Obj.IsActive == true) || Model.Obj == null || Model.Obj.Id == 0 ? "Active" : "Inactive")</label>
+							</div>
+						</div>
+					</div>
+
+					
+				</div>
+			</div>
+		</div>
+
+		<div class="card-footer">
+			<div class="row no-gutters">
+				<div class="col-sm-1">&nbsp;</div>
+				<div class="col-sm-6 text-left">
+					<button type="submit" class="btn btn-success btnSubmit">Save</button>
+					<button type="button" class="btn btn-danger" onclick="fnCloseParialView('divformSave', '#table_Common');">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script type="text/javascript">
+		$(document).ready(function () {
+
+		});
+
+
+	</script>
+}
