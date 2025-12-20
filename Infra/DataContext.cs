@@ -1096,6 +1096,7 @@ namespace Broker.Infra
 							FurnishingStatus_TEXT = dr["FurnishingStatus_TEXT"] != DBNull.Value ? Convert.ToString(dr["FurnishingStatus_TEXT"]) : "",
 							AvailabilityStatus = dr["AvailabilityStatus"] != DBNull.Value ? Convert.ToString(dr["AvailabilityStatus"]) : "",
 							AvailabilityStatus_TEXT = dr["AvailabilityStatus_TEXT"] != DBNull.Value ? Convert.ToString(dr["AvailabilityStatus_TEXT"]) : "",
+							Remark = dr["Remark"] != DBNull.Value ? Convert.ToString(dr["Remark"]) : "",
 							IsFeatured = dr["IsFeatured"] != DBNull.Value ? Convert.ToBoolean(dr["IsFeatured"]) : false,
 							IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
 						});
