@@ -56,10 +56,57 @@ namespace Broker.Areas.Admin.Controllers
                     {
                         CommonViewModel.IsSuccess = false;
                         CommonViewModel.StatusCode = ResponseStatusCode.Error;
-                        CommonViewModel.Message = "Please enter name.";
+                        CommonViewModel.Message = "Please enter Service Title.";
 
                         return Json(CommonViewModel);
                     }
+
+                    if (string.IsNullOrEmpty(viewModel.ShortDescription))
+                    {
+                        CommonViewModel.IsSuccess = false;
+                        CommonViewModel.StatusCode = ResponseStatusCode.Error;
+                        CommonViewModel.Message = "Please enter Short Description.";
+
+                        return Json(CommonViewModel);
+                    }
+
+                    if (string.IsNullOrEmpty(viewModel.FullDescription))
+                    {
+                        CommonViewModel.IsSuccess = false;
+                        CommonViewModel.StatusCode = ResponseStatusCode.Error;
+                        CommonViewModel.Message = "Please enter Full Description.";
+
+                        return Json(CommonViewModel);
+                    }
+
+                    if (viewModel.DisplayOrder == 0)
+                    {
+                        CommonViewModel.IsSuccess = false;
+                        CommonViewModel.StatusCode = ResponseStatusCode.Error;
+                        CommonViewModel.Message = "Please enter DisplayOrder.";
+
+                        return Json(CommonViewModel);
+                    }
+
+                    if (!viewModel.IsFeatured.HasValue)
+                    {
+                        CommonViewModel.IsSuccess = false;
+                        CommonViewModel.StatusCode = ResponseStatusCode.Error;
+                        CommonViewModel.Message = "Please select IsFeatured.";
+
+                        return Json(CommonViewModel);
+                    }
+
+
+                    if (viewModel.ImageFile == null || viewModel.ImageFile.Length == 0)
+                    {
+                        CommonViewModel.IsSuccess = false;
+                        CommonViewModel.StatusCode = ResponseStatusCode.Error;
+                        CommonViewModel.Message = "Please upload an image.";
+
+                        return Json(CommonViewModel);
+                    }
+
                     if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
                     {
                         var allowedExt = new[] { ".jpg", ".jpeg", ".png", ".webp" };

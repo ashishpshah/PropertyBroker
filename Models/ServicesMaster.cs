@@ -19,7 +19,7 @@ public partial class ServicesMaster : EntitiesBase
 
     public int DisplayOrder { get; set; }
 
-    public bool IsFeatured { get; set; }
+    public bool? IsFeatured { get; set; }
 
     public byte[]? ResumeFile { get; set; }
 

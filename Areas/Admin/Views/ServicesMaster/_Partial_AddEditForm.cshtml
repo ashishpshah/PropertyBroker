@@ -8,7 +8,7 @@
 	<div class="card card-info">
 
 		<div class="card-header">
-			<h3 class="card-title">@(Model.Obj != null && Model.Obj.ServiceId > 0 ? "Edit" : "Create") Property</h3>
+			<h3 class="card-title">@(Model.Obj != null && Model.Obj.ServiceId > 0 ? "Edit" : "Create") Services</h3>
 			<input type="text" class="form-control d-none" id="ServiceId" name="ServiceId" value="@(Model.Obj != null && Model.Obj.ServiceId > 0 ? Model.Obj.ServiceId.ToString() : "")">
 		</div>
 
@@ -16,35 +16,35 @@
 			<div class="row no-gutters">
 				<div class="col-12">
 					<div class="form-group row" style=" padding-top: 20px;">
-						<label for="ServiceTitle" class="col-2 col-form-label text-end">ServiceTitle<span style="color:red">*</span></label>
+						<label for="ServiceTitle" class="col-2 col-form-label text-end">Service Title<span style="color:red">*</span></label>
 						<div class="col-sm-4">
 							<input type="text" class="form-control " id="ServiceTitle" name="ServiceTitle" value="@Model.Obj.ServiceTitle"
-								   placeholder="ServiceTitle" autocomplete="off">
+								   placeholder="Service Title" autocomplete="off">
 						</div>
-						<label for="ShortDescription" class="col-2 col-form-label text-end">ShortDescription<span style="color:red">*</span></label>
+						<label for="ShortDescription" class="col-2 col-form-label text-end">Short Description<span style="color:red">*</span></label>
 						<div class="col-sm-4">
 							<input type="text" class="form-control " id="ShortDescription" name="ShortDescription" value="@Model.Obj.ShortDescription"
-								   placeholder="ShortDescription" autocomplete="off">
+								   placeholder="Short Description" autocomplete="off">
 						</div>
 					</div>
 
 					<div class="form-group row" style=" padding-top: 20px;">
-						<label for="FullDescription" class="col-2 col-form-label text-end">FullDescription<span style="color:red">*</span></label>
+						<label for="FullDescription" class="col-2 col-form-label text-end">Full Description<span style="color:red">*</span></label>
 						<div class="col-sm-4">
 							<input type="text" class="form-control " id="FullDescription" name="FullDescription" value="@Model.Obj.FullDescription"
-								   placeholder="FullDescription" autocomplete="off">
+								   placeholder="Full Description" autocomplete="off">
 						</div>
-						<label for="DisplayOrder" class="col-2 col-form-label text-end">DisplayOrder<span style="color:red">*</span></label>
+						<label for="DisplayOrder" class="col-2 col-form-label text-end">Display Order<span style="color:red">*</span></label>
 						<div class="col-sm-4">
-							<input type="text" class="form-control " id="DisplayOrder" name="DisplayOrder" value="@Model.Obj.DisplayOrder"
-								   placeholder="DisplayOrder" autocomplete="off">
+							<input type="number" class="form-control " id="DisplayOrder" name="DisplayOrder" min="1" max="99999" oninput="this.value = this.value.slice(0,5)" value="@Model.Obj.DisplayOrder"
+								   placeholder="Display Order" autocomplete="off">
 						</div>
 					</div>
 
 					
 					
 					<div class="form-group row" style=" padding-top: 20px;">
-						<label for="IsFeatured" class="col-2 col-form-label text-end">IsFeatured</label>
+						<label for="IsFeatured" class="col-2 col-form-label text-end">Is Featured</label>
 						<div class="col-sm-4">
 							<div class="form-check form-check-inline form-control border-0">
 								<input type="checkbox" class="form-check-input"
@@ -57,9 +57,7 @@
 
 					
 					<div class="form-group row pt-3">
-						<label class="col-2 col-form-label text-end">
-							Service Image
-						</label>
+						<label for="DisplayOrder" class="col-2 col-form-label text-end">Save Image<span style="color:red">*</span></label>
 						<div class="col-sm-4">
 							<input type="file"
 								   name="ImageFile"
