@@ -11,6 +11,7 @@ public partial class LeadFollowup : EntitiesBase
     public long? LeadId { get; set; }
 
     public string? Name { get; set; }
+    public string? Status { get; set; }
     public string? Remark { get; set; }
 
     public DateTime? NextFollowupDate { get; set; }
