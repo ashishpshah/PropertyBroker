@@ -96,7 +96,7 @@ namespace Broker.Areas.Admin.Controllers
 
                 oParams.Add(new SqlParameter("@CityId", SqlDbType.BigInt) { Value = viewModel.Id });
                 oParams.Add(new SqlParameter("@CityName", SqlDbType.VarChar) { Value = viewModel.Name ?? "" });
-                oParams.Add(new SqlParameter("@State", SqlDbType.VarChar) { Value = viewModel.State ?? "" });
+                oParams.Add(new SqlParameter("@State", SqlDbType.VarChar) { Value = "Gujarat" });
                 oParams.Add(new SqlParameter("@IsActive", SqlDbType.Bit) { Value = viewModel.IsActive});
                 oParams.Add(new SqlParameter("@Operated_By", SqlDbType.BigInt) { Value = AppHttpContextAccessor.GetSession(SessionKey.KEY_USER_ID) });
                 oParams.Add(new SqlParameter("@Action", SqlDbType.VarChar) { Value = viewModel.Id == 0 ? "INSERT" : "UPDATE" });

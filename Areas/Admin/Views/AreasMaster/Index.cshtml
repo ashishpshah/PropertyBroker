@@ -13,14 +13,14 @@
 
 				<button type="button" id="btnAddNewItem" class="btn btn-primary btn-md pull-right mr-2 divformSave_Hide"
 							onclick="fnLoadParialView('divformSave', '@Url.Action("Partial_AddEditForm", "AreasMaster", new { area = "Admin" })?Id=@Model.Obj.Id&cityId=@Model.Obj.CityId');">
-					<i class="bi bi-plus-circle"></i> &nbsp; Add New Areas
+					<i class="bi bi-plus-circle"></i> &nbsp; Add New Area
 					</button>
 				
 				<button type="button" id="btnBackToList" class="btn btn-primary btn-md pull-right mr-2 divformSave_Hide" onclick="fnBackToList('@Url.Action("Index", "City")');">
 					<i class="bi bi-arrow-left-circle"></i> &nbsp; Back To List
 				</button>
 			</div>
-			<h4 class="page-title">Areas</h4>
+			<h4 class="page-title">Area</h4>
 		</div>
 	</div>
 </div>
@@ -36,7 +36,7 @@
 					<div class="row no-gutters" id="divformSave"></div>
 				</form>
 			</div>
-			<div class="card-header" style=" margin: 5px !important;">
+			<div class="card-header row no-gooters divformSave_Hide"" style=" margin: 5px !important;">
 				<div class="form-group row">
 					<label for="CityName" class="col-sm-2 col-form-label text-right">City Name</label>
 					<div class="col-sm-4">

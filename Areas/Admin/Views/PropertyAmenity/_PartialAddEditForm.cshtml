@@ -22,7 +22,7 @@
                             <input type="text" id="CityName" name="CityName" class="form-control" value="@Model.Obj.CityName" readonly />
                         </div> *@
 
-                        <label for="Obj.AreaName" class="col-sm-2 col-form-label text-right">
+                        <label for="Obj.AreaName" class="col-sm-2 col-form-label text-end">
                             Property Amenity Name<span style="color:red">*</span>
                         </label>
                         <div class="col-sm-4">
@@ -31,7 +31,7 @@
                                    value="@Model.Obj.Name"
                                    placeholder="Property Amenity Name" autocomplete="off">
                         </div>
-                        <label for="DisplayOrder" class="col-sm-2 col-form-label text-right">
+                        @* <label for="DisplayOrder" class="col-sm-2 col-form-label text-end">
                             Display Order
                         </label>
                         <div class="col-sm-4">
@@ -41,14 +41,7 @@
                                    placeholder=""
                                    autocomplete="off"
                                    maxlength="10">
-                        </div>
-                        
-                        
-
-                    </div>
-
-                    <!-- ✅ ONLY spacing & alignment fixes below -->
-                    <div class="form-group row align-items-center">
+                        </div> *@
 
                         <label for="IsActive" class="col-2 col-form-label text-end">Status</label>
                         <div class="col-sm-4">
@@ -59,6 +52,11 @@
                                 <label class="form-check-label" for="switch_Status" id="label_Switch_Status" data-true="Active" data-false="Inactive">@((Model.Obj != null && Model.Obj.IsActive == true) || Model.Obj == null || Model.Obj.Id == 0 ? "Active" : "Inactive")</label>
                             </div>
                         </div>
+
+                    </div>
+
+                    <!-- ✅ ONLY spacing & alignment fixes below -->
+                    <div class="form-group row align-items-center">
                     </div>
 
                 </div>
