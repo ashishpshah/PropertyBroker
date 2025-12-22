@@ -8,7 +8,7 @@
     <div class="card card-info">
 
         <div class="card-header">
-            <h3 class="card-title">@(Model.Obj != null && Model.Obj.Id > 0 ? "Edit" : "Create") Amenity</h3>
+            <h3 class="card-title">@(Model.Obj != null && Model.Obj.Id > 0 ? "Edit" : "Create") Property Amenity</h3>
             <input type="text" class="form-control d-none" id="Id" name="Id" value="@(Model.Obj != null && Model.Obj.Id > 0 ? Model.Obj.Id.ToString() : "")">
         </div>
 
@@ -23,13 +23,13 @@
                         </div> *@
 
                         <label for="Obj.AreaName" class="col-sm-2 col-form-label text-right">
-                            Amenity Name<span style="color:red">*</span>
+                            Property Amenity Name<span style="color:red">*</span>
                         </label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control form-control-sm"
                                    id="Name" name="Name"
                                    value="@Model.Obj.Name"
-                                   placeholder="Amenity Name" autocomplete="off">
+                                   placeholder="Property Amenity Name" autocomplete="off">
                         </div>
                         <label for="DisplayOrder" class="col-sm-2 col-form-label text-right">
                             Display Order
