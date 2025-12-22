@@ -25,13 +25,13 @@
 			<div class="d-flex align-items-center gap-2">
 				<button type="button"
 						class="btn btn-danger btn-md divformSave_Hide"
-						onclick="fnUpdateStatus_Confirm_WithRemarks('Are you sure you want to close this lead','Remarks','Remarks','@Model.Obj.LeadId','LOST');">
+						onclick="fnUpdateStatus_Confirm_WithRemarks('Are you sure you want to mark this lead as Lost?','Remarks','Remarks','@Model.Obj.LeadId','LOST');">
 					<i class="bi bi-x-circle"></i> Lost
 				</button>
 
 				<button type="button"
 						class="btn btn-success btn-md divformSave_Hide"
-						onclick="fnUpdateStatus_Confirm('@Url.Action("LeadStatus_Change", "LeadFollowUp", new { area = "Admin" })?Id=@Model.Obj.LeadId&Status=WON','Are you sure you want to won this lead');" ">
+						onclick="fnUpdateStatus_Confirm('@Url.Action("LeadStatus_Change", "LeadFollowUp", new { area = "Admin" })?Id=@Model.Obj.LeadId&Status=WON','Are you sure you want to mark this lead as Won?');" ">
 					<i class="bi bi-check-circle"></i> Won
 				</button>
 			</div>
