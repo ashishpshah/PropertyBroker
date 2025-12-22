@@ -5,6 +5,7 @@ using Broker.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -15,11 +16,31 @@ namespace Broker.Areas.Admin.Controllers
     public class LeadController : BaseController<ResponseModel<Lead>>
     {
         public LeadController(IRepositoryWrapper repository) : base(repository) { }
-        public ActionResult Index()
+        public ActionResult Index(string Status = "NEW")
         {
             CommonViewModel.ObjList = new List<Lead>();
-            CommonViewModel.ObjList = DataContext_Command.Lead_Get(0).ToList();
+            CommonViewModel.ObjList = DataContext_Command.Lead_Get(0 , Status).ToList();
 
+            var list = new List<SelectListItem_Custom>();
+            var dt = new DataTable();
+            var sqlParameters = new List<SqlParameter>();
+            sqlParameters.Add(new SqlParameter("@Lov_Column", SqlDbType.VarChar) { Value = "LEADSTATUS" });
+            dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_Leads_Status_Combo", sqlParameters, true);
+
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    list.Add(new SelectListItem_Custom(Convert.ToString(dr["Lov_Code"]), Convert.ToString(dr["Lov_Desc"]), Convert.ToString(dr["Lov_Column"]) , Convert.ToString(dr["Lead_Count"]))
+                    {
+                        Value = dr["Lov_Code"] != DBNull.Value ? Convert.ToString(dr["Lov_Code"]) : "",
+                        Text = dr["Lov_Desc"] != DBNull.Value ? Convert.ToString(dr["Lov_Desc"]) : "",
+                        Group = dr["Lov_Column"] != DBNull.Value ? Convert.ToString(dr["Lov_Column"]) : "",
+                        Value2 = dr["Lead_Count"] != DBNull.Value ? Convert.ToString(dr["Lead_Count"]) : "",
+                    });
+                }
+            }
+            CommonViewModel.SelectListItems = list;
             return View(CommonViewModel);
         }
 

@@ -113,32 +113,12 @@
 		});
 
 
-		function fnChange_Select($id) {
-			var selectedValue = new Array();
-
-			$('#select' + $id + ' input[type="checkbox"]:checked').each(function () {
-				selectedValue.push($(this).attr('data-id'));
-			});
-
-			if (typeof selectedValue != 'undefined' && selectedValue != null && selectedValue != '' && selectedValue.length > 0)
-				$('#input' + $id).val(selectedValue.join(','));
-			else
-				$('#input' + $id).val('');
-
-			$('#input' + $id).trigger('change');
-		}
-
-
-		function fnChange_SelectAll($this, $id) {
-
-			$('dd.dd_' + $id + ' input[type="checkbox"]').trigger('click');
-
-		}
-
 		// function fnChange_Select($id) {
+		// 	var selectedValue = new Array();
 
-
-		// 	var selectedValue = $('#select' + $id).val();
+		// 	$('#select' + $id + ' input[type="checkbox"]:checked').each(function () {
+		// 		selectedValue.push($(this).attr('data-id'));
+		// 	});
 
 		// 	if (typeof selectedValue != 'undefined' && selectedValue != null && selectedValue != '' && selectedValue.length > 0)
 		// 		$('#input' + $id).val(selectedValue.join(','));
@@ -147,6 +127,26 @@
 
 		// 	$('#input' + $id).trigger('change');
 		// }
+
+
+		// function fnChange_SelectAll($this, $id) {
+
+		// 	$('dd.dd_' + $id + ' input[type="checkbox"]').trigger('click');
+
+		// }
+
+		function fnChange_Select($id) {
+
+
+			var selectedValue = $('#select' + $id).val();
+
+			if (typeof selectedValue != 'undefined' && selectedValue != null && selectedValue != '' && selectedValue.length > 0)
+				$('#input' + $id).val(selectedValue.join(','));
+			else
+				$('#input' + $id).val('');
+
+			$('#input' + $id).trigger('change');
+		}
 
 		//function fnChange_Checkbox($this) {
 		//
