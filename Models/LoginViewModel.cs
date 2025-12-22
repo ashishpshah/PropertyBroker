@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Broker.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Broker
 {
@@ -8,7 +9,10 @@ namespace Broker
 		[Required(ErrorMessage = "Please enter password.")] public string Password { get; set; }
 		public string User_Type { get; set; }
 		public bool RememberMe { get; set; }
-	}
+
+        public List<Lead> LeadPendingFollowUpList { get; set; }
+        public List<LeadFollowup> LeadFollowupList { get; set; }
+    }
 	public class RegisterViewModel
 	{
 		[Required]

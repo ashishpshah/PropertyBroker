@@ -1140,7 +1140,40 @@ namespace Broker.Infra
                             Status_TEXT = dr["Status_TEXT"] != DBNull.Value ? Convert.ToString(dr["Status_TEXT"]) : "",
                             BudgetMin = dr["BudgetMin"] != DBNull.Value ? Convert.ToDecimal(dr["BudgetMin"]) : 0,
                             BudgetMax = dr["BudgetMax"] != DBNull.Value ? Convert.ToDecimal(dr["BudgetMax"]) : 0,
-                            IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
+                            IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false,
+							NextFollowupDate = dr["Next_FollowUp_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Next_FollowUp_Date"]) : nullDateTime,
+                        });
+            }
+            catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+            return listObj;
+        }
+
+        public static List<Lead> Pending_Lead_FollowUp_Get()
+        {
+            DateTime? nullDateTime = null;
+            var listObj = new List<Lead>();
+
+            try
+            {
+                //var parameters = new List<SqlParameter>();
+                //parameters.Add(new SqlParameter("Lead_Id", SqlDbType.BigInt) { Value = 0, Direction = ParameterDirection.Input, IsNullable = true });
+
+                var dt = ExecuteStoredProcedure_DataTable("SP_Dashbord_Pending_FollowUp_Get", null);
+
+                if (dt != null && dt.Rows.Count > 0)
+                    foreach (DataRow dr in dt.Rows)
+                        listObj.Add(new Lead()
+                        {
+                            Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
+                            Name = dr["LeadName"] != DBNull.Value ? Convert.ToString(dr["LeadName"]) : "",
+                            Mobile = dr["Mobile"] != DBNull.Value ? Convert.ToString(dr["Mobile"]) : "",
+                            Email = dr["Email"] != DBNull.Value ? Convert.ToString(dr["Email"]) : "",
+                            Property_Type_TEXT = dr["Property_Type_TEXT"] != DBNull.Value ? Convert.ToString(dr["Property_Type_TEXT"]) : "",
+                            LeadSource_TEXT = dr["LeadSource_TEXT"] != DBNull.Value ? Convert.ToString(dr["LeadSource_TEXT"]) : "",
+                            Status = dr["Status"] != DBNull.Value ? Convert.ToString(dr["Status"]) : "",
+                            Status_TEXT = dr["Status_TEXT"] != DBNull.Value ? Convert.ToString(dr["Status_TEXT"]) : "",
+                            NextFollowupDate = dr["Next_FollowUp_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Next_FollowUp_Date"]) : nullDateTime,
                         });
             }
             catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }

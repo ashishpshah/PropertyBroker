@@ -44,8 +44,8 @@
 					<div class="row no-gutters" id="divformSave"></div>
 				</form>
 			</div>
-			<div class="card-body">
-				<div class="row no-gooters divformSave_Hide">
+			<div class="card-body divformSave_Hide">
+				<div class="row no-gooters ">
 					<div class="col-md-12 my-1">
 						<div class="responsive-table-plugin">
 							<div class="table-rep-plugin">
@@ -57,7 +57,7 @@
 												<th>Name</th>
 												<th>Mobile No</th>
 												<th>Email</th>
-												<th>Requirement</th>
+												<th>Next FollowUp Date</th>
 												@* <th>Assigned To</th> *@
 												<th>Lead Source</th>																					
 												<th>Status</th>																					
@@ -74,7 +74,7 @@
 														<td>@item.Name</td>
 														<td>@item.Mobile</td>
 														<td>@item.Email</td>
-														<td>@item.Requirement</td>
+														<td>@item.NextFollowupDate?.ToString(Common.DateTimeFormat_ddMMMyyyy)</td>
 														@* <td>@item.AssignedTo_Text</td> *@
 														<td>@item.LeadSource_TEXT</td>
 														<td>@item.Status_TEXT</td>

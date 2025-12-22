@@ -49,4 +49,6 @@ public partial class Lead : EntitiesBase
     public virtual City? PreferredCity { get; set; }
 
     public virtual PropertyType? PropertyTypeNavigation { get; set; }
+
+    public DateTime? NextFollowupDate { get; set; }
 }

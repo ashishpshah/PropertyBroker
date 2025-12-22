@@ -16,7 +16,12 @@ namespace Broker.Areas.Admin.Controllers
 			if (Common.LoggedUser_Id() <= 0)
 				return RedirectToAction("Account", "Home", new { Area = "Admin" });
 
-			return View();
+				CommonViewModel.Obj = new LoginViewModel();
+			    CommonViewModel.Obj.LeadPendingFollowUpList = new List<Lead>();
+
+			CommonViewModel.Obj.LeadPendingFollowUpList = DataContext_Command.Pending_Lead_FollowUp_Get().ToList();
+			     
+			return View(CommonViewModel);
 		}
 
 		public ActionResult Account()
@@ -26,8 +31,18 @@ namespace Broker.Areas.Admin.Controllers
 			return View(new ResponseModel<LoginViewModel>());
 		}
 
+        public ActionResult GetFollowUp_List(long Lead_Id = 0, string Status = "")
+        {
+			CommonViewModel.Obj = new LoginViewModel();
+			CommonViewModel.Obj.LeadFollowupList = new List<LeadFollowup>();
 
-		[HttpPost]
+			CommonViewModel.Obj.LeadFollowupList = DataContext_Command.LeadFollowUp_Get(0,Lead_Id, Status).ToList();
+
+                return PartialView("_Partial_AddEditForm_FollowUp", CommonViewModel);
+            
+
+        }
+        [HttpPost]
 		//[ValidateAntiForgeryToken]
 		public JsonResult Login(LoginViewModel viewModel)
 		{

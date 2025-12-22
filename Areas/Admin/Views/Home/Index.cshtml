@@ -1,4 +1,4 @@
-﻿
+﻿@model ResponseModel<LoginViewModel>
 @{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_Layout_Admin.cshtml";
@@ -8,15 +8,133 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box">
-            <div class="page-title-right">
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Velonic</a></li>
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
-                    <li class="breadcrumb-item active">Starter</li>
-                </ol>
-            </div>
-            <h4 class="page-title">Starter</h4>
+           
+            <h4 class="page-title">Dashboard</h4>
         </div>
     </div>
 </div>
+<div class="row">
+	<div class="page-title-box">
+		<h4 class="page-title">Pending Lead Followups (Next 5 Days)</h4>
+	</div>
+	<div class="col-12">
+		<div class="card">
+			<div class="card-header p-0 divformSave_Display d-none">
+				<form id="formSave" action="@Url.Action("Save", "Property", new { area = "Admin" })" method="post">
+					<div class="row no-gutters" id="divformSave"></div>
+				</form>
+			</div>
+			<div class="card-body">
+				<div class="row no-gooters divformSave_Hide">
+					<div class="col-md-12 my-1">
+						<div class="responsive-table-plugin">
+							<div class="table-rep-plugin">
+								<div class="table-responsive" data-pattern="priority-columns">
+									<table class="table table-sm table-bordered table-striped dt-responsive nowrap w-100 table_Common_SrNo">
+										<thead>
+											<tr>
+												<th>SrNo</th>
+												<th>Lead Name</th>
+												<th>Mobile No</th>
+												<th>Email </th>
+												@* <th>Description</th> *@
+												<th>Next FollowUp Date</th>
+											    <th>Lead Source</th>
+												<th>Action</th>
+											</tr>
+										</thead>
+										<tbody>
+											@if (Model.Obj != null)
+											{
+												foreach (var item in Model.Obj.LeadPendingFollowUpList)
+												{
+													<tr>
+														<td></td>
+														<td>@item.Name</td>
+														<td>@item.Mobile</td>
+														<td>@item.Email</td>
+														@* <td>@item.Description</td> *@
+														<td>@item.NextFollowupDate?.ToString(Common.DateTimeFormat_ddMMMyyyy)</td>
+														<td>@item.LeadSource_TEXT</td>
+														<td>
+															<div class="btn-group">
+
+																<button type="button"
+																		class="btn btn-primary btn-sm btn-flat ml-2"
+																		data-toggle="tooltip"
+																		data-placement="top"
+																		title="View Follow Up"
+																		onclick="fnShow_Modal('@Url.Action("GetFollowUp_List", "Home")?Lead_Id=@item.Id&Status=@item.Status','FollowUpList',false,'html',false,false)">
+																	View Follow Up
+																</button>
+
+															</div>
+														</td>
+													</tr>
+												}
+											}
+										</tbody>
+									</table>
+								</div> <!-- end .table-responsive -->
+
+							</div> <!-- end .table-rep-plugin-->
+						</div> <!-- end .responsive-table-plugin-->
+					</div>
+
+					<div class="clearfix"></div>
+				</div>
+			</div> <!-- end card body-->
+		</div> <!-- end card -->
+	</div><!-- end col-->
+</div> <!-- end row-->
 <!-- end page title -->
+@section Scripts {
+	<script type="text/javascript">
+		$(document).ready(function () {
+
+		});
+
+
+		function fnShow_Modal_Success($url, $title) {
+			$('#largeModal .modal-dialog').addClass('modal-fullscreen');
+			$('#largeModal').css('display', 'block');
+			$('#largeModal .modal-body form #divProjectSiteDoc').css('display', 'none');
+			$('#largeModal .modal-footer').css('display', 'none');
+			$('#largeModal .modal-body .btn-add').css('display', 'block');
+		}
+
+		// function fnChange_Select($id) {
+
+
+		// 	var selectedValue = $('#select' + $id).val();
+
+		// 	if (typeof selectedValue != 'undefined' && selectedValue != null && selectedValue != '' && selectedValue.length > 0)
+		// 		$('#input' + $id).val(selectedValue.join(','));
+		// 	else
+		// 		$('#input' + $id).val('');
+
+		// 	$('#input' + $id).trigger('change');
+		// }
+
+		//function fnChange_Checkbox($this) {
+		//
+
+		//    var selectedValue = $('#selectedMenu').val();
+
+		//    if (selectedValue == 'undefined' || selectedValue == null)
+		//        selectedValue = "";
+
+		//    if ($this.checked && selectedValue.indexOf($this.value) == -1) {
+		//        selectedValue = selectedValue + $this.value + ",";
+		//    }
+		//    else if (!$this.checked && selectedValue.indexOf($this.value) > -1) {
+		//        selectedValue = selectedValue.replace($this.value + ",", "");
+		//        selectedValue = selectedValue.replace($this.value, "");
+		//    }
+
+		//    $('#selectedMenu').val(selectedValue);
+		//    $('#selectedMenu').trigger('change');
+		//}
+
+	</script>
+}
