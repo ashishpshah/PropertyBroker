@@ -60,7 +60,7 @@
 
             <div class="col-sm-12 text-center">
                 <button type="submit" class="btn btn-success btnSubmit">Save</button>
-                <a href="@Url.Action("Index", "AreasMaster")" class="btn btn-danger">Cancel</a>
+                <a href="@Url.Action("Index", "AreasMaster")?cityId=@Model.Obj.CityId" class="btn btn-danger">Cancel</a>
             </div>
 
         </div>

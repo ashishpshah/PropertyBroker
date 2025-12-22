@@ -48,10 +48,10 @@ namespace Broker.Areas.Admin.Controllers
 
         [HttpGet]
 
-        public IActionResult Partial_AddEditForm(int cityId = 0 ,int Id = 0)
+        public IActionResult Partial_AddEditForm(int cityId = 0, int Id = 0)
         {
 
-            var obj = new AreasMaster() { CityId = cityId};
+            var obj = new AreasMaster() { CityId = cityId };
 
             var dt = new DataTable();
 
@@ -63,7 +63,7 @@ namespace Broker.Areas.Admin.Controllers
                 if (Id > 0)
                 {
                     oParam.Add(new SqlParameter("@AreaId", SqlDbType.BigInt) { Value = Id == 0 ? null : Id });
-                    oParam.Add(new SqlParameter("@CityId", SqlDbType.BigInt) { Value = cityId});
+                    oParam.Add(new SqlParameter("@CityId", SqlDbType.BigInt) { Value = cityId });
 
                     dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_Areas_Get", oParam, true);
 
@@ -131,7 +131,7 @@ namespace Broker.Areas.Admin.Controllers
             }
             return Json(CommonViewModel);
         }
-        public ActionResult DeleteConfirmed(long Id = 0 , long CityId = 0)
+        public ActionResult DeleteConfirmed(long Id = 0, long CityId = 0)
         {
             var parameters = new List<SqlParameter>();
             parameters.Add(new SqlParameter("@AreaId", SqlDbType.Int) { Value = Id, Direction = ParameterDirection.Input });
@@ -140,20 +140,23 @@ namespace Broker.Areas.Admin.Controllers
 
             var response = DataContext_Command.ExecuteStoredProcedure("sp_Areas_Delete", parameters.ToArray());
 
-            var msgtype = response;
+            var msgtype = response.Split('|');   // 👈 added
 
-            if (msgtype.Contains("S"))
-            {
-                CommonViewModel.IsConfirm = true;
-                CommonViewModel.IsSuccess = true;
-                CommonViewModel.Message = msgtype;
-                CommonViewModel.StatusCode = ResponseStatusCode.Success;
-                CommonViewModel.RedirectURL = Url.Action("Index", "AreasMaster");
-                return Json(CommonViewModel);
-            }
             CommonViewModel.IsConfirm = true;
-            CommonViewModel.IsSuccess = false;
-            CommonViewModel.StatusCode = ResponseStatusCode.Error;
+            CommonViewModel.Message = msgtype.Length > 1 ? msgtype[1] : response; // 👈 clean message
+
+            if (msgtype[0] == "S")   // 👈 check only first part
+            {
+                CommonViewModel.IsSuccess = true;
+                CommonViewModel.StatusCode = ResponseStatusCode.Success;
+                CommonViewModel.RedirectURL = Url.Action("Index", "AreasMaster", new { CityId = CityId });
+            }
+            else
+            {
+                CommonViewModel.IsSuccess = false;
+                CommonViewModel.StatusCode = ResponseStatusCode.Error;
+            }
+
             return Json(CommonViewModel);
         }
     }

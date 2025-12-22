@@ -88,7 +88,7 @@ namespace Broker.Areas.Admin.Controllers
                 {
                     CommonViewModel.IsSuccess = false;
                     CommonViewModel.StatusCode = ResponseStatusCode.Error;
-                    CommonViewModel.Message = "Please enter Area Name.";
+                    CommonViewModel.Message = "Please enter Property Amenity Name.";
 
                     return Json(CommonViewModel);
                 }
