@@ -70,7 +70,14 @@ namespace Broker.Areas.Admin.Controllers
 
                         return Json(CommonViewModel);
                     }
+                    if(viewModel.ReminderDatetime > viewModel.NextFollowupDate)
+                    {
+                        CommonViewModel.IsSuccess = false;
+                        CommonViewModel.StatusCode = ResponseStatusCode.Error;
+                        CommonViewModel.Message = "The reminder date must be earlier than or equal to the next follow-up date.";
 
+                        return Json(CommonViewModel);
+                    }
 
                     #endregion
 
