@@ -9,10 +9,10 @@ namespace Broker.Areas.Admin.Controllers
     public class LeadFollowUpController : BaseController<ResponseModel<LeadFollowup>>
     {
         public LeadFollowUpController(IRepositoryWrapper repository) : base(repository) { }
-        public ActionResult Index(long Id = 0)
+        public ActionResult Index(long Id = 0 , string Status = "")
         {
             CommonViewModel.ObjList = new List<LeadFollowup>();
-            CommonViewModel.Obj = new LeadFollowup() { LeadId = Id };
+            CommonViewModel.Obj = new LeadFollowup() { LeadId = Id , Status = Status };
             CommonViewModel.ObjList = DataContext_Command.LeadFollowUp_Get(0, Id).ToList();
 
             var dt = DataContext_Command.ExecuteQuery("select Name from Leads where Id=" + Id);
@@ -21,13 +21,13 @@ namespace Broker.Areas.Admin.Controllers
 
             return View(CommonViewModel);
         }
-        public ActionResult Partial_AddEditForm(long Id = 0, long LeadId = 0)
+        public ActionResult Partial_AddEditForm(long Id = 0, long LeadId = 0 , string Status = "")
         {
-            CommonViewModel.Obj = new LeadFollowup() { LeadId = LeadId  ,NextFollowupDate = DateTime.Today.AddDays(7) };
+            CommonViewModel.Obj = new LeadFollowup() { LeadId = LeadId  , Status = Status, NextFollowupDate = DateTime.Today.AddDays(7) };
 
             if (Id > 0)
             {
-                CommonViewModel.Obj = DataContext_Command.LeadFollowUp_Get(Id, LeadId).FirstOrDefault();
+                CommonViewModel.Obj = DataContext_Command.LeadFollowUp_Get(Id, LeadId , Status).FirstOrDefault();
             }
 
 
@@ -83,7 +83,7 @@ namespace Broker.Areas.Admin.Controllers
                     CommonViewModel.IsSuccess = IsSuccess;
                     CommonViewModel.StatusCode = IsSuccess ? ResponseStatusCode.Success : ResponseStatusCode.Error;
                     CommonViewModel.Message = response;
-                    CommonViewModel.RedirectURL = Url.Action("Index", "LeadFollowUp", new { area = "Admin", Id = viewModel.LeadId });
+                    CommonViewModel.RedirectURL = Url.Action("Index", "LeadFollowUp", new { area = "Admin", Id = viewModel.LeadId,Status = viewModel.Status});
 
 
 

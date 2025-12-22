@@ -40,17 +40,21 @@
 			<h4 class="page-title mb-0 text-center flex-grow-1">
 				Lead Follow Ups
 			</h4>
-
+			
 			<!-- RIGHT: ADD / BACK -->
 			<div class="d-flex align-items-center gap-2">
-				<button type="button"
-						class="btn btn-primary btn-md  divformSave_Hide"
-						onclick="fnLoadParialView(
-                    'divformSave',
-                    '@Url.Action("Partial_AddEditForm", "LeadFollowUp", new { area = "Admin" })?LeadId=@Model.Obj.LeadId'
-                );">
-					<i class="bi bi-plus-circle"></i> Add New
-				</button>
+				@if(Model.Obj.Status == "NEW"||Model.Obj.Status == "INPROC")
+				{
+					<button type="button"
+							class="btn btn-primary btn-md  divformSave_Hide"
+							onclick="fnLoadParialView(
+	                    'divformSave',
+	                    '@Url.Action("Partial_AddEditForm", "LeadFollowUp", new { area = "Admin" })?LeadId=@Model.Obj.LeadId&Status=@Model.Obj.Status'
+	                );">
+						<i class="bi bi-plus-circle"></i> Add New
+					</button>
+				}
+				
 
 				<button type="button"
 						class="btn btn-primary btn-md divformSave_Hide"
@@ -92,11 +96,14 @@
 									<table class="table table-sm table-bordered table-striped dt-responsive nowrap w-100 table_Common_SrNo">
 										<thead>
 											<tr>
-												<th>SrNo</th>
+												<th>Sr.No</th>
 												<th>Next Follow Up Date</th>
 												<th>Reminder Date</th>
 												<th>Remarks</th>
-												<th>Action</th>
+												@if (Model.Obj.Status == "NEW" || Model.Obj.Status == "INPROC")
+												{
+													<th>Action</th>
+												}
 											</tr>
 										</thead>
 										<tbody>
@@ -109,21 +116,26 @@
 														<td>@item.NextFollowupDate?.ToString(Common.DateTimeFormat_ddMMMyyyy)</td>
 														<td>@item.ReminderDatetime?.ToString(Common.DateTimeFormat_ddMMMyyyy)</td>
 														<td>@item.Remark</td>
-														<td>
-															<div class="btn-group">
+														@if (Model.Obj.Status == "NEW" || Model.Obj.Status == "INPROC")
+														{
+															<td>
+																<div class="btn-group">
 
-																<button type="button" class="btn btn-info btn-sm btn-flat" data-toggle="tooltip" data-placement="top" title="Edit"
-																		onclick="fnLoadParialView('divformSave', '@Url.Action("Partial_AddEditForm", "LeadFollowUp", new { area = "Admin" })?Id=@item.Id&LeadId=@item.LeadId');">
-																	<i class="ri-pencil-fill"></i>
-																</button>
 
-																@* <button type="button" class="btn btn-danger btn-sm btn-flat ml-2" data-toggle="tooltip" data-placement="top" title="Delete"
+																	<button type="button" class="btn btn-info btn-sm btn-flat" data-toggle="tooltip" data-placement="top" title="Edit"
+																			onclick="fnLoadParialView('divformSave', '@Url.Action("Partial_AddEditForm", "LeadFollowUp", new { area = "Admin" })?Id=@item.Id&LeadId=@item.LeadId&Status=@Model.Obj.Status');">
+																		<i class="ri-pencil-fill"></i>
+																	</button>
+
+
+																	@* <button type="button" class="btn btn-danger btn-sm btn-flat ml-2" data-toggle="tooltip" data-placement="top" title="Delete"
 																		onclick="fnDelete_Confirm('@Url.Action("DeleteConfirmed", "LeadFollowUp", new { area = "Admin" })?Id=@item.Id&ParentId=@item.ParentId');">
 																	<i class="ri-delete-bin-2-line"></i>
 																</button> *@
 
-															</div>
-														</td>
+																</div>
+															</td>
+														}
 													</tr>
 												}
 											}

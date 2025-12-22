@@ -50,7 +50,7 @@
 						</div>
 					</div>
 
-					@if (Common.IsAdmin())
+					@* @if (Common.IsAdmin())
 					{
 						var selectedValue = Model.Obj.CreatedDate_Text.Split(',').ToList();
 
@@ -108,6 +108,36 @@
 							</div>
 						</div>
 
+					}
+ *@
+					@if (Common.IsAdmin())
+					{
+						var selectedValue = Model.Obj.CreatedDate_Text.Split(',').ToList();
+
+						<div class="form-group row">
+							<label class="col-sm-2 col-form-label text-right">Select Menu</label>
+							<div class="col-sm-8 d-flex flex-wrap">
+								<select multiple id="selectMenu" class="form-control form-control-sm select2 w-100" onchange="fnChange_Select('Menu')">
+									<option value="">-- Select --</option>
+									@if (Model.SelectListItems != null)
+									{
+										foreach (var item in Model.SelectListItems.Where(x => x.Group == "M"))
+										{
+											if (selectedValue != null && selectedValue.Any(x => x == item.Value))
+											{
+												<option value="@item.Value" selected>@item.Text</option>
+											}
+											else
+											{
+												<option value="@item.Value">@item.Text</option>
+											}
+										}
+									}
+								</select>
+
+								<input type="text" id="inputMenu" name="CreatedDate_Text" value="@Model.Obj.CreatedDate_Text" class="d-none" />
+							</div>
+						</div>
 					}
 
 				</div>

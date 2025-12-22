@@ -49,8 +49,8 @@ namespace Broker.Areas.Admin.Controllers
 				menus = (from x in listMenu.ToList()
 						 where !x.Name.ToLower().Contains("menu") //x.IsSuperAdmin == Common.IsSuperAdmin() && x.IsAdmin == Common.IsAdmin()
 						 orderby x.ParentId, x.DisplayOrder
-						 //select new SelectListItem_Custom(Convert.ToString(x.Id + "_" + x.ParentId), Convert.ToString(x.Name) + (x.ParentId > 0 ? " (" + Convert.ToString(x.ParentMenuName) + " )" : ""), "M")
-						 select new SelectListItem_Custom(Convert.ToString(x.Id), Convert.ToString(x.Name), Convert.ToString(x.ParentId), x.DisplayOrder ?? 0, "M")
+						 select new SelectListItem_Custom(Convert.ToString(x.Id + "_" + x.ParentId), Convert.ToString(x.Name) + (x.ParentId > 0 ? " (" + Convert.ToString(x.ParentMenuName) + " )" : ""), "M")
+						 //select new SelectListItem_Custom(Convert.ToString(x.Id), Convert.ToString(x.Name), Convert.ToString(x.ParentId), x.DisplayOrder ?? 0, "M")
 						 ).ToList();
 			}
 			else
@@ -58,8 +58,8 @@ namespace Broker.Areas.Admin.Controllers
 				menus = (from x in listMenu.ToList()
 						 where x.IsSuperAdmin == false && !x.Name.ToLower().Contains("menu") && x.Id != 1 && x.ParentId != 1
 						 orderby x.ParentId, x.DisplayOrder
-						 //select new SelectListItem_Custom(Convert.ToString(x.Id + "_" + x.ParentId), Convert.ToString(x.Name) + (x.ParentId > 0 ? " (" + Convert.ToString(x.ParentMenuName) + " )" : ""), "M")
-						 select new SelectListItem_Custom(Convert.ToString(x.Id), Convert.ToString(x.Name), Convert.ToString(x.ParentId), x.DisplayOrder ?? 0, "M")
+						 select new SelectListItem_Custom(Convert.ToString(x.Id + "_" + x.ParentId), Convert.ToString(x.Name) + (x.ParentId > 0 ? " (" + Convert.ToString(x.ParentMenuName) + " )" : ""), "M")
+						 // select new SelectListItem_Custom(Convert.ToString(x.Id), Convert.ToString(x.Name), Convert.ToString(x.ParentId), x.DisplayOrder ?? 0, "M")
 						 ).ToList();
 			}
 

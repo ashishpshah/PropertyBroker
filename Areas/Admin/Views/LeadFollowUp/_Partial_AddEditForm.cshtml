@@ -11,6 +11,7 @@
 			<h3 class="card-title">@(Model.Obj != null && Model.Obj.Id > 0 ? "Edit" : "Create") Property Sub Type</h3>
 			<input type="text" class="form-control d-none" id="Id" name="Id" value="@(Model.Obj != null && Model.Obj.Id > 0 ? Model.Obj.Id.ToString() : "")">
 			<input type="text" class="form-control d-none" id="LeadId" name="LeadId" value="@(Model.Obj != null && Model.Obj.LeadId > 0 ? Model.Obj.LeadId.ToString() : "")">
+			<input type="text" class="form-control d-none" id="Status" name="Status" value="@(Model.Obj != null && Model.Obj.Status != null ? Model.Obj.Status.ToString() : "")">
 		</div>
 
 		<div class="card-body form-horizontal">

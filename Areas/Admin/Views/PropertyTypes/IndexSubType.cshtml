@@ -25,8 +25,8 @@
 						onclick="fnLoadParialView('divformSave', '@Url.Action("Partial_AddEditForm_Sub_Type", "PropertyTypes", new { area = "Admin" })?Parent_Id=@Model.Obj.ParentId');">
 					<i class="bi bi-plus-circle"></i> &nbsp; Add New
 					</button>
-				
-					<button type="button" class="btn btn-primary btn-md pull-right mr-2" onclick="fnBackToList('@Url.Action("Index","PropertyTypes")');">
+
+				<button type="button" class="btn btn-primary btn-md pull-right mr-2 divformSave_Hide" onclick="fnBackToList('@Url.Action("Index", "PropertyTypes")');">
 					<i class="bi bi-arrow-left-circle"></i> &nbsp; Back To List
 					</button>
 			</div>
@@ -63,7 +63,7 @@
 									<table class="table table-sm table-bordered table-striped dt-responsive nowrap w-100 table_Common_SrNo">
 										<thead>
 											<tr>
-												<th>SrNo</th>
+												<th>Sr.No</th>
 												<th>Property Sub Type name</th>
 												<th>Action</th>
 											</tr>

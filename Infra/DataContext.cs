@@ -1148,7 +1148,7 @@ namespace Broker.Infra
             return listObj;
         }
 
-        public static List<LeadFollowup> LeadFollowUp_Get(long id = 0, long LeadId = 0)
+        public static List<LeadFollowup> LeadFollowUp_Get(long id = 0, long LeadId = 0 , string Status = "")
         {
             DateTime? nullDateTime = null;
             var listObj = new List<LeadFollowup>();
@@ -1170,7 +1170,8 @@ namespace Broker.Infra
                             NextFollowupDate = dr["NextFollowupDate"] != DBNull.Value ? Convert.ToDateTime(dr["NextFollowupDate"]) : nullDateTime,
                             ReminderDatetime = dr["ReminderDatetime"] != DBNull.Value ? Convert.ToDateTime(dr["ReminderDatetime"]) : nullDateTime,
                             Remark = dr["Remark"] != DBNull.Value ? Convert.ToString(dr["Remark"]) : "",
-                            IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
+                            IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false,
+                            Status = Status
                         });
             }
             catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
