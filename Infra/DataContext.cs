@@ -430,14 +430,14 @@ namespace Broker.Infra
 				entity.Property(e => e.ProjectDetailTypeAccess).HasMaxLength(500);
 			});
 
-			modelBuilder.Entity<RoleMenuAccess>(entity =>
-			{
-				entity
-					.HasNoKey()
-					.ToTable("RoleMenuAccess");
-			});
-
-			modelBuilder.Entity<ServicesMaster>(entity =>
+            //modelBuilder.Entity<RoleMenuAccess>(entity =>
+            //{
+            //	entity
+            //		.HasNoKey()
+            //		.ToTable("RoleMenuAccess");
+            //});
+            modelBuilder.Entity<RoleMenuAccess>().HasKey(e => new { e.RoleId, e.MenuId, e.IsCreate, e.IsUpdate, e.IsRead, e.IsDelete });
+            modelBuilder.Entity<ServicesMaster>(entity =>
 			{
 				entity.HasKey(e => e.ServiceId).HasName("PK__Services__C51BB00AA6B29667");
 
@@ -475,12 +475,16 @@ namespace Broker.Infra
 					.HasNoKey()
 					.ToTable("UserMenuAccess");
 			});
-            //modelBuilder.Entity<UserMenuAccess>(entity =>
+            //modelBuilder.Entity<RoleMenuAccess>(entity =>
             //{
-            //    entity
-            //        .HasNoKey()
-            //        .ToTable("RoleMenuAccess");
+            //	entity
+            //		.HasNoKey()
+            //		.ToTable("RoleMenuAccess");
             //});
+            modelBuilder.Entity<UserMenuAccess>().ToTable("UserMenuAccess");
+            modelBuilder.Entity<RoleMenuAccess>().ToTable("RoleMenuAccess");
+            modelBuilder.Entity<UserMenuAccess>().HasKey(e => new { e.UserId, e.RoleId, e.MenuId, e.IsCreate, e.IsUpdate, e.IsRead, e.IsDelete });
+            modelBuilder.Entity<RoleMenuAccess>().HasKey(e => new { e.RoleId, e.MenuId, e.IsCreate, e.IsUpdate, e.IsRead, e.IsDelete });
             modelBuilder.Entity<UserRoleMapping>(entity =>
 			{
 				entity.HasKey(e => e.Id).HasName("PK_UserRoleMapping_1");
