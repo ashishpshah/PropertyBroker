@@ -475,8 +475,13 @@ namespace Broker.Infra
 					.HasNoKey()
 					.ToTable("UserMenuAccess");
 			});
-
-			modelBuilder.Entity<UserRoleMapping>(entity =>
+            //modelBuilder.Entity<UserMenuAccess>(entity =>
+            //{
+            //    entity
+            //        .HasNoKey()
+            //        .ToTable("RoleMenuAccess");
+            //});
+            modelBuilder.Entity<UserRoleMapping>(entity =>
 			{
 				entity.HasKey(e => e.Id).HasName("PK_UserRoleMapping_1");
 
@@ -1106,7 +1111,7 @@ namespace Broker.Infra
 			return listObj;
 		}
 
-        public static List<Lead> Lead_Get(long id = 0)
+        public static List<Lead> Lead_Get(long id = 0 , string Status = "")
         {
             DateTime? nullDateTime = null;
             var listObj = new List<Lead>();
@@ -1115,6 +1120,7 @@ namespace Broker.Infra
             {
                 var parameters = new List<SqlParameter>();
                 parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = id, Direction = ParameterDirection.Input, IsNullable = true });
+                parameters.Add(new SqlParameter("Status", SqlDbType.VarChar) { Value = Status, Direction = ParameterDirection.Input, IsNullable = true });
 
                 var dt = ExecuteStoredProcedure_DataTable("SP_Leads_Get", parameters.ToList());
 
