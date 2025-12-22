@@ -45,6 +45,38 @@
 				</form>
 			</div>
 			<div class="card-body divformSave_Hide">
+				@if (Model.SelectListItems != null && Model.ObjList != null)
+				{
+					// Required display order
+					var statusOrder = new List<string> { "NEW", "INPROC", "WON", "LOST" };
+
+					var leadStatuses = Model.SelectListItems
+					.Where(x => x.Group == "LEADSTATUS")
+					.OrderBy(x => statusOrder.IndexOf(x.Value))
+					.ToList();
+
+					<div class="mb-3 d-flex flex-wrap gap-2">
+						@foreach (var status in leadStatuses)
+						{
+							int leadCount = Convert.ToInt32(status.Value2);
+
+							string badgeClass = status.Value switch
+							{
+								"NEW" => "bg-primary",
+								"INPROC" => "bg-warning text-dark",
+								"WON" => "bg-success",
+								"LOST" => "bg-danger",
+								_ => "bg-secondary"
+							};
+
+							<span role="button"
+								  class="badge rounded-pill @badgeClass px-3 py-2 fs-6"
+								  onclick="filterByStatus('@status.Value')">
+								@status.Text (@leadCount)
+							</span>
+						}
+					</div>
+				}
 				<div class="row no-gooters ">
 					<div class="col-md-12 my-1">
 						<div class="responsive-table-plugin">
@@ -177,7 +209,10 @@
 			}
 
 		}
-
+		function filterByStatus(status) {
+			window.location.href =
+				'@Url.Action("Index", "Lead", new { area = "Admin" })' + '?Status=' + status;
+		}
 		// function fnChange_Select($id) {
 
 
