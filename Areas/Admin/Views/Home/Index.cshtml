@@ -19,23 +19,24 @@
 		<a href="@Url.Action("PropertyList", "Home", new { area = "Admin" })"
 		   class="text-decoration-none text-reset">
 
-			<div class="card widget-flat text-bg-info cursor-pointer shadow-sm">
+			<div class="card widget-flat text-bg-pink">
 				<div class="card-body">
 					<div class="float-end">
-						<i class="bi bi-house-check fs-1 opacity-75"></i>
+						<i class="bi bi-house-check fs-1 opacity-75 widget-icon"></i>
 					</div>
 
-					<h6 class="text-uppercase mt-0 fw-semibold">
+					<h6 class="text-uppercase mt-0">
 						Available Properties
 					</h6>
 
-					<h2 class="my-2 fw-bold">
+					<h2 class="my-2">
 						@Model.Obj.Count
 					</h2>
 
-					<span class="text-white-50">
-						View all listings
-					</span>
+					<p class="mb-0">
+						
+						<span class="text-nowrap"> View Summary</span>
+					</p>
 				</div>
 			</div>
 

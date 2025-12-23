@@ -9,6 +9,7 @@ public partial class PropertyType : EntitiesBase
 	public long ParentId { get; set; }
 
     public string? Name { get; set; }
+    public int  Display_Seq_No { get; set; }
 
 
     //public virtual ICollection<Lead> Leads { get; set; } = new List<Lead>();

@@ -14,6 +14,7 @@ namespace Broker
         public List<LeadFollowup> LeadFollowupList { get; set; }
         public List<Properties> PropertiesList { get; set; }
         public Properties Properties { get; set; }
+        public long  Selected_Type_Id { get; set; }
     }
 	public class RegisterViewModel
 	{

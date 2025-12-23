@@ -26,7 +26,7 @@ namespace Broker.Areas.Admin.Controllers
 			CommonViewModel.Obj.Count = Convert.ToInt32(dt.Rows[0]["Count"]);
             return View(CommonViewModel);
 		}
-        public ActionResult PropertyList(long Type_Id = 14)
+        public ActionResult PropertyList(long  Type_Id = 0)
         {
             
 
@@ -34,26 +34,43 @@ namespace Broker.Areas.Admin.Controllers
             //CommonViewModel.Obj.LeadPendingFollowUpList = new List<Lead>();          
             
 			CommonViewModel.Obj.PropertiesList = new List<Properties>();
-			CommonViewModel.Obj.PropertiesList = DataContext_Command.Property_Get(0, Type_Id);
+			
             var list = new List<SelectListItem_Custom>();
             var dt = new DataTable();
             //var sqlParameters = new List<SqlParameter>();
             //sqlParameters.Add(new SqlParameter("@Id", SqlDbType.VarChar) { Value = 0 });
             dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_PropertyTypes_Combo_ByProperties", null, true);
-
+            long  defaultTypeId = 0;
             if (dt != null && dt.Rows.Count > 0)
             {
                 foreach (DataRow dr in dt.Rows)
                 {
-                    list.Add(new SelectListItem_Custom(Convert.ToString(dr["Id"]), Convert.ToString(dr["Name"]), Convert.ToString(dr["Property_Count"]) , Convert.ToString(dr["DisplayOrder"]) , "PropertyType")
+                    var item = new SelectListItem_Custom(
+                        Convert.ToString(dr["Id"]),
+                        Convert.ToString(dr["Name"]),
+                        Convert.ToString(dr["Property_Count"]),
+                        Convert.ToString(dr["Display_Seq_No"]),
+                        "PropertyType")
                     {
-                        Value = dr["Id"] != DBNull.Value ? Convert.ToString(dr["Id"]) : "",
-                        Text = dr["Name"] != DBNull.Value ? Convert.ToString(dr["Name"]) : "",
-						Value2 = dr["Property_Count"] != DBNull.Value ? Convert.ToString(dr["Property_Count"]) : "",
-                        Value3 = dr["DisplayOrder"] != DBNull.Value ? Convert.ToString(dr["DisplayOrder"]) : "",
-                    });
+                        Value = Convert.ToString(dr["Id"]),
+                        Text = Convert.ToString(dr["Name"]),
+                        Value2 = Convert.ToString(dr["Property_Count"]),
+                        Value3 = Convert.ToString(dr["Display_Seq_No"]),
+                    };
+
+                    list.Add(item);
+
+                    // ⭐ Capture default type (Display_Seq_No = 1)
+                    if (defaultTypeId == 0 && item.Value3 == "1")
+                    {
+                        defaultTypeId = Convert.ToInt64(item.Value);
+                    }
+                    
                 }
             }
+            long selectedTypeId = Type_Id > 0 ? Type_Id : defaultTypeId;
+            CommonViewModel.Obj.PropertiesList = DataContext_Command.Property_Get(0, selectedTypeId);
+			CommonViewModel.Obj.Selected_Type_Id = selectedTypeId;
             CommonViewModel.SelectListItems = list;
             return View(CommonViewModel);
         }

@@ -3,7 +3,7 @@
 @{
 	ViewBag.Title = "Index";
 	Layout = "~/Areas/Admin/Views/Shared/_Layout_Admin.cshtml";
-
+	string? selectedStatus = Model.Obj.Selected_Status;
 }
 
 
@@ -11,6 +11,10 @@
 	<style type="text/css">
 		.select2-container .select2-selection--multiple .select2-selection__rendered {
 			display: contents !important;
+		}
+
+		.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+			background-color: #3bc0c3 !important;
 		}
 	</style>
 }
@@ -47,35 +51,28 @@
 			<div class="card-body divformSave_Hide">
 				@if (Model.SelectListItems != null && Model.ObjList != null)
 				{
-					// Required display order
-					var statusOrder = new List<string> { "NEW", "INPROC", "WON", "LOST" };
+					@* var propertylist = Model.SelectListItems
+					.Where(x => x.Group == "PropertyType")
+					.OrderBy(x => x.Value3)
+					.ToList(); *@
 
-					var leadStatuses = Model.SelectListItems
-					.Where(x => x.Group == "LEADSTATUS")
-					.OrderBy(x => statusOrder.IndexOf(x.Value))
-					.ToList();
-
-					<div class="mb-3 d-flex flex-wrap gap-2">
-						@foreach (var status in leadStatuses)
+					<ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
+						@foreach (var item in Model.SelectListItems.Where(x => x.Group == "LEADSTATUS").OrderBy(x => Convert.ToInt32(x.Value3)))
 						{
-							int leadCount = Convert.ToInt32(status.Value2);
+							string? status = item.Value;
+							int count = Convert.ToInt32(item.Value2);
 
-							string badgeClass = status.Value switch
-							{
-								"NEW" => "bg-primary",
-								"INPROC" => "bg-warning text-dark",
-								"WON" => "bg-success",
-								"LOST" => "bg-danger",
-								_ => "bg-secondary"
-							};
+							bool isActive = selectedStatus == status;
 
-							<span role="button"
-								  class="badge rounded-pill @badgeClass px-3 py-2 fs-6"
-								  onclick="filterByStatus('@status.Value')">
-								@status.Text (@leadCount)
-							</span>
+							<li class="nav-item">
+								<a class="nav-link rounded-0 @(isActive ? "active" : "")"
+								   href="@Url.Action("Index", "Lead",
+									new { area = "Admin", Status = status })">
+									@item.Text (@count)
+								</a>
+							</li>
 						}
-					</div>
+					</ul>
 				}
 				<div class="row no-gooters ">
 					<div class="col-md-12 my-1">
