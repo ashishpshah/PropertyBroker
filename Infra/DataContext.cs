@@ -400,7 +400,6 @@ namespace Broker.Infra
 
 				entity.ToTable("PropertyTypes", "dbo");
 
-				entity.Property(e => e.DisplaySeqNo).HasColumnName("Display_Seq_No");
 				entity.Property(e => e.ImagePath).HasMaxLength(100);
 				entity.Property(e => e.Name).HasMaxLength(50);
 			});
