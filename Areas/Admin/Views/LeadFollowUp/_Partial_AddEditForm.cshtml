@@ -8,7 +8,7 @@
 	<div class="card card-info">
 
 		<div class="card-header">
-			<h3 class="card-title">@(Model.Obj != null && Model.Obj.Id > 0 ? "Edit" : "Create") Property Sub Type</h3>
+			<h3 class="card-title">@(Model.Obj != null && Model.Obj.Id > 0 ? "Edit" : "Create") Lead Follow Up</h3>
 			<input type="text" class="form-control d-none" id="Id" name="Id" value="@(Model.Obj != null && Model.Obj.Id > 0 ? Model.Obj.Id.ToString() : "")">
 			<input type="text" class="form-control d-none" id="LeadId" name="LeadId" value="@(Model.Obj != null && Model.Obj.LeadId > 0 ? Model.Obj.LeadId.ToString() : "")">
 			<input type="text" class="form-control d-none" id="Status" name="Status" value="@(Model.Obj != null && Model.Obj.Status != null ? Model.Obj.Status.ToString() : "")">
@@ -19,15 +19,10 @@
 				<div class="col-12">
 					<div class="form-group row">
 						<label for="Name" class="col-2 col-form-label text-end">Next FollowUp Date</label>
-						<div class="col-sm-4">
+						<div class="col-sm-6">
 							<input type="date" class="form-control form-control-sm" id="NextFollowupDate" name="NextFollowupDate" value="@Model.Obj.NextFollowupDate?.ToString("yyyy-MM-dd")"
 								   placeholder="Next FollowUp Date" autocomplete="off">
-						</div>
-						<label for="Name" class="col-2 col-form-label text-end">Reminder Date</label>
-						<div class="col-sm-4">
-							<input type="date" class="form-control form-control-sm" id="ReminderDatetime" name="ReminderDatetime" value="@Model.Obj.ReminderDatetime?.ToString("yyyy-MM-dd")"
-								   placeholder="Reminder Date" autocomplete="off">
-						</div>
+						</div>					
 					</div>
 					<div class="form-group row" style=" padding-top: 20px;">
 						<label for="Obj.DealerName" class="col-sm-2 col-form-label text-end">Remark</label>

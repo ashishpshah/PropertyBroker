@@ -15,8 +15,7 @@ public partial class LeadFollowup : EntitiesBase
     public string? Remark { get; set; }
 
     public DateTime? NextFollowupDate { get; set; }
-
-    public DateTime? ReminderDatetime { get; set; }
+   
 
     public virtual Lead? Lead { get; set; }
 }

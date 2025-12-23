@@ -89,7 +89,10 @@
 
 																<button type="button"
 																		class="btn btn-primary btn-sm btn-flat ml-2"
-																		onclick="fnShow_Modal('@Url.Action("GetFollowUp_List", "Home")?Lead_Id=@item.Id&Status=@item.Status','Follow Up List',false,'html',false,false)">
+																		data-toggle="tooltip"
+																		data-placement="top"
+																		title="View Follow Up"
+																		onclick="location.href='@Url.Action("Index", "LeadFollowUp", new { area = "Admin" })?Id=@item.Id&Status=@item.Status';">
 																	View Follow Up
 																</button>
 
