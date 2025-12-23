@@ -2,9 +2,12 @@ using Broker.Infra;
 using Broker.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
+using Microsoft.CodeAnalysis;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NuGet.Protocol.Core.Types;
+using System.Data;
 using System.Diagnostics;
 
 namespace Broker.Controllers
@@ -113,18 +116,35 @@ namespace Broker.Controllers
 
 			if (list != null && list.Count() > 0) CommonViewModel.SelectListItems.AddRange(list);
 
-			CommonViewModel.Data1 = (from parent in _context.Using<PropertyType>().GetByCondition(x => x.IsActive == true).ToList()
-									 where parent.IsActive && parent.ParentId == 0
-									 select new
-									 {
-										 TypeId = parent.Id,
-										 TypeName = parent.Name,
-										 ImagePath = parent.ImagePath,
-										 Display_Seq_No = parent.Display_Seq_No == null?0: parent.Display_Seq_No,
-										 PropertyCount = _context.Using<Properties>().GetByCondition(x => x.IsActive == true).ToList()
-										 .Count(p => (p.TypeId == parent.Id || _context.Using<PropertyType>().GetByCondition(x => x.IsActive == true)
-										 .Any(c => c.ParentId == parent.Id && c.IsActive && c.Id == p.TypeId)) && p.IsActive)
-									 }).ToList();
+			//CommonViewModel.Data1 = (from parent in _context.Using<PropertyType>().GetByCondition(x => x.IsActive == true).ToList()
+			//						 where parent.IsActive && parent.ParentId == 0
+			//						 select new
+			//						 {
+			//							 TypeId = parent.Id,
+			//							 TypeName = parent.Name,
+			//							 ImagePath = parent.ImagePath,
+			//							 Display_Seq_No = parent.Display_Seq_No == null?0: parent.Display_Seq_No,
+			//							 PropertyCount = _context.Using<Properties>().GetByCondition(x => x.IsActive == true).ToList()
+			//							 .Count(p => (p.TypeId == parent.Id || _context.Using<PropertyType>().GetByCondition(x => x.IsActive == true)
+			//							 .Any(c => c.ParentId == parent.Id && c.IsActive && c.Id == p.TypeId)) && p.IsActive)
+			//						 }).ToList();
+
+			var listObj = new List<PropertyType>();
+
+			var dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_Property_Get_Type_Wise", null);
+
+			if (dt != null && dt.Rows.Count > 0)
+				foreach (DataRow dr in dt.Rows)
+					listObj.Add(new PropertyType()
+					{
+						Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
+						Name = dr["Name"] != DBNull.Value ? Convert.ToString(dr["Name"]) : "",
+						ImagePath = dr["ImagePath"] != DBNull.Value ? Convert.ToString(dr["ImagePath"]) : "",
+						PropertyCount = dr["PropertyCount"] != DBNull.Value ? Convert.ToInt32(dr["PropertyCount"]) : 0,
+						Display_Seq_No = dr["Display_Seq_No"] != DBNull.Value ? Convert.ToInt32(dr["Display_Seq_No"]) : 0
+					});
+
+			CommonViewModel.Data1 = listObj;
 
 			return View(CommonViewModel);
 		}

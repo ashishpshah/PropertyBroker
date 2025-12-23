@@ -187,9 +187,9 @@
 		<div class="row row-cols-lg-5 row-cols-md-3 row-cols-sm-2 row-cols-1 g-4 mt-0">
 			@if (Model.Data1 != null)
 			{
-				foreach (dynamic item in ((Model.Data1 as IEnumerable<object>)?.ToList()))
+				foreach (dynamic item in ((Model.Data1 as IList<PropertyType>)?.OrderBy(x => x.Display_Seq_No).ToList()))
 				{
-					<div class="col property-type" role="button" data-property-type-id="@item.TypeId" onclick="openPropertyModal(this)">
+					<div class="col property-type" role="button" data-property-type-id="@item.Id" onclick="openPropertyModal(this)">
 						<div class="categories position-relative overflow-hidden rounded-3 shadow">
 							@if (!string.IsNullOrEmpty(item.ImagePath))
 							{
@@ -201,7 +201,7 @@
 							}
 
 							<div class="p-3">
-								<a href="" class="title text-dark fs-5 fw-medium">@item.TypeName</a>
+								<span class="title text-dark fs-5 fw-medium">@item.Name</span>
 								<p class="text-muted small mb-0">@item.PropertyCount @(item.PropertyCount > 1 ? "Properties" : "Property")</p>
 							</div>
 
@@ -282,33 +282,33 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h1 class="modal-title fs-5" id="exampleModalCenteredScrollableTitle">Please fill out your basic details in this form</h1>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" tabindex="-1"></button>
 			</div>
 			<div class="modal-body">
 				<form id="formUserData" action="@Url.Action("Search", "Home", new { area = "" })" class="needs-validation" novalidate="">
 					<div class="row g-3">
 						<div class="col-sm-6">
 							<label for="firstName" class="form-label">First name</label>
-							<input type="text" class="form-control" name="FirstName" id="firstName" data-required data-msg="Please enter First name">
+							<input type="text" class="form-control" name="FirstName" id="firstName" data-required data-msg="Please enter First name" tabindex="1">
 						</div>
 						<div class="col-sm-6">
 							<label for="lastName" class="form-label">Last name</label>
-							<input type="text" class="form-control" name="LastName" id="lastName" data-required data-msg="Please enter Last name">
+							<input type="text" class="form-control" name="LastName" id="lastName" data-required data-msg="Please enter Last name" tabindex="2">
 						</div>
 						<div class="col-12">
 							<label for="email" class="form-label">Email <span class="text-body-secondary">(Optional)</span></label>
-							<input type="email" class="form-control" name="Email" id="email" placeholder="you@example.com" data-required data-msg="Please enter Email">
+							<input type="email" class="form-control" name="Email" id="email" placeholder="you@example.com" data-required data-msg="Please enter Email" tabindex="3">
 						</div>
 						<div class="col-12">
 							<label for="ContactNo" class="form-label">Contact No.</label>
-							<input type="text" class="form-control isNumberKey" name="ContactNo" id="ContactNo" maxlength="11" data-required data-msg="Please enter Contact No.">
+							<input type="text" class="form-control isNumberKey" name="ContactNo" id="ContactNo" maxlength="11" data-required data-msg="Please enter Contact No." tabindex="4">
 						</div>
 					</div>
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary" onclick="fnSubmitFormHere('formUserData')">Submit</button>
+				<button type="button" class="btn btn-primary" onclick="fnSubmitFormHere('formUserData')" tabindex="5">Submit</button>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" tabindex="6">Close</button>
 			</div>
 		</div>
 	</div>
