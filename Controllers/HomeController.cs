@@ -151,6 +151,29 @@ namespace Broker.Controllers
 
 			try
 			{
+				responseModel.SelectListItems = new List<SelectListItem_Custom>();
+
+				var requirement = "";
+
+				//var list = _context.Using<AreasMaster>().GetByCondition(x => x.Id > 1, x => x.City).Include(x => x.City).OrderBy(x => x.Id)
+				//			.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name + ", " + x.City.Name, "L")).Distinct().ToList();
+				var list = (from area in _context.Using<AreasMaster>().GetByCondition(x => x.IsActive == true).ToList()
+							join city in _context.Using<City>().GetByCondition(x => x.IsActive == true).ToList()
+							  on area.CityId equals city.Id into cityGroup
+							from city in cityGroup.DefaultIfEmpty() // LEFT JOIN
+							orderby area.Id
+							select new SelectListItem_Custom(area.Id.ToString(), area.Name + (city != null ? ", " + city.Name : ""), "L")).Distinct().ToList();
+
+				if (list != null && list.Count() > 0) responseModel.SelectListItems.AddRange(list);
+
+				list = _context.Using<PropertyCategory>().GetByCondition(x => x.IsActive == true).OrderBy(x => x.Name)
+							.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name, "PC")).Distinct().ToList();
+
+				if (list != null && list.Count() > 0) responseModel.SelectListItems.AddRange(list);
+
+				if (viewModel.PropertyCategory > 0)
+					requirement = "For " + (string)list.Where(x => x.Value == viewModel.PropertyCategory.ToString()).Select(x => x.Text).FirstOrDefault();
+
 				responseModel.IsSuccess = true;
 
 				if (!string.IsNullOrEmpty(viewModel.Email) || !string.IsNullOrEmpty(viewModel.ContactNo))
@@ -160,26 +183,14 @@ namespace Broker.Controllers
 						Name = viewModel.FirstName + " " + viewModel.LastName,
 						Email = viewModel.Email,
 						Mobile = viewModel.ContactNo,
-						Requirement = viewModel.PropertyFor,
+						Requirement = requirement,
+						PreferredAreaId = viewModel.Location,
 						PropertyType = viewModel.PropertyType_Parent,
 						LeadSource_Value = (string)_context.Using<LovMaster>().GetByCondition(x => x.LovDesc.ToLower().Contains("website")).Select(x => x.LovCode).FirstOrDefault()
 					};
 
-					//_context.Using<Lead>().Add(lead);
 					var (IsSuccess, response, Id) = DataContext_Command.Leads_Save(lead);
 				}
-
-				responseModel.SelectListItems = new List<SelectListItem_Custom>();
-
-				var list = _context.Using<AreasMaster>().GetByCondition(x => x.Id > 1, x => x.City).OrderBy(x => x.Id)
-							.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name + ", " + x.City.Name, "L")).Distinct().ToList();
-
-				if (list != null && list.Count() > 0) responseModel.SelectListItems.AddRange(list);
-
-				list = _context.Using<PropertyCategory>().GetByCondition(x => x.IsActive == true).OrderBy(x => x.Name)
-							.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name, "PC")).Distinct().ToList();
-
-				if (list != null && list.Count() > 0) responseModel.SelectListItems.AddRange(list);
 
 				list = _context.Using<PropertyType>().GetByCondition(x => x.IsActive == true).OrderBy(x => x.Name)
 							.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name, x.ParentId.ToString(), 1, "PT")).Distinct().ToList();

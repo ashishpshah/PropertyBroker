@@ -32,8 +32,10 @@
 	<header id="topnav" class="defaultscroll sticky">
 		<div class="container">
 			<a class="logo" href="@Url.Action("Index", "Home", new { area = "" })">
-				<img src="~/images/logo-dark.png" class="logo-light-mode" alt="">
-				<img src="~/images/logo-light.png" class="logo-dark-mode" alt="">
+				@* <img src="~/images/logo-dark.png" class="logo-light-mode" alt="">
+				<img src="~/images/logo-light.png" class="logo-dark-mode" alt=""> *@
+				<img src="~/images/logo-dark-1.png" class="logo-light-mode" alt="" height="32" width="132">
+				<img src="~/images/logo-dark-1.png" class="logo-dark-mode" alt="" height="32" width="132">
 			</a>
 
 			<div class="menu-extras">
@@ -50,25 +52,9 @@
 
 			<ul class="buy-button list-inline mb-0">
 				<li class="list-inline-item ps-1 mb-0">
-					<div class="dropdown">
-						<button type="button" class="dropdown-toggle btn btn-sm btn-icon btn-pills btn-primary" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<i data-feather="search" class="icons"></i>
-						</button>
-						<div class="dropdown-menu dd-menu dropdown-menu-end bg-white rounded-3 border-0 mt-3 p-0" style="width: 240px;">
-							<div class="search-bar">
-								<div id="itemSearch" class="menu-search mb-0">
-									<form role="search" method="get" id="searchItemform" class="searchform">
-										<input type="text" class="form-control rounded border" name="s" id="searchItem" placeholder="Search...">
-										<input type="submit" id="searchItemsubmit" value="Search">
-										<i data-feather="search" class="search-icon fea icon-sm"></i>
-									</form>
-								</div>
-							</div>
-						</div>
-					</div>
-				</li>
-				<li class="list-inline-item ps-1 mb-0">
-					<a href="auth-login.html" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="user" class="icons"></i></a>
+					<a href="@Url.Action("Index", "Home", new { area = "Admin" })" class="btn btn-sm btn-icon btn-pills btn-primary">
+						<i data-feather="user" class="icons"></i>
+					</a>
 				</li>
 			</ul>
 
@@ -111,55 +97,35 @@
 					<div class="footer-py-60 footer-border">
 						<div class="row">
 							<div class="col-lg-5 col-12 mb-0 mb-md-4 pb-0 pb-md-2">
-								<a href="#" class="logo-footer">
-									<img src="~/images/logo-light.png" alt="">
-								</a>
-								<p class="mt-4">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
-								<ul class="list-unstyled social-icon foot-social-icon mb-0 mt-4">
-									<li class="list-inline-item"><a href="https://1.envato.market/towntor" target="_blank" class="rounded-3"><i data-feather="shopping-cart" class="fea icon-sm align-middle" title="Buy Now"></i></a></li>
-									<li class="list-inline-item"><a href="https://dribbble.com/shreethemes" target="_blank" class="rounded-3"><i data-feather="dribbble" class="fea icon-sm align-middle" title="dribbble"></i></a></li>
-									<li class="list-inline-item"><a href="http://linkedin.com/company/shreethemes" target="_blank" class="rounded-3"><i data-feather="linkedin" class="fea icon-sm align-middle" title="Linkedin"></i></a></li>
-									<li class="list-inline-item"><a href="https://www.facebook.com/shreethemes" target="_blank" class="rounded-3"><i data-feather="facebook" class="fea icon-sm align-middle" title="facebook"></i></a></li>
-									<li class="list-inline-item"><a href="https://www.instagram.com/shreethemes/" target="_blank" class="rounded-3"><i data-feather="instagram" class="fea icon-sm align-middle" title="instagram"></i></a></li>
-									<li class="list-inline-item"><a href="https://twitter.com/shreethemes" target="_blank" class="rounded-3"><i data-feather="twitter" class="fea icon-sm align-middle" title="twitter"></i></a></li>
-									<li class="list-inline-item"><a href="mailto:support@shreethemes.in" class="rounded-3"><i data-feather="mail" class="fea icon-sm align-middle" title="email"></i></a></li>
-								</ul><!--end icon-->
+								@* <a href="#" class="logo-footer"> <img src="~/images/logo-light.png" alt=""> </a> *@
+								<a href="#" class="logo-footer"> <img src="~/images/logo-dark-1.png" alt="" height="32" width="132"> </a>
+								<p class="mt-4"> Find the perfect home to buy or sell with trusted listings and expert support. <br /> Secure high-value commercial properties that drive business growth and returns. <br /> Discover rental properties with flexible options and hassle-free leasing. </p>
 							</div>
 
 							<div class="col-lg-2 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
 								<h5 class="footer-head">Company</h5>
 								<ul class="list-unstyled footer-list mt-4">
-									<li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right align-middle me-1"></i> About us</a></li>
-									<li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right align-middle me-1"></i> Services</a></li>
-									<li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right align-middle me-1"></i> Team</a></li>
-									<li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right align-middle me-1"></i> Pricing</a></li>
-									<li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right align-middle me-1"></i> Project</a></li>
-									<li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right align-middle me-1"></i> Careers</a></li>
-									<li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right align-middle me-1"></i> Blog</a></li>
-									<li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right align-middle me-1"></i> Login</a></li>
-								</ul>
-							</div>
-
-							<div class="col-lg-2 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
-								<h5 class="footer-head">Usefull Links</h5>
-								<ul class="list-unstyled footer-list mt-4">
-									<li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right align-middle me-1"></i> Terms of Services</a></li>
-									<li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right align-middle me-1"></i> Privacy Policy</a></li>
-									<li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right align-middle me-1"></i> Listing</a></li>
-									<li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right align-middle me-1"></i> Contact us</a></li>
+									<li><a href="@Url.Action("Index", "Home", new { area = "" })" class="text-foot"><i class="mdi mdi-chevron-right align-middle me-1"></i> Home</a></li>
+									<li><a href="@Url.Action("AboutUs", "Home", new { area = "" })" class="text-foot"><i class="mdi mdi-chevron-right align-middle me-1"></i> About us</a></li>
+									<li><a href="@Url.Action("ContactUs", "Home", new { area = "" })" class="text-foot"><i class="mdi mdi-chevron-right align-middle me-1"></i> Contact us</a></li>
 								</ul>
 							</div>
 
 							<div class="col-lg-3 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
-								<h5 class="footer-head">Contact Details</h5>
+								<h5 class="footer-head">Location Details</h5>
 
 								<div class="d-flex mt-4">
 									<i data-feather="map-pin" class="fea icon-sm text-primary mt-1 me-3"></i>
 									<div class="">
-										<p class="mb-2">C/54 Northwest Freeway, <br> Suite 558, <br> Houston, USA 485</p>
-										<a href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d39206.002432144705!2d-95.4973981212445!3d29.709510002925988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640c16de81f3ca5%3A0xf43e0b60ae539ac9!2sGerald+D.+Hines+Waterwall+Park!5e0!3m2!1sen!2sin!4v1566305861440!5m2!1sen!2sin" data-type="iframe" class="text-primary lightbox">View on Google map</a>
+										<p class="mb-2"> 303, Apm Complex, Sattadhar cross road,<br> Sola, Ahmedabad, Gujarat 380061 </p>
+										<a href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3670.887208566479!2d72.52857697600876!3d23.06459636475743!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e83b90c3cf8cb%3A0xe636d1e1ceac201f!2sPadhya%20Software%20Technologies!5e0!3m2!1sen!2sin!4v1744791925520!5m2!1sen!2sin" data-type="iframe" class="text-primary lightbox">View on Google map</a>
 									</div>
 								</div>
+
+							</div>
+
+							<div class="col-lg-3 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
+								<h5 class="footer-head">Get in Touch</h5>
 
 								<div class="d-flex mt-4">
 									<i data-feather="mail" class="fea icon-sm text-primary mt-1 me-3"></i>
@@ -182,7 +148,9 @@
 				<div class="row">
 					<div class="col">
 						<div class="text-center">
-							<p class="mb-0">© <script>document.write(new Date().getFullYear())</script> Towntor. Design with <i class="mdi mdi-heart text-danger"></i> by <a href="https://shreethemes.in/" target="_blank" class="text-reset">Shreethemes</a>.</p>
+							<p class="mb-0">
+								© <script>document.write(new Date().getFullYear())</script>  <a href="https://www.padhyasoft.com/" target="_blank" class="text-reset">Padhya Software Technologies</a>. All Rights Reserved.
+							</p>
 						</div>
 					</div>
 				</div>

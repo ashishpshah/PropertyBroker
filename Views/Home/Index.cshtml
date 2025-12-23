@@ -9,6 +9,32 @@
 		.error {
 			display: block !important;
 		}
+
+		.form-label {
+			margin-bottom: 0 !important;
+		}
+
+		.form-control {
+			font-size: 16px;
+			line-height: 26px;
+			background-color: #fff;
+			border: 0;
+			border-bottom: 1px solid #e7e7e7;
+			border-radius: 0;
+			font-weight: bold;
+			margin-bottom: 7px;
+		}
+
+		.shadow {
+			box-shadow: var(--bs-box-shadow) !important;
+		}
+
+		.nav-pills .nav-link.active {
+			border-bottom: 3px solid #38bdf8 !important;
+			border-radius: 0 !important;
+			background: transparent !important;
+			color: #38bdf8 !important;
+		}
 	</style>
 }
 
@@ -23,7 +49,7 @@
 					<div class="col-12">
 						<div class="title-heading">
 							<h4 class="heading fw-bold text-white title-dark mb-3">We will help you find <br> your <span class="typewrite text-primary" data-period="2000" data-type='[ "Wonderful", "Dream" ]'></span> home</h4>
-							<p class="para-desc text-white title-dark mb-0">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
+							<p class="para-desc text-white title-dark mb-0">A reliable marketplace for buying, and renting properties with our support.</p>
 						</div>
 					</div>
 				</div>
@@ -37,23 +63,27 @@
 		<div class="row justify-content-center">
 			<div class="col-12 mt-sm-0 pt-sm-0">
 				<div class="features-absolute">
-					<ul class="nav nav-pills bg-white shadow border-bottom p-3 flex-row d-md-inline-flex nav-justified mb-0 rounded-top-3 position-relative overflow-hidden" id="pills-tab" role="tablist">
-						<li class="nav-item m-1">
-							<a class="nav-link py-2 px-4 active rounded-3 fw-medium" id="Buy" data-bs-toggle="pill" href="#buy" role="tab" aria-controls="buy" aria-selected="false">
-								Buy
-							</a>
-						</li>
+					<ul class="nav nav-pills bg-white border-bottom p-3 flex-row d-md-inline-flex mb-0 rounded-top-3 position-relative overflow-hidden" id="pills-tab" role="tablist">
 
-						<li class="nav-item m-1">
-							<a class="nav-link py-2 px-4 rounded-3 fw-medium" id="Rent" data-bs-toggle="pill" href="#rent" role="tab" aria-controls="rent" aria-selected="false">
-								Rent
-							</a>
-						</li>
+						@if (Model.SelectListItems != null)
+						{
+							var category = Model.SelectListItems.Where(x => x.Group == "PC").OrderBy(x => x.OrderBy).ToList();
+
+							for (int i = 0; i < category.Count(); i++)
+							{
+								<li class="nav-item m-1 shadow">
+									<a class="nav-link py-2 px-4 @(i == 0 ? "active" : "") rounded-3 fw-medium" id="@category[i].Value" data-bs-toggle="pill" href="#" role="tab" aria-controls="@category[i].Value" aria-selected="false">
+										@category[i].Text
+									</a>
+								</li>
+
+							}
+						}
 					</ul>
 
-					<div class="bg-white rounded-bottom-3 rounded-end-3 sm-rounded-0 shadow">
-						<div class="card border-0">
-							<form class="card-body text-start">
+					<div class="bg-white rounded-bottom-3 rounded-end-3 sm-rounded-0">
+						<div class="card border-0 bg-transparent">
+							<form class="card-body text-start shadow" style="border-radius: 26px; box-shadow: 0 3px 12px -9px rgba(0, 0, 0, 0.4); border: solid 1px #38bdf8; background-color: #ffffff;">
 								<div class="registration-form text-dark text-start">
 									<div class="row g-lg-0">
 										<div class="col-lg-3 col-md-6 col-12">
@@ -72,7 +102,7 @@
 												</div>
 											</div>
 										</div>
-
+										@* 
 										<div class="col-lg-3 col-md-6 col-12">
 											<div class="mb-3 text-start">
 												<label class="form-label fs-6">Category</label>
@@ -88,11 +118,11 @@
 													</select>
 												</div>
 											</div>
-										</div>
+										</div> *@
 
 										<div class="col-lg-3 col-md-6 col-12">
 											<div class="mb-3 text-start">
-												<label class="form-label fs-6">&nbsp;</label>
+												<label class="form-label fs-6">Type</label>
 												<div class="filter-search-form position-relative filter-border">
 													<select class="form-select choices-select" id="choices-PropertyType_Parent">
 														@if (Model.SelectListItems != null)
@@ -124,12 +154,18 @@
 											</div>
 										</div>
 
-										<div class="col-lg-3 col-md-6 col-12">
-											<input type="hidden" name="PropertyFor" id="ListingType" value="Buy" style="display:none" />
-											@* <input type="submit" id="search" name="search" style="height: 48px;" class="btn btn-primary searchbtn w-100" value="Search"> *@
-											@* <a href="@Url.Action("Features", "Home", new { area = "" })" class="btn btn-primary searchbtn w-100">Search</a> *@
-											<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable">Search</button>
+										<div class="col-lg-3 col-md-6 col-12 align-self-end justify-content-center">
+											<div class="mb-3 text-start">
+												<label class="form-label fs-6">&nbsp;</label>
+												<div class="filter-search-form position-relative">
+													<button type="button" class="btn btn-primary ms-md-5" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable"
+															style="height: 60px; font-size: 20px; font-weight: 600;">
+														Search
+													</button>
+												</div>
+											</div>
 										</div>
+
 									</div>
 								</div>
 							</form>
@@ -182,7 +218,7 @@
 			<div class="col">
 				<div class="section-title text-center mb-4 pb-2">
 					<h4 class="title mb-3">How It Works</h4>
-					<p class="text-muted para-desc mb-0 mx-auto">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
+					<p class="text-muted para-desc mb-0 mx-auto">A simple platform that makes buying and renting properties easy, with expert help and a smooth experience from start to finish.</p>
 				</div>
 			</div>
 		</div>
@@ -198,8 +234,8 @@
 					</div>
 
 					<div class="mt-4">
-						<a href="" class="fw-medium title text-dark fs-5">Evaluate Property</a>
-						<p class="text-muted mt-3 mb-0">If the distribution of letters and 'words' is random, the reader will not be distracted from making.</p>
+						<a href="" class="fw-medium title text-dark fs-5">Check Property</a>
+						<p class="text-muted mt-3 mb-0">Take your time to explore property details and location so you can feel confident about your choice.</p>
 					</div>
 				</div>
 			</div>
@@ -214,8 +250,8 @@
 					</div>
 
 					<div class="mt-4">
-						<a href="" class="fw-medium title text-dark fs-5">Meeting with Agent</a>
-						<p class="text-muted mt-3 mb-0">If the distribution of letters and 'words' is random, the reader will not be distracted from making.</p>
+						<a href="" class="fw-medium title text-dark fs-5">Talk to Agent</a>
+						<p class="text-muted mt-3 mb-0">Connect with a friendly, experienced agent who can answer your questions and guide you through the process.</p>
 					</div>
 				</div>
 			</div>
@@ -230,27 +266,14 @@
 					</div>
 
 					<div class="mt-4">
-						<a href="" class="fw-medium title text-dark fs-5">Close the Deal</a>
-						<p class="text-muted mt-3 mb-0">If the distribution of letters and 'words' is random, the reader will not be distracted from making.</p>
+						<a href="" class="fw-medium title text-dark fs-5">Finalize Deal</a>
+						<p class="text-muted mt-3 mb-0">Complete the paperwork, confirm the details, and move forward knowing everything is handled smoothly and securely.</p>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="container mt-100 mt-60">
-		<div class="row justify-content-center">
-			<div class="col-12">
-				<div class="section-title text-center">
-					<h4 class="title mb-3">Have Question ? Get in touch!</h4>
-					<p class="text-muted para-desc mb-0 mx-auto">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
-					<div class="mt-4 pt-2">
-						<a href="contactus.html" class="btn btn-pills btn-primary"><span class="h5 mb-0 me-1"><i data-feather="mail" class="fea icon-sm"></i></span> Contact us</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 </section><!--end section-->
 <!-- End -->
 
@@ -317,13 +340,6 @@
 		}
 
 
-		document.querySelectorAll('#pills-tab .nav-link')
-		.forEach(tab => {
-		  tab.addEventListener('shown.bs.tab', function (e) {
-			document.getElementById('ListingType').value = e.target.id;
-		  });
-		});
-		
 		function fnSubmitFormHere(formId) {
 
 			const $form = $('#' + formId);
@@ -358,7 +374,7 @@
 				type = $('#choices-PropertyType').val();
 
 				location = $('#choices-PropertyLocation').val();
-				category = $('#choices-PropertyCategory').val();
+				category = $('#pills-tab .nav-link.active').attr('id');
 
 				if (!location || !category || !type) {
 					showToast('Please select all search filters', 'danger', 5000);
@@ -376,8 +392,8 @@
 				`&PropertyType_Parent=${encodeURIComponent(typeParent)}` +
 				`&PropertyType=${encodeURIComponent(type)}`;
 
-					
-		
+
+
 		fetch(url, { method: 'GET' })
 		.then(async response =>
 		{
@@ -387,12 +403,12 @@
 
 				try {
 					errorBody = await response.json(); // 👈 read body
+					showToast(errorBody.Message, 'danger', 5000);
+					return; // stop here
 				} catch {
 					// response is not JSON
 				}
 
-				showToast(errorBody.Message, 'danger', 5000);
-				return; // stop here
 			}
 
 			// ✅ Response is OK → redirect
@@ -402,7 +418,7 @@
 			showToast('Opps!... Something went wrong', 'danger', 5000);
 		});
 
-		
+
 
 		}
 
@@ -443,7 +459,7 @@
 				// 		console.error("Redirect failed:", err);
 				// 	}
 
-						
+
 
 				// }
 
@@ -471,12 +487,14 @@
 		.addEventListener('change', function () {
 		  const selectedParent = this.value;
 
+		  var filterd = originalOptions.filter(o => o.dataset.parent === selectedParent).map(o => ({ value: o.value, label: o.text, }));
+
 			const choices = childSelect._choicesInstance;
 
 			choices.clearChoices();
-			choices.setChoices(originalOptions.filter(o => o.dataset.parent === selectedParent).map(o => ({ value: o.value, label: o.text, })), 'value', 'label', true );
-
 			choices.removeActiveItems();
+			choices.setChoices(filterd, 'value', 'label', true );
+
 		});
 	</script>
 }

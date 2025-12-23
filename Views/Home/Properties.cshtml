@@ -58,53 +58,43 @@
 						</div>
 					</div>
 					<!-- SEARCH -->
-					<!-- TYPE -->
-					<div class="mt-4">
-						<h6 class="mb-0">Type of Properties</h6>
+					@if (Model.SelectListItems != null)
+					{
+						<!-- TYPE -->
+						<div class="mt-4">
+							<h6 class="mb-0">Choose Category</h6>
 
-						<ul class="list-unstyled mt-2 mb-0">
-							<li class="list-inline-item mb-0 me-2">
-								<div class="custom-control custom-radio custom-control-inline">
-									<div class="form-check mb-0">
-										<input class="form-check-input" type="radio" name="flexRadioDefault" id="Buy" @(Model.Data1.PropertyFor == "Buy" ? "checked" : "")>
-										<label class="form-check-label" for="buy">For Buy</label>
-									</div>
-								</div>
-							</li>
-							<li class="list-inline-item mb-0 me-2">
-								<div class="custom-control custom-radio custom-control-inline">
-									<div class="form-check mb-0">
-										<input class="form-check-input" type="radio" name="flexRadioDefault" id="Rent" @(Model.Data1.PropertyFor == "Buy" ? "checked" : "")>
-										<label class="form-check-label" for="rent">For Rent</label>
-									</div>
-								</div>
-							</li>
-
-						</ul>
-					</div>
-					<!-- TYPE -->
-					<!-- Categories -->
-					<div class="mt-4">
-						<h6 class="mb-0">Categories</h6>
-						<select class="form-select choices-select" id="choices-PropertyCategory">
-							@if (Model.SelectListItems != null)
-							{
-								foreach (var item in Model.SelectListItems.Where(x => x.Group == "PC"))
+							<ul class="list-unstyled mt-2 mb-0">
+								@foreach (var item in Model.SelectListItems.Where(x => x.Group == "PC"))
 								{
 									if (Convert.ToString(propertySerch.PropertyCategory) == item.Value)
 									{
-										<option value="@item.Value" selected>@item.Text</option>
+										<li class="list-inline-item mb-0 me-2">
+											<div class="custom-control custom-radio custom-control-inline">
+												<div class="form-check mb-0">
+													<input class="form-check-input" type="radio" name="flexRadioDefault" id="@item.Value" checked>
+													<label class="form-check-label" for="@item.Value">For @item.Text</label>
+												</div>
+											</div>
+										</li>
 									}
 									else
 									{
-										<option value="@item.Value">@item.Text</option>
+										<li class="list-inline-item mb-0 me-2">
+											<div class="custom-control custom-radio custom-control-inline">
+												<div class="form-check mb-0">
+													<input class="form-check-input" type="radio" name="flexRadioDefault" id="@item.Value">
+													<label class="form-check-label" for="@item.Value">For @item.Text</label>
+												</div>
+											</div>
+										</li>
 									}
 								}
-							}
-						</select>
-					</div>
-					<!-- Categories -->
-					<!-- Location -->
+							</ul>
+						</div>
+						<!-- TYPE -->
+					}
+
 					<div class="mt-4">
 						<h6 class="mb-0">Property Type</h6>
 						<select class="form-select choices-select" id="choices-PropertyType_Parent">
@@ -146,7 +136,6 @@
 					<!-- Location -->
 
 					<div class="mt-4">
-						<input type="hidden" name="PropertyFor" id="ListingType" value="@Model.Data1.PropertyFor" style="display:none" />
 						<button role="button" class="btn btn-primary w-100" onclick="fnSubmitFormHere()">Search</button>
 					</div>
 				</div>
@@ -157,7 +146,7 @@
 					<div class="col-lg-6 col-12">
 						<div class="card property border-0 shadow position-relative overflow-hidden rounded-3">
 							<div class="property-image position-relative overflow-hidden shadow">
-								<img src="images/property/1.jpg" class="img-fluid" alt="">
+								<img src="~/images/property/1.jpg" class="img-fluid" alt="">
 								<ul class="list-unstyled property-icon">
 									<li class=""><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="home" class="icons"></i></a></li>
 									<li class="mt-1"><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="heart" class="icons"></i></a></li>
@@ -207,7 +196,7 @@
 					<div class="col-lg-6 col-12">
 						<div class="card property border-0 shadow position-relative overflow-hidden rounded-3">
 							<div class="property-image position-relative overflow-hidden shadow">
-								<img src="images/property/2.jpg" class="img-fluid" alt="">
+								<img src="~/images/property/2.jpg" class="img-fluid" alt="">
 								<ul class="list-unstyled property-icon">
 									<li class=""><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="home" class="icons"></i></a></li>
 									<li class="mt-1"><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="heart" class="icons"></i></a></li>
@@ -256,7 +245,7 @@
 					<div class="col-lg-6 col-12">
 						<div class="card property border-0 shadow position-relative overflow-hidden rounded-3">
 							<div class="property-image position-relative overflow-hidden shadow">
-								<img src="images/property/3.jpg" class="img-fluid" alt="">
+								<img src="~/images/property/3.jpg" class="img-fluid" alt="">
 								<ul class="list-unstyled property-icon">
 									<li class=""><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="home" class="icons"></i></a></li>
 									<li class="mt-1"><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="heart" class="icons"></i></a></li>
@@ -305,7 +294,7 @@
 					<div class="col-lg-6 col-12">
 						<div class="card property border-0 shadow position-relative overflow-hidden rounded-3">
 							<div class="property-image position-relative overflow-hidden shadow">
-								<img src="images/property/4.jpg" class="img-fluid" alt="">
+								<img src="~/images/property/4.jpg" class="img-fluid" alt="">
 								<ul class="list-unstyled property-icon">
 									<li class=""><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="home" class="icons"></i></a></li>
 									<li class="mt-1"><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="heart" class="icons"></i></a></li>
@@ -354,7 +343,7 @@
 					<div class="col-lg-6 col-12">
 						<div class="card property border-0 shadow position-relative overflow-hidden rounded-3">
 							<div class="property-image position-relative overflow-hidden shadow">
-								<img src="images/property/5.jpg" class="img-fluid" alt="">
+								<img src="~/images/property/5.jpg" class="img-fluid" alt="">
 								<ul class="list-unstyled property-icon">
 									<li class=""><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="home" class="icons"></i></a></li>
 									<li class="mt-1"><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="heart" class="icons"></i></a></li>
@@ -403,7 +392,7 @@
 					<div class="col-lg-6 col-12">
 						<div class="card property border-0 shadow position-relative overflow-hidden rounded-3">
 							<div class="property-image position-relative overflow-hidden shadow">
-								<img src="images/property/6.jpg" class="img-fluid" alt="">
+								<img src="~/images/property/6.jpg" class="img-fluid" alt="">
 								<ul class="list-unstyled property-icon">
 									<li class=""><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="home" class="icons"></i></a></li>
 									<li class="mt-1"><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="heart" class="icons"></i></a></li>
@@ -452,7 +441,7 @@
 					<div class="col-lg-6 col-12">
 						<div class="card property border-0 shadow position-relative overflow-hidden rounded-3">
 							<div class="property-image position-relative overflow-hidden shadow">
-								<img src="images/property/7.jpg" class="img-fluid" alt="">
+								<img src="~/images/property/7.jpg" class="img-fluid" alt="">
 								<ul class="list-unstyled property-icon">
 									<li class=""><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="home" class="icons"></i></a></li>
 									<li class="mt-1"><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="heart" class="icons"></i></a></li>
@@ -501,7 +490,7 @@
 					<div class="col-lg-6 col-12">
 						<div class="card property border-0 shadow position-relative overflow-hidden rounded-3">
 							<div class="property-image position-relative overflow-hidden shadow">
-								<img src="images/property/8.jpg" class="img-fluid" alt="">
+								<img src="~/images/property/8.jpg" class="img-fluid" alt="">
 								<ul class="list-unstyled property-icon">
 									<li class=""><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="home" class="icons"></i></a></li>
 									<li class="mt-1"><a href="javascript:void(0)" class="btn btn-sm btn-icon btn-pills btn-primary"><i data-feather="heart" class="icons"></i></a></li>

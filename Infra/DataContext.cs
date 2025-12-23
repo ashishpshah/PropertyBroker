@@ -37,7 +37,7 @@ namespace Broker.Infra
 
 		public virtual DbSet<LocationPropertyMap> LocationPropertyMaps { get; set; }
 
-		public virtual DbSet<Location> Locations { get; set; }
+		public virtual DbSet<Broker.Models.Location> Locations { get; set; }
 
 		public virtual DbSet<LovMaster> LovMasters { get; set; }
 
@@ -269,6 +269,17 @@ namespace Broker.Infra
 					.HasConstraintName("FK_Timeline_Lead");
 			});
 
+
+			modelBuilder.Entity<Broker.Models.Location>(entity =>
+			{
+				entity.HasKey(e => e.LocationId).HasName("PK__Location__E7FEA497A2A34FF1");
+
+				entity.ToTable("Locations", "dbo");
+
+				entity.Property(e => e.LocationName).HasMaxLength(150);
+				entity.Property(e => e.Pincode).HasMaxLength(10);
+			});
+
 			modelBuilder.Entity<LocationPropertyMap>(entity =>
 			{
 				entity.HasKey(e => e.Id).HasName("PK__Location__3214EC075411C3E2");
@@ -277,19 +288,6 @@ namespace Broker.Infra
 
 				entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 				entity.Property(e => e.LastModifiedDate).HasColumnType("datetime");
-			});
-
-			modelBuilder.Entity<Location>(entity =>
-			{
-				entity.HasKey(e => e.LocationId).HasName("PK__Location__E7FEA4974BB4678C");
-
-				entity.Property(e => e.LocationName).HasMaxLength(150);
-				entity.Property(e => e.Pincode).HasMaxLength(10);
-
-				//entity.HasOne(d => d.Area).WithMany(p => p.Locations)
-				//	.HasForeignKey(d => d.AreaId)
-				//	.OnDelete(DeleteBehavior.ClientSetNull)
-				//	.HasConstraintName("FK__Locations__AreaI__17C286CF");
 			});
 
 			modelBuilder.Entity<LovMaster>(entity =>
@@ -357,7 +355,7 @@ namespace Broker.Infra
 				entity.Property(e => e.Remark)
 					.HasMaxLength(500)
 					.IsUnicode(false);
-				entity.Property(e => e.AvailabilityStatus).HasColumnName("Status")
+				entity.Property(e => e.Status)
 					.HasMaxLength(50)
 					.IsUnicode(false)
 					.HasDefaultValue("Active");
@@ -402,8 +400,9 @@ namespace Broker.Infra
 
 				entity.ToTable("PropertyTypes", "dbo");
 
-				entity.Property(e => e.Name).HasMaxLength(50);
+				entity.Property(e => e.DisplaySeqNo).HasColumnName("Display_Seq_No");
 				entity.Property(e => e.ImagePath).HasMaxLength(100);
+				entity.Property(e => e.Name).HasMaxLength(50);
 			});
 
 			modelBuilder.Entity<PropertyImage>(entity =>

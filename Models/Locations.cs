@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Broker.Models;
 
-public partial class Locations : EntitiesBase
+public partial class Location : EntitiesBase
 {
 	[NotMapped] public override long Id { get; set; }
 
