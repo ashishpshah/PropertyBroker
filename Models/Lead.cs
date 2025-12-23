@@ -60,8 +60,8 @@ public partial class Lead : EntitiesBase
 
 	[NotMapped] public virtual PropertyType? PropertyTypeNavigation { get; set; }
 
-	[NotMapped] public DateTime? NextFollowupDate { get; set; }
-    public virtual PropertyType? PropertyTypeNavigation { get; set; }
+	 public DateTime? Next_FollowUp_Date { get; set; }
+  
     public string? Selected_Status { get; set; }
-    public DateTime? NextFollowupDate { get; set; }
+  
 }

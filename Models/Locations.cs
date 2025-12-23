@@ -6,7 +6,7 @@ namespace Broker.Models;
 
 public partial class Locations : EntitiesBase
 {
-	[NotMapped] public override long Id { get; set; }
+	public override long Id { get; set; }
 
 	public long LocationId { get; set; }
 

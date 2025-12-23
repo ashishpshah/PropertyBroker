@@ -37,7 +37,7 @@ namespace Broker.Infra
 
 		public virtual DbSet<LocationPropertyMap> LocationPropertyMaps { get; set; }
 
-		public virtual DbSet<Location> Locations { get; set; }
+		public virtual DbSet<Locations> Locations { get; set; }
 
 		public virtual DbSet<LovMaster> LovMasters { get; set; }
 
@@ -279,7 +279,7 @@ namespace Broker.Infra
 				entity.Property(e => e.LastModifiedDate).HasColumnType("datetime");
 			});
 
-			modelBuilder.Entity<Location>(entity =>
+			modelBuilder.Entity<Locations>(entity =>
 			{
 				entity.HasKey(e => e.LocationId).HasName("PK__Location__E7FEA4974BB4678C");
 
@@ -1148,7 +1148,7 @@ namespace Broker.Infra
                             BudgetMin = dr["BudgetMin"] != DBNull.Value ? Convert.ToDecimal(dr["BudgetMin"]) : 0,
                             BudgetMax = dr["BudgetMax"] != DBNull.Value ? Convert.ToDecimal(dr["BudgetMax"]) : 0,
                             IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false,
-							NextFollowupDate = dr["Next_FollowUp_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Next_FollowUp_Date"]) : nullDateTime,
+                            Next_FollowUp_Date = dr["Next_FollowUp_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Next_FollowUp_Date"]) : nullDateTime,
                         });
             }
             catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
@@ -1180,7 +1180,7 @@ namespace Broker.Infra
                             LeadSource_TEXT = dr["LeadSource_TEXT"] != DBNull.Value ? Convert.ToString(dr["LeadSource_TEXT"]) : "",
                             Status = dr["Status"] != DBNull.Value ? Convert.ToString(dr["Status"]) : "",
                             Status_TEXT = dr["Status_TEXT"] != DBNull.Value ? Convert.ToString(dr["Status_TEXT"]) : "",
-                            NextFollowupDate = dr["Next_FollowUp_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Next_FollowUp_Date"]) : nullDateTime,
+                            Next_FollowUp_Date = dr["Next_FollowUp_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Next_FollowUp_Date"]) : nullDateTime,
                         });
             }
             catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
