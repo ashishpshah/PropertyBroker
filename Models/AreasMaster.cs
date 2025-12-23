@@ -17,6 +17,6 @@ public partial class AreasMaster : EntitiesBase
 
 	public virtual ICollection<LocationPropertyMap> LocationPropertyMaps { get; set; } = new List<LocationPropertyMap>();
 
-    public virtual ICollection<Location> Locations { get; set; } = new List<Location>();
+    public virtual ICollection<Locations> Locations { get; set; } = new List<Locations>();
 
 }

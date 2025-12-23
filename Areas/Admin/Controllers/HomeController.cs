@@ -2,7 +2,9 @@
 using Broker.Infra;
 using Broker.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Broker.Areas.Admin.Controllers
 {
@@ -18,13 +20,44 @@ namespace Broker.Areas.Admin.Controllers
 
 				CommonViewModel.Obj = new LoginViewModel();
 			    CommonViewModel.Obj.LeadPendingFollowUpList = new List<Lead>();
-
-			CommonViewModel.Obj.LeadPendingFollowUpList = DataContext_Command.Pending_Lead_FollowUp_Get().ToList();
-			     
-			return View(CommonViewModel);
+			    CommonViewModel.Obj.Count = 0;
+            var dt = DataContext_Command.ExecuteQuery("select Count(*) AS Count from Property");
+            CommonViewModel.Obj.LeadPendingFollowUpList = DataContext_Command.Pending_Lead_FollowUp_Get().ToList();
+			CommonViewModel.Obj.Count = Convert.ToInt32(dt.Rows[0]["Count"]);
+            return View(CommonViewModel);
 		}
+        public ActionResult PropertyList(long Type_Id = 14)
+        {
+            
 
-		public ActionResult Account()
+            CommonViewModel.Obj = new LoginViewModel();
+            //CommonViewModel.Obj.LeadPendingFollowUpList = new List<Lead>();          
+            
+			CommonViewModel.Obj.PropertiesList = new List<Properties>();
+			CommonViewModel.Obj.PropertiesList = DataContext_Command.Property_Get(0, Type_Id);
+            var list = new List<SelectListItem_Custom>();
+            var dt = new DataTable();
+            //var sqlParameters = new List<SqlParameter>();
+            //sqlParameters.Add(new SqlParameter("@Id", SqlDbType.VarChar) { Value = 0 });
+            dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_PropertyTypes_Combo_ByProperties", null, true);
+
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    list.Add(new SelectListItem_Custom(Convert.ToString(dr["Id"]), Convert.ToString(dr["Name"]), Convert.ToString(dr["Property_Count"]) , Convert.ToString(dr["DisplayOrder"]) , "PropertyType")
+                    {
+                        Value = dr["Id"] != DBNull.Value ? Convert.ToString(dr["Id"]) : "",
+                        Text = dr["Name"] != DBNull.Value ? Convert.ToString(dr["Name"]) : "",
+						Value2 = dr["Property_Count"] != DBNull.Value ? Convert.ToString(dr["Property_Count"]) : "",
+                        Value3 = dr["DisplayOrder"] != DBNull.Value ? Convert.ToString(dr["DisplayOrder"]) : "",
+                    });
+                }
+            }
+            CommonViewModel.SelectListItems = list;
+            return View(CommonViewModel);
+        }
+        public ActionResult Account()
 		{
 			Common.Clear_Session();
 
@@ -40,6 +73,18 @@ namespace Broker.Areas.Admin.Controllers
 
                 return PartialView("_Partial_AddEditForm_FollowUp", CommonViewModel);
             
+
+        }
+
+        public ActionResult Partial_AddEditForm_PropertyDetail(long Id = 0)
+        {
+            CommonViewModel.Obj = new LoginViewModel();
+            CommonViewModel.Obj.Properties = new Properties();
+
+            CommonViewModel.Obj.Properties = DataContext_Command.Property_Get(Id , 0).FirstOrDefault();
+
+            return PartialView("_Partial_AddEditForm_PropertyDetail", CommonViewModel);
+
 
         }
         [HttpPost]

@@ -13,7 +13,34 @@
         </div>
     </div>
 </div>
+
 <div class="row">
+	<div class="col-xxl-3 col-sm-6">
+		<a href="@Url.Action("PropertyList", "Home", new { area = "Admin" })"
+		   class="text-decoration-none text-reset">
+
+			<div class="card widget-flat text-bg-info cursor-pointer shadow-sm">
+				<div class="card-body">
+					<div class="float-end">
+						<i class="bi bi-house-check fs-1 opacity-75"></i>
+					</div>
+
+					<h6 class="text-uppercase mt-0 fw-semibold">
+						Available Properties
+					</h6>
+
+					<h2 class="my-2 fw-bold">
+						@Model.Obj.Count
+					</h2>
+
+					<span class="text-white-50">
+						View all listings
+					</span>
+				</div>
+			</div>
+
+		</a>
+	</div>
 	<div class="page-title-box">
 		<h4 class="page-title">Pending Lead Followups (Next 5 Days)</h4>
 	</div>

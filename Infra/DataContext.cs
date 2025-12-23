@@ -1,4 +1,5 @@
 ﻿using Broker.Models;
+using Microsoft.CodeAnalysis;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -1059,7 +1060,7 @@ namespace Broker.Infra
 			return listObj;
 		}
 
-		public static List<Properties> Property_Get(long id = 0)
+		public static List<Properties> Property_Get(long id = 0 , long Type_Id = 0)
 		{
 			DateTime? nullDateTime = null;
 			var listObj = new List<Properties>();
@@ -1068,6 +1069,7 @@ namespace Broker.Infra
 			{
 				var parameters = new List<SqlParameter>();
 				parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = id, Direction = ParameterDirection.Input, IsNullable = true });
+				parameters.Add(new SqlParameter("Type_Id", SqlDbType.BigInt) { Value = Type_Id, Direction = ParameterDirection.Input, IsNullable = true });
 
 				var dt = ExecuteStoredProcedure_DataTable("SP_Property_Get", parameters.ToList());
 
@@ -1097,6 +1099,8 @@ namespace Broker.Infra
 							FurnishingStatus_TEXT = dr["FurnishingStatus_TEXT"] != DBNull.Value ? Convert.ToString(dr["FurnishingStatus_TEXT"]) : "",
 							AvailabilityStatus = dr["AvailabilityStatus"] != DBNull.Value ? Convert.ToString(dr["AvailabilityStatus"]) : "",
 							AvailabilityStatus_TEXT = dr["AvailabilityStatus_TEXT"] != DBNull.Value ? Convert.ToString(dr["AvailabilityStatus_TEXT"]) : "",
+                            City_Name = dr["City_Name"] != DBNull.Value ? Convert.ToString(dr["City_Name"]) : "",
+                            Area_Name = dr["Area_Name"] != DBNull.Value ? Convert.ToString(dr["Area_Name"]) : "",
 							Remark = dr["Remark"] != DBNull.Value ? Convert.ToString(dr["Remark"]) : "",
 							IsFeatured = dr["IsFeatured"] != DBNull.Value ? Convert.ToBoolean(dr["IsFeatured"]) : false,
 							IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
