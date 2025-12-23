@@ -35,9 +35,9 @@ namespace Broker.Infra
 
 		public virtual DbSet<LeadTimeline> LeadTimelines { get; set; }
 
-		public virtual DbSet<Locations> Locations { get; set; }
-
 		public virtual DbSet<LocationPropertyMap> LocationPropertyMaps { get; set; }
+
+		public virtual DbSet<Location> Locations { get; set; }
 
 		public virtual DbSet<LovMaster> LovMasters { get; set; }
 
@@ -186,7 +186,9 @@ namespace Broker.Infra
 
 			modelBuilder.Entity<Lead>(entity =>
 			{
-				entity.HasKey(e => e.Id).HasName("PK__Leads__73EF78FAF5903568");
+				entity.HasKey(e => e.Id).HasName("PK__Leads__73EF78FAE19C4EEE");
+
+				entity.ToTable("Leads", "dbo");
 
 				entity.Property(e => e.BudgetMax).HasColumnType("decimal(12, 2)");
 				entity.Property(e => e.BudgetMin).HasColumnType("decimal(12, 2)");
@@ -194,17 +196,20 @@ namespace Broker.Infra
 					.HasMaxLength(150)
 					.IsUnicode(false);
 				entity.Property(e => e.IsActive).HasDefaultValue(true);
-				entity.Property(e => e.IsDeleted).HasDefaultValue(false);
 				entity.Property(e => e.Landmark).IsUnicode(false);
+				entity.Property(e => e.LeadSource)
+					.HasMaxLength(50)
+					.IsUnicode(false);
 				entity.Property(e => e.Mobile)
-					.HasMaxLength(15)
+					.HasMaxLength(10)
 					.IsUnicode(false);
 				entity.Property(e => e.Name)
 					.HasMaxLength(100)
 					.IsUnicode(false);
-				entity.Property(e => e.Preferred_Area_Id)
-					.HasMaxLength(200)
-					.IsUnicode(false);
+				entity.Property(e => e.NextFollowUpDate).HasColumnName("Next_FollowUp_Date");
+				entity.Property(e => e.PreferredAreaId).HasColumnName("Preferred_Area_Id");
+				entity.Property(e => e.PreferredCityId).HasColumnName("Preferred_City_Id");
+				entity.Property(e => e.Remarks).IsUnicode(false);
 				entity.Property(e => e.Requirement)
 					.HasMaxLength(200)
 					.IsUnicode(false);
@@ -212,38 +217,29 @@ namespace Broker.Infra
 					.HasMaxLength(50)
 					.IsUnicode(false)
 					.HasDefaultValue("New");
-
-				entity.HasOne(d => d.AssignedToNavigation).WithMany(p => p.Leads)
-					.HasForeignKey(d => d.AssignedTo)
-					.HasConstraintName("FK_Leads_User");
-
-				//entity.HasOne(d => d.LeadSource).WithMany(p => p.Leads)
-				//	.HasForeignKey(d => d)
-				//	.HasConstraintName("FK_Leads_LeadSource");
-
 			});
 
 			modelBuilder.Entity<LeadFollowup>(entity =>
 			{
-				entity.HasKey(e => e.Id).HasName("PK__LeadFoll__C6356211ADB9C0A7");
+				entity.HasKey(e => e.Id).HasName("PK__LeadFoll__C635621196732F43");
+
+				entity.ToTable("LeadFollowups", "dbo");
 
 				entity.Property(e => e.IsActive).HasDefaultValue(true);
 				entity.Property(e => e.IsDeleted).HasDefaultValue(false);
 				entity.Property(e => e.Remark).IsUnicode(false);
-
-				entity.HasOne(d => d.Lead).WithMany(p => p.LeadFollowups)
-					.HasForeignKey(d => d.LeadId)
-					.OnDelete(DeleteBehavior.Cascade)
-					.HasConstraintName("FK_Followup_Lead");
 			});
 
 			modelBuilder.Entity<LeadSource>(entity =>
 			{
 				entity.HasKey(e => e.LeadSourceId).HasName("PK__LeadSour__9FB37DB3BB167E3C");
 
-				entity.ToTable("LeadSource");
+				entity.ToTable("LeadSource", "dbo");
 
-				entity.Property(e => e.LeadSourceId).HasColumnName("LeadSourceID");
+				entity.Property(e => e.LeadSourceId)
+					.HasMaxLength(50)
+					.IsUnicode(false)
+					.HasColumnName("LeadSourceID");
 				entity.Property(e => e.LeadSourceName)
 					.HasMaxLength(255)
 					.IsUnicode(false);
@@ -251,9 +247,9 @@ namespace Broker.Infra
 
 			modelBuilder.Entity<LeadTimeline>(entity =>
 			{
-				entity.HasKey(e => e.TimelineId).HasName("PK__LeadTime__1DE4F085D526EF64");
+				entity.HasKey(e => e.TimelineId).HasName("PK__LeadTime__1DE4F08582C6E0A2");
 
-				entity.ToTable("LeadTimeline");
+				entity.ToTable("LeadTimeline", "dbo");
 
 				entity.Property(e => e.Action)
 					.HasMaxLength(200)
@@ -273,7 +269,17 @@ namespace Broker.Infra
 					.HasConstraintName("FK_Timeline_Lead");
 			});
 
-			modelBuilder.Entity<Locations>(entity =>
+			modelBuilder.Entity<LocationPropertyMap>(entity =>
+			{
+				entity.HasKey(e => e.Id).HasName("PK__Location__3214EC075411C3E2");
+
+				entity.ToTable("LocationPropertyMap", "dbo");
+
+				entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+				entity.Property(e => e.LastModifiedDate).HasColumnType("datetime");
+			});
+
+			modelBuilder.Entity<Location>(entity =>
 			{
 				entity.HasKey(e => e.LocationId).HasName("PK__Location__E7FEA4974BB4678C");
 
@@ -284,21 +290,6 @@ namespace Broker.Infra
 				//	.HasForeignKey(d => d.AreaId)
 				//	.OnDelete(DeleteBehavior.ClientSetNull)
 				//	.HasConstraintName("FK__Locations__AreaI__17C286CF");
-			});
-
-			modelBuilder.Entity<LocationPropertyMap>(entity =>
-			{
-				entity.HasKey(e => e.Id).HasName("PK__Location__3214EC0779E0E50A");
-
-				entity.ToTable("LocationPropertyMap");
-
-				entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-				entity.Property(e => e.LastModifiedDate).HasColumnType("datetime");
-
-				//entity.HasOne(d => d.Area).WithMany(p => p.LocationPropertyMaps)
-				//	.HasForeignKey(d => d.AreaId)
-				//	.HasConstraintName("FK_LPM_Area");
-
 			});
 
 			modelBuilder.Entity<LovMaster>(entity =>
@@ -412,6 +403,7 @@ namespace Broker.Infra
 				entity.ToTable("PropertyTypes", "dbo");
 
 				entity.Property(e => e.Name).HasMaxLength(50);
+				entity.Property(e => e.ImagePath).HasMaxLength(100);
 			});
 
 			modelBuilder.Entity<PropertyImage>(entity =>

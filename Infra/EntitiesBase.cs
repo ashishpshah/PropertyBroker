@@ -13,7 +13,7 @@ namespace Broker
 		[DataType(DataType.Date)]
 		[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
 		public virtual Nullable<System.DateTime> CreatedDate { get; set; }
-		public virtual long LastModifiedBy { get; set; }
+		public virtual long? LastModifiedBy { get; set; }
 		[DataType(DataType.Date)]
 		[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
 		public virtual Nullable<System.DateTime> LastModifiedDate { get; set; }

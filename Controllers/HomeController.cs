@@ -109,10 +109,21 @@ namespace Broker.Controllers
 			if (list != null && list.Count() > 0) CommonViewModel.SelectListItems.AddRange(list);
 
 			list = _context.Using<PropertyType>().GetByCondition(x => x.IsActive == true).OrderBy(x => x.Name)
-						.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name, x.ParentId.ToString(), 1, "PT")).Distinct().ToList();
+						.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name, x.ParentId.ToString(), x.ImagePath, "PT")).Distinct().ToList();
 
 			if (list != null && list.Count() > 0) CommonViewModel.SelectListItems.AddRange(list);
 
+			CommonViewModel.Data1 = (from parent in _context.Using<PropertyType>().GetByCondition(x => x.IsActive == true).ToList()
+									 where parent.IsActive && parent.ParentId == 0
+									 select new
+									 {
+										 TypeId = parent.Id,
+										 TypeName = parent.Name,
+										 ImagePath = parent.ImagePath,
+										 PropertyCount = _context.Using<Properties>().GetByCondition(x => x.IsActive == true).ToList()
+										 .Count(p => (p.TypeId == parent.Id || _context.Using<PropertyType>().GetByCondition(x => x.IsActive == true)
+										 .Any(c => c.ParentId == parent.Id && c.IsActive && c.Id == p.TypeId)) && p.IsActive)
+									 }).ToList();
 
 			return View(CommonViewModel);
 		}
@@ -132,44 +143,54 @@ namespace Broker.Controllers
 		{
 			viewModel ??= new PropertySerch();
 
-			if (!string.IsNullOrEmpty(viewModel.Email) || !string.IsNullOrEmpty(viewModel.ContactNo))
-			{
-				var lead = new Lead()
-				{
-					Name = viewModel.FirstName + " " + viewModel.LastName,
-					Email = viewModel.Email,
-					Mobile = viewModel.ContactNo,
-					LeadSource_Value = (string)_context.Using<LovMaster>().GetByCondition(x => x.LovDesc.ToLower().Contains("website")).Select(x => x.LovCode).FirstOrDefault()
-				};
-
-				_context.Using<Lead>().Add(lead);
-			}
-
 			ResponseModel<Properties> responseModel = new ResponseModel<Properties>
 			{
-				ObjList = new List<Properties>() //_context.Using<Properties>().GetByCondition(x => x.IsActive == true).OrderByDescending(x => x.Id).ToList();
-				,
+				ObjList = new List<Properties>(), //_context.Using<Properties>().GetByCondition(x => x.IsActive == true).OrderByDescending(x => x.Id).ToList();
 				Data1 = viewModel
 			};
 
-			responseModel.SelectListItems = new List<SelectListItem_Custom>();
+			try
+			{
+				responseModel.IsSuccess = true;
 
-			var list = _context.Using<AreasMaster>().GetByCondition(x => x.Id > 1, x => x.City).OrderBy(x => x.Id)
-						.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name + ", " + x.City.Name, "L")).Distinct().ToList();
+				if (!string.IsNullOrEmpty(viewModel.Email) || !string.IsNullOrEmpty(viewModel.ContactNo))
+				{
+					var lead = new Lead()
+					{
+						Name = viewModel.FirstName + " " + viewModel.LastName,
+						Email = viewModel.Email,
+						Mobile = viewModel.ContactNo,
+						Requirement = viewModel.PropertyFor,
+						PropertyType = viewModel.PropertyType_Parent,
+						LeadSource_Value = (string)_context.Using<LovMaster>().GetByCondition(x => x.LovDesc.ToLower().Contains("website")).Select(x => x.LovCode).FirstOrDefault()
+					};
 
-			if (list != null && list.Count() > 0) responseModel.SelectListItems.AddRange(list);
+					//_context.Using<Lead>().Add(lead);
+					var (IsSuccess, response, Id) = DataContext_Command.Leads_Save(lead);
+				}
 
-			list = _context.Using<PropertyCategory>().GetByCondition(x => x.IsActive == true).OrderBy(x => x.Name)
-						.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name, "PC")).Distinct().ToList();
+				responseModel.SelectListItems = new List<SelectListItem_Custom>();
 
-			if (list != null && list.Count() > 0) responseModel.SelectListItems.AddRange(list);
+				var list = _context.Using<AreasMaster>().GetByCondition(x => x.Id > 1, x => x.City).OrderBy(x => x.Id)
+							.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name + ", " + x.City.Name, "L")).Distinct().ToList();
 
-			list = _context.Using<PropertyType>().GetByCondition(x => x.IsActive == true).OrderBy(x => x.Name)
-						.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name, x.ParentId.ToString(), 1, "PT")).Distinct().ToList();
+				if (list != null && list.Count() > 0) responseModel.SelectListItems.AddRange(list);
 
-			if (list != null && list.Count() > 0) responseModel.SelectListItems.AddRange(list);
+				list = _context.Using<PropertyCategory>().GetByCondition(x => x.IsActive == true).OrderBy(x => x.Name)
+							.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name, "PC")).Distinct().ToList();
 
-			return View(responseModel);
+				if (list != null && list.Count() > 0) responseModel.SelectListItems.AddRange(list);
+
+				list = _context.Using<PropertyType>().GetByCondition(x => x.IsActive == true).OrderBy(x => x.Name)
+							.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name, x.ParentId.ToString(), 1, "PT")).Distinct().ToList();
+
+				if (list != null && list.Count() > 0) responseModel.SelectListItems.AddRange(list);
+
+				return View(responseModel);
+			}
+			catch (Exception ex) { responseModel.IsSuccess = false; }
+
+			return BadRequest(responseModel);
 		}
 
 		public IActionResult ContactUs()

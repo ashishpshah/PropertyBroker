@@ -83,6 +83,25 @@
 	</header>
 	<!-- Navbar End -->
 	@RenderBody()
+
+	<div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+
+		<div id="appToast" class="toast align-items-center text-bg-primary border-0"
+			 role="alert" aria-live="assertive" aria-atomic="true">
+
+			<div class="d-flex">
+				<div class="toast-body">
+					<span id="toastMessage">Hello!</span>
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto"
+						data-bs-dismiss="toast"></button>
+			</div>
+
+		</div>
+
+	</div>
+
+
 	<!-- Footer Start -->
 	<section class="bg-building-pic d-table w-100" style="background: url('images/building.png') bottom no-repeat;"></section>
 	<footer class="bg-footer">
@@ -191,15 +210,28 @@
 	<script src="~/js/app.js"></script>
 
 	<script>
-		// easy_background("#hero-images",
-		// 	{
-		// 		slide: ["~/images/bg/01.jpg", "~/images/bg/02.jpg", "~/images/bg/03.jpg"],
-		// 		delay: [10000, 10000, 10000]
-		// 	}
-		// );
+		function showToast(message, type = 'primary', delay = 3000) {
 
+			const toastEl = $('#appToast');
 
+			// Reset background classes
+			toastEl.removeClass('text-bg-primary text-bg-success text-bg-danger text-bg-warning');
+
+			// Apply type
+			toastEl.addClass(`text-bg-${type}`);
+
+			// Set message
+			$('#toastMessage').text(message);
+
+			// Create Bootstrap toast instance
+			const toast = new bootstrap.Toast(toastEl[0], {
+				delay: delay
+			});
+
+			toast.show();
+		}
 	</script>
+
 	<script src="~/js/site.js" asp-append-version="true"></script>
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
