@@ -34,7 +34,7 @@ public partial class ErrorLog : EntitiesBase
 
 	public override DateTime? CreatedDate { get; set; }
 
-	[NotMapped] public override long LastModifiedBy { get; set; }
+	[NotMapped] public override long? LastModifiedBy { get; set; }
 
 	[NotMapped] public DateTime? LastModifiedDate { get; set; }
 

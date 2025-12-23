@@ -125,11 +125,11 @@
 						</select>
 					</div>
 					<div class="mt-4">
-						<h6 class="mb-0">&nbsp;</h6>
+						<h6 class="mb-0 d-none">&nbsp;</h6>
 						<select class="form-select choices-select" id="choices-PropertyType">
 							@if (Model.SelectListItems != null)
 							{
-								foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z <= 0))
+								foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0))
 								{
 									if (Convert.ToString(propertySerch.PropertyType) == item.Value)
 									{

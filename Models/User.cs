@@ -20,8 +20,6 @@ public partial class User : EntitiesBase
 
     public string? Email { get; set; }
 
-    public virtual ICollection<Lead> Leads { get; set; } = new List<Lead>();
-
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
 	[NotMapped] public string UserId { get; set; }

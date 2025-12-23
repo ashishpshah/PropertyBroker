@@ -1,11 +1,12 @@
-﻿@model ResponseModel<LoginViewModel>
+﻿@using Broker.Infra
+@model ResponseModel<LoginViewModel>
 @{
 	ViewData["Title"] = "Home Page";
 }
 
-@section Styles{
+@section Styles {
 	<style type="text/css">
-		.error{
+		.error {
 			display: block !important;
 		}
 	</style>
@@ -140,106 +141,39 @@
 	</div>
 
 	<div class="container mt-100 mt-60">
-		<div class="row align-items-center">
-			<div class="col-lg-6 col-md-6">
-				<div class="row g-3 align-items-center">
-					<div class="col-lg-7 col-6">
-						<img src="images/hero.jpg" class="img-fluid rounded-3" alt="work-image">
-					</div>
-
-					<div class="col-lg-5 col-6">
-						<div class="row g-3">
-							<div class="col-lg-12 col-md-12">
-								<img src="images/1.jpg" class="img-fluid rounded-3" alt="work-image">
-							</div>
-
-							<div class="col-lg-12 col-md-12">
-								<img src="images/logo-icon.png" class="img-fluid" alt="work-image">
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-lg-6 col-md-6 mt-4 mt-sm-0 pt-2 pt-sm-0">
-				<div class="section-title ms-lg-5">
-					<h6 class="text-primary fw-medium mb-2">Our story: Towntor</h6>
-					<h4 class="title mb-3">Efficiency. <br> Transparency. Control.</h4>
-					<p class="text-muted para-desc mb-0">Towntor developed a platform for the Real Estate marketplace that allows buyers and sellers to easily execute a transaction on their own. The platform drives efficiency, cost transparency and control into the hands of the consumers. Towntor is Real Estate Redefined.</p>
-
-					<div class="mt-4">
-						<a href="aboutus.html" class="btn btn-pills btn-primary">Read More <i class="mdi mdi-arrow-right align-middle"></i></a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="container mt-100 mt-60">
 		<div class="row justify-content-center">
 			<div class="col">
 				<div class="section-title mb-4 pb-2">
 					<h4 class="title mb-3">Listing Categories</h4>
-					<p class="text-muted para-desc mb-0">A great plateform to buy, sell and rent your properties without any agent or commisions.</p>
 				</div>
 			</div>
 		</div>
-
 		<div class="row row-cols-lg-5 row-cols-md-3 row-cols-sm-2 row-cols-1 g-4 mt-0">
-			<div class="col">
-				<div class="categories position-relative overflow-hidden rounded-3 shadow">
-					<img src="images/property/residential.jpg" class="img-fluid" alt="">
+			@if (Model.Data1 != null)
+			{
+				foreach (dynamic item in ((Model.Data1 as IEnumerable<object>)?.ToList()))
+				{
+					<div class="col property-type" role="button" data-property-type-id="@item.TypeId" onclick="openPropertyModal(this)">
+						<div class="categories position-relative overflow-hidden rounded-3 shadow">
+							@if (!string.IsNullOrEmpty(item.ImagePath))
+							{
+								<img src="@Url.Content("~/" + item.ImagePath)" class="img-fluid" alt="" style="width:204px; height:140px">
+							}
+							else
+							{
+								<img src="~/no_image_available.png" class="img-fluid" alt="" style="width:204px; height:140px">
+							}
 
-					<div class="p-3">
-						<a href="" class="title text-dark fs-5 fw-medium">Residential</a>
-						<p class="text-muted small mb-0">46 Listings</p>
+							<div class="p-3">
+								<a href="" class="title text-dark fs-5 fw-medium">@item.TypeName</a>
+								<p class="text-muted small mb-0">@item.PropertyCount @(item.PropertyCount > 1 ? "Properties" : "Property")</p>
+							</div>
+
+						</div>
 					</div>
-				</div>
-			</div>
+				}
+			}
 
-			<div class="col">
-				<div class="categories position-relative overflow-hidden rounded-3 shadow">
-					<img src="images/property/land.jpg" class="img-fluid" alt="">
-
-					<div class="p-3">
-						<a href="" class="title text-dark fs-5 fw-medium">Land</a>
-						<p class="text-muted small mb-0">124 Listings</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="col">
-				<div class="categories position-relative overflow-hidden rounded-3 shadow">
-					<img src="images/property/commercial.jpg" class="img-fluid" alt="">
-
-					<div class="p-3">
-						<a href="" class="title text-dark fs-5 fw-medium">Commercial</a>
-						<p class="text-muted small mb-0">265 Listings</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="col">
-				<div class="categories position-relative overflow-hidden rounded-3 shadow">
-					<img src="images/property/industrial.jpg" class="img-fluid" alt="">
-
-					<div class="p-3">
-						<a href="" class="title text-dark fs-5 fw-medium">Industrial</a>
-						<p class="text-muted small mb-0">452 Listings</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="col">
-				<div class="categories position-relative overflow-hidden rounded-3 shadow">
-					<img src="images/property/investment.jpg" class="img-fluid" alt="">
-
-					<div class="p-3">
-						<a href="" class="title text-dark fs-5 fw-medium">Investment</a>
-						<p class="text-muted small mb-0">12 Listings</p>
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 
@@ -324,7 +258,7 @@
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="exampleModalCenteredScrollableTitle">Modal title</h1>
+				<h1 class="modal-title fs-5" id="exampleModalCenteredScrollableTitle">Please fill out your basic details in this form</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -362,46 +296,156 @@
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 	<script type="text/javascript">
-			  document
-		.querySelectorAll('#pills-tab .nav-link')
+		const modalEl = document.getElementById('exampleModalCenteredScrollable');
+
+		modalEl.addEventListener('show.bs.modal', function (event) {
+
+			if (event.relatedTarget) {
+				modalEl.dataset.openSource =
+					event.relatedTarget.dataset.openSource || 'search-button';
+			}
+		});
+
+		function openPropertyModal(el) {
+			const modalEl = document.getElementById('exampleModalCenteredScrollable');
+
+			modalEl.dataset.openSource = 'property-type';
+			modalEl.dataset.propertyTypeId = el.dataset.propertyTypeId;
+
+			const modal = new bootstrap.Modal(modalEl);
+			modal.show();
+		}
+
+
+		document.querySelectorAll('#pills-tab .nav-link')
 		.forEach(tab => {
 		  tab.addEventListener('shown.bs.tab', function (e) {
 			document.getElementById('ListingType').value = e.target.id;
 		  });
 		});
+		
+		function fnSubmitFormHere(formId) {
 
-				function fnSubmitFormHere($id){
-					//ShowLoader(true);
+			const $form = $('#' + formId);
+			const modalEl = document.getElementById('exampleModalCenteredScrollable');
+			const source = modalEl.dataset.openSource;
 
-					var $form = $('#' + $id);
-
-						$form.validate({
-						  rules: {
-							Location: { required: true },
-							PropertyCategory: { required: true },
-							PropertyType: { required: true }
-						  }
-						});
-
-						const query = $form.serialize();
-
-						if (!$form.valid()) { return; }
-
-						const location = $('#choices-PropertyLocation').val();
-						const category = $('#choices-PropertyCategory').val();
-						const type_Parent = $('#choices-PropertyType_Parent').val();
-						const type = $('#choices-PropertyType').val();
-
-						const url =
-						  `@Url.Action("Properties", "Home", new { area = "" })?${query}` +
-						  `&Location=${encodeURIComponent(location)}` +
-						  `&PropertyCategory=${encodeURIComponent(category)}` +
-						  `&PropertyType_Parent=${encodeURIComponent(type_Parent)}` +
-						  `&PropertyType=${encodeURIComponent(type)}`;
-
-						window.location.href = url;
-
+			// ---- VALIDATE USER FORM (always required) ----
+			$form.validate({
+				rules: {
+					FirstName: { required: true },
+					LastName: { required: true },
+					Email: { required: true },
+					ContactNo: { required: true }
 				}
+			});
+
+			if (!$form.valid()) return;
+
+			// ---- COMMON VALUES ----
+			let location = '';
+			let category = '';
+			let typeParent = '';
+			let type = '';
+
+			// ---- DIFFERENCE BASED ON SOURCE ----
+			if (source === 'property-type') {
+				// ✅ Type already selected
+				typeParent = modalEl.dataset.propertyTypeId;
+			} else {
+				// ✅ Search button flow → validate selects
+				typeParent = $('#choices-PropertyType_Parent').val();
+				type = $('#choices-PropertyType').val();
+
+				location = $('#choices-PropertyLocation').val();
+				category = $('#choices-PropertyCategory').val();
+
+				if (!location || !category || !type) {
+					showToast('Please select all search filters', 'danger', 5000);
+					return;
+				}
+			}
+
+			// ---- BUILD URL ----
+			const query = $form.serialize();
+
+			const url =
+				`@Url.Action("Properties", "Home")?${query}` +
+				`&Location=${encodeURIComponent(location)}` +
+				`&PropertyCategory=${encodeURIComponent(category)}` +
+				`&PropertyType_Parent=${encodeURIComponent(typeParent)}` +
+				`&PropertyType=${encodeURIComponent(type)}`;
+
+					
+		
+		fetch(url, { method: 'GET' })
+		.then(async response =>
+		{
+			debugger;
+			if (!response.ok) {
+				let errorBody = null;
+
+				try {
+					errorBody = await response.json(); // 👈 read body
+				} catch {
+					// response is not JSON
+				}
+
+				showToast(errorBody.Message, 'danger', 5000);
+				return; // stop here
+			}
+
+			// ✅ Response is OK → redirect
+			window.location.href = url;
+		})
+		.catch(err => {debugger;
+			showToast('Opps!... Something went wrong', 'danger', 5000);
+		});
+
+		
+
+		}
+
+				// function fnSubmitFormHere($id){
+				// 	//ShowLoader(true);
+
+				// 	var $form = $('#' + $id);
+
+				// 		$form.validate({
+				// 		  rules: {
+				// 			Location: { required: true },
+				// 			PropertyCategory: { required: true },
+				// 			PropertyType: { required: true }
+				// 		  }
+				// 		});
+
+				// 		const query = $form.serialize();
+
+				// 		if (!$form.valid()) { return; }
+
+				// 		const location = $('#choices-PropertyLocation').val();
+				// 		const category = $('#choices-PropertyCategory').val();
+				// 		const type_Parent = $('#choices-PropertyType_Parent').val();
+				// 		const type = $('#choices-PropertyType').val();
+
+				// 		const url =
+				// 		  `@Url.Action("Properties", "Home", new { area = "" })?${query}` +
+				// 		  `&Location=${encodeURIComponent(location)}` +
+				// 		  `&PropertyCategory=${encodeURIComponent(category)}` +
+				// 		  `&PropertyType_Parent=${encodeURIComponent(type_Parent)}` +
+				// 		  `&PropertyType=${encodeURIComponent(type)}`;
+
+				// 	debugger;
+				// 	try {
+				// 			window.location.href = url;
+				// 	} catch (err) {
+				// 		debugger;
+				// 		console.error("Redirect failed:", err);
+				// 	}
+
+						
+
+				// }
 
 		document.querySelectorAll('.choices-select:not([data-choices-init])')
 		  .forEach(el => {
@@ -421,7 +465,7 @@
 		const originalOptions = Array.from(childSelect.options).map(o =>
 		  o.cloneNode(true)
 		);
-	
+
 		document
 		.getElementById('choices-PropertyType_Parent')
 		.addEventListener('change', function () {

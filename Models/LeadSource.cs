@@ -12,13 +12,11 @@ public partial class LeadSource : EntitiesBase
 
     public string LeadSourceName { get; set; } = null!;
 
-    public virtual ICollection<Lead> Leads { get; set; } = new List<Lead>();
-
 	[NotMapped] public override long CreatedBy { get; set; }
 
 	[NotMapped] public override DateTime? CreatedDate { get; set; }
 
-	[NotMapped] public override long LastModifiedBy { get; set; }
+	[NotMapped] public override long? LastModifiedBy { get; set; }
 
 	[NotMapped] public DateTime? LastModifiedDate { get; set; }
 

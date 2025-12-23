@@ -23,7 +23,7 @@ public partial class PropertyImage : EntitiesBase
 
 	[NotMapped] public override DateTime? CreatedDate { get; set; }
 
-	[NotMapped] public override long LastModifiedBy { get; set; }
+	[NotMapped] public override long? LastModifiedBy { get; set; }
 
 	[NotMapped] public DateTime? LastModifiedDate { get; set; }
 

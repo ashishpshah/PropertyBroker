@@ -14,7 +14,5 @@ public partial class City : EntitiesBase
 
     public virtual ICollection<AreasMaster> Areas { get; set; } = new List<AreasMaster>();
 
-    public virtual ICollection<Lead> Leads { get; set; } = new List<Lead>();
-
     public virtual ICollection<Properties> Properties { get; set; } = new List<Properties>();
 }

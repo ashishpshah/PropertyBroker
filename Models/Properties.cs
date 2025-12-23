@@ -28,15 +28,15 @@ public partial class Properties : EntitiesBase
     public string? OwnerMobile { get; set; }
 
     public string? BuilderName { get; set; }
-    public string? Property_Type { get; set; }
-    public string? Property_Category { get; set; }
-    public int? FloorNo { get; set; }   
-    public int? TotalFloors { get; set; }   
-    public string? Facing { get; set; }   
-    public string? FurnishingStatus { get; set; }
-    public string? FurnishingStatus_TEXT { get; set; }
+	[NotMapped] public string? Property_Type { get; set; }
+	[NotMapped] public string? Property_Category { get; set; }
+	[NotMapped] public int? FloorNo { get; set; }
+	[NotMapped] public int? TotalFloors { get; set; }
+	[NotMapped] public string? Facing { get; set; }
+	[NotMapped] public string? FurnishingStatus { get; set; }
+    [NotMapped] public string? FurnishingStatus_TEXT { get; set; }
     public string? AvailabilityStatus { get; set; }
-    public string? AvailabilityStatus_TEXT { get; set; }
-    public bool? IsFeatured { get; set; }
+    [NotMapped] public string? AvailabilityStatus_TEXT { get; set; }
+	[NotMapped] public bool? IsFeatured { get; set; }
     public string? Remark { get; set; }
 }
