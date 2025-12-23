@@ -187,9 +187,9 @@
 		<div class="row row-cols-lg-5 row-cols-md-3 row-cols-sm-2 row-cols-1 g-4 mt-0">
 			@if (Model.Data1 != null)
 			{
-				foreach (dynamic item in ((Model.Data1 as IEnumerable<object>)?.ToList()))
+				foreach (dynamic item in ((Model.Data1 as IList<PropertyType>)?.OrderBy(x => x.Display_Seq_No).ToList()))
 				{
-					<div class="col property-type" role="button" data-property-type-id="@item.TypeId" onclick="openPropertyModal(this)">
+					<div class="col property-type" role="button" data-property-type-id="@item.Id" onclick="openPropertyModal(this)">
 						<div class="categories position-relative overflow-hidden rounded-3 shadow">
 							@if (!string.IsNullOrEmpty(item.ImagePath))
 							{
@@ -201,7 +201,7 @@
 							}
 
 							<div class="p-3">
-								<a href="" class="title text-dark fs-5 fw-medium">@item.TypeName</a>
+								<span class="title text-dark fs-5 fw-medium">@item.Name</span>
 								<p class="text-muted small mb-0">@item.PropertyCount @(item.PropertyCount > 1 ? "Properties" : "Property")</p>
 							</div>
 

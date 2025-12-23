@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Broker.Models;
 
@@ -11,6 +12,8 @@ public partial class PropertyType : EntitiesBase
     public string? Name { get; set; }
     public string? ImagePath { get; set; }
     public int? Display_Seq_No { get; set; } = 0;
+
+    [NotMapped] public int PropertyCount { get; set; } = 0;
 
 
 	//public virtual ICollection<Lead> Leads { get; set; } = new List<Lead>();
