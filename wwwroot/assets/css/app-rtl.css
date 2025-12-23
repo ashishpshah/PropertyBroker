@@ -17040,9 +17040,11 @@ strong {
 }
 @media (min-width: 1200px) and (max-width: 1500px) {
   .widget-flat i.widget-icon {
-   /* display: none;*/
+    display: none;
+    
   }
 }
+
 
 .widget-icon {
   color: var(--tz-white);
