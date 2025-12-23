@@ -19,8 +19,9 @@ namespace Broker.Areas.Admin.Controllers
         public ActionResult Index(string Status = "NEW")
         {
             CommonViewModel.ObjList = new List<Lead>();
+            CommonViewModel.Obj = new Lead() { Selected_Status = Status};      
             CommonViewModel.ObjList = DataContext_Command.Lead_Get(0 , Status).ToList();
-
+            
             var list = new List<SelectListItem_Custom>();
             var dt = new DataTable();
             var sqlParameters = new List<SqlParameter>();
@@ -31,15 +32,18 @@ namespace Broker.Areas.Admin.Controllers
             {
                 foreach (DataRow dr in dt.Rows)
                 {
-                    list.Add(new SelectListItem_Custom(Convert.ToString(dr["Lov_Code"]), Convert.ToString(dr["Lov_Desc"]), Convert.ToString(dr["Lov_Column"]) , Convert.ToString(dr["Lead_Count"]))
+
+                    list.Add(new SelectListItem_Custom(Convert.ToString(dr["Lov_Code"]), Convert.ToString(dr["Lov_Desc"]),  Convert.ToString(dr["Lead_Count"]) , Convert.ToString(dr["DisplayOrder"]) , Convert.ToString(dr["Lov_Column"]))
                     {
                         Value = dr["Lov_Code"] != DBNull.Value ? Convert.ToString(dr["Lov_Code"]) : "",
                         Text = dr["Lov_Desc"] != DBNull.Value ? Convert.ToString(dr["Lov_Desc"]) : "",
                         Group = dr["Lov_Column"] != DBNull.Value ? Convert.ToString(dr["Lov_Column"]) : "",
                         Value2 = dr["Lead_Count"] != DBNull.Value ? Convert.ToString(dr["Lead_Count"]) : "",
+                        Value3 = dr["DisplayOrder"] != DBNull.Value ? Convert.ToString(dr["DisplayOrder"]) : "",
                     });
                 }
             }
+
             CommonViewModel.SelectListItems = list;
             return View(CommonViewModel);
         }

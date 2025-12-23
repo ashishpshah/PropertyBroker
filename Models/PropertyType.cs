@@ -10,7 +10,7 @@ public partial class PropertyType : EntitiesBase
 
     public string? Name { get; set; }
     public string? ImagePath { get; set; }
-	public int? DisplaySeqNo { get; set; }
+    public int? Display_Seq_No { get; set; } = 0;
 
 
 	//public virtual ICollection<Lead> Leads { get; set; } = new List<Lead>();

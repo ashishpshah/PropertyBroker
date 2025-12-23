@@ -3,14 +3,20 @@
 @{
 	ViewBag.Title = "Index";
 	Layout = "~/Areas/Admin/Views/Shared/_Layout_Admin.cshtml";
-
+	long? selectedTypeId = Model.Obj.Selected_Type_Id;
 }
 
-
+@{
+	
+}
 @section Styles {
 	<style type="text/css">
 		.select2-container .select2-selection--multiple .select2-selection__rendered {
 			display: contents !important;
+		}
+
+		.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+			background-color: #3bc0c3 !important;
 		}
 	</style>
 }
@@ -43,44 +49,32 @@
 			<div class="card-body ">
 				@if (Model.SelectListItems != null && Model.Obj.PropertiesList != null)
 				{
-					// Required display order
-					@* var statusOrder = new List<string> { "NEW", "INPROC", "WON", "LOST" }; *@
-
-					var propertylist = Model.SelectListItems
+					@* var propertylist = Model.SelectListItems
 					.Where(x => x.Group == "PropertyType")
 					.OrderBy(x => x.Value3)
-					.ToList();
+					.ToList(); *@
 
-					<div class="mb-3 d-flex flex-wrap gap-2">
-						@foreach (var propertytype in propertylist)
+					<ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
+						@foreach (var item in Model.SelectListItems
+											.Where(x => x.Group == "PropertyType")
+											.OrderBy(x => Convert.ToInt32(x.Value3)))
 						{
-							int propertycount = Convert.ToInt32(propertytype.Value2);
+							long typeId = Convert.ToInt64(item.Value);
+							int count = Convert.ToInt32(item.Value2);
 
-							string[] badgeClasses =
-							{
-										"bg-primary",
-										"bg-success",
-										"bg-warning text-dark",
-										"bg-info",
-										"bg-danger",
-										"bg-secondary",
-										"bg-dark"
-							};
-							
-								int index = Math.Abs(propertytype.Value.GetHashCode()) % badgeClasses.Length;
-								string badgeClass = badgeClasses[index];
+							bool isActive = selectedTypeId == typeId;
 
-								<span role="button"
-									  class="badge @badgeClass px-3 py-2 fs-6"
-								  onclick="filterByPropertyType('@propertytype.Value')">
-									@propertytype.Text (@propertycount)
-								</span>
-							
-
-							
+							<li class="nav-item">
+								<a class="nav-link rounded-0 @(isActive ? "active" : "")"
+								   href="@Url.Action("PropertyList", "Home",
+							 		 new { area = "Admin", Type_Id = typeId })">
+									@item.Text (@count)
+								</a>
+							</li>
 						}
-					</div>
+					</ul>
 				}
+	
 				<div class="row no-gooters ">
 					<div class="col-md-12 my-1">
 						<div class="responsive-table-plugin">
@@ -124,7 +118,7 @@
 															<div class="btn-group">
 
 																<button type="button"
-																		class="btn btn-info btn-sm btn-flat ml-2"
+																		class="btn btn-primary btn-sm btn-flat ml-2"
 																		onclick="fnShow_Modal('@Url.Action("Partial_AddEditForm_PropertyDetail", "Home")?Id=@item.Id','Property Detail',false,'html',false,false)">
 																	View Detail
 																</button>
@@ -158,9 +152,18 @@
 
 
 
-		function filterByPropertyType(Type_Id) {
+		function filterByPropertyType(Type_Id , el) {
 			window.location.href =
 				'@Url.Action("PropertyList", "Home", new { area = "Admin" })' + '?Type_Id=' + Type_Id;
+
+				ocument.querySelectorAll('.nav-pills .nav-link')
+            .forEach(x => x.classList.remove('active'));
+
+        // set active on clicked tab
+        el.classList.add('active');
+
+        // your existing filtering logic here
+        console.log("Selected:", type);
 		}
 		// function fnShow_Modal_Success($url, $title) {
 		// 	$('#largeModal .modal-dialog').addClass('modal-fullscreen');

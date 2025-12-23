@@ -120,6 +120,7 @@ namespace Broker.Controllers
 										 TypeId = parent.Id,
 										 TypeName = parent.Name,
 										 ImagePath = parent.ImagePath,
+										 Display_Seq_No = parent.Display_Seq_No == null?0: parent.Display_Seq_No,
 										 PropertyCount = _context.Using<Properties>().GetByCondition(x => x.IsActive == true).ToList()
 										 .Count(p => (p.TypeId == parent.Id || _context.Using<PropertyType>().GetByCondition(x => x.IsActive == true)
 										 .Any(c => c.ParentId == parent.Id && c.IsActive && c.Id == p.TypeId)) && p.IsActive)

@@ -1049,6 +1049,7 @@ namespace Broker.Infra
 						listObj.Add(new PropertyType()
 						{
 							Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
+							Display_Seq_No = dr["Display_Seq_No"] != DBNull.Value ? Convert.ToInt32(dr["Display_Seq_No"]) : 0,
 							ParentId = dr["ParentId"] != DBNull.Value ? Convert.ToInt64(dr["ParentId"]) : 0,
 							Name = dr["Name"] != DBNull.Value ? Convert.ToString(dr["Name"]) : "",
 							IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
@@ -1059,7 +1060,7 @@ namespace Broker.Infra
 			return listObj;
 		}
 
-		public static List<Properties> Property_Get(long id = 0 , long Type_Id = 0)
+		public static List<Properties> Property_Get(long id = 0 , long  Type_Id = 0)
 		{
 			DateTime? nullDateTime = null;
 			var listObj = new List<Properties>();
@@ -1146,7 +1147,7 @@ namespace Broker.Infra
                             BudgetMin = dr["BudgetMin"] != DBNull.Value ? Convert.ToDecimal(dr["BudgetMin"]) : 0,
                             BudgetMax = dr["BudgetMax"] != DBNull.Value ? Convert.ToDecimal(dr["BudgetMax"]) : 0,
                             IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false,
-							NextFollowupDate = dr["Next_FollowUp_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Next_FollowUp_Date"]) : nullDateTime,
+                            Next_FollowUp_Date = dr["Next_FollowUp_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Next_FollowUp_Date"]) : nullDateTime,
                         });
             }
             catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
@@ -1178,7 +1179,7 @@ namespace Broker.Infra
                             LeadSource_TEXT = dr["LeadSource_TEXT"] != DBNull.Value ? Convert.ToString(dr["LeadSource_TEXT"]) : "",
                             Status = dr["Status"] != DBNull.Value ? Convert.ToString(dr["Status"]) : "",
                             Status_TEXT = dr["Status_TEXT"] != DBNull.Value ? Convert.ToString(dr["Status_TEXT"]) : "",
-                            NextFollowupDate = dr["Next_FollowUp_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Next_FollowUp_Date"]) : nullDateTime,
+                            Next_FollowUp_Date = dr["Next_FollowUp_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Next_FollowUp_Date"]) : nullDateTime,
                         });
             }
             catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
@@ -1368,6 +1369,7 @@ namespace Broker.Infra
 
 					parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = obj.Id, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("Parent_Id", SqlDbType.BigInt) { Value = obj.ParentId, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Display_Seq_No", SqlDbType.Int) { Value = obj.Display_Seq_No, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("Name", SqlDbType.VarChar) { Value = obj.Name, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("IsActive", SqlDbType.NVarChar) { Value = obj.IsActive, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
