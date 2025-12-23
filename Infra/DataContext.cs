@@ -1205,8 +1205,7 @@ namespace Broker.Infra
                         {
                             Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
                             LeadId = dr["LeadId"] != DBNull.Value ? Convert.ToInt64(dr["LeadId"]) : 0,
-                            NextFollowupDate = dr["NextFollowupDate"] != DBNull.Value ? Convert.ToDateTime(dr["NextFollowupDate"]) : nullDateTime,
-                            ReminderDatetime = dr["ReminderDatetime"] != DBNull.Value ? Convert.ToDateTime(dr["ReminderDatetime"]) : nullDateTime,
+                            NextFollowupDate = dr["NextFollowupDate"] != DBNull.Value ? Convert.ToDateTime(dr["NextFollowupDate"]) : nullDateTime,                            
                             Remark = dr["Remark"] != DBNull.Value ? Convert.ToString(dr["Remark"]) : "",
                             IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false,
                             Status = Status
@@ -1263,7 +1262,6 @@ namespace Broker.Infra
                     parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = obj.Id, Direction = ParameterDirection.Input, IsNullable = true });
                     parameters.Add(new SqlParameter("LeadId", SqlDbType.BigInt) { Value = obj.LeadId, Direction = ParameterDirection.Input, IsNullable = true });
                     parameters.Add(new SqlParameter("NextFollowupDate", SqlDbType.DateTime) { Value = obj.NextFollowupDate, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("ReminderDatetime", SqlDbType.DateTime) { Value = obj.ReminderDatetime, Direction = ParameterDirection.Input, IsNullable = true });
                     parameters.Add(new SqlParameter("Remark", SqlDbType.VarChar) { Value = obj.Remark, Direction = ParameterDirection.Input, IsNullable = true });
                     parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
                     parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.Id > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });

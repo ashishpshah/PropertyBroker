@@ -97,8 +97,7 @@
 										<thead>
 											<tr>
 												<th>Sr.No</th>
-												<th>Next Follow Up Date</th>
-												<th>Reminder Date</th>
+												<th>Next Follow Up Date</th>												
 												<th>Remarks</th>
 												@if (Model.Obj.Status == "NEW" || Model.Obj.Status == "INPROC")
 												{
@@ -113,8 +112,7 @@
 												{
 													<tr>
 														<td></td>
-														<td>@item.NextFollowupDate?.ToString(Common.DateTimeFormat_ddMMMyyyy)</td>
-														<td>@item.ReminderDatetime?.ToString(Common.DateTimeFormat_ddMMMyyyy)</td>
+														<td>@item.NextFollowupDate?.ToString(Common.DateTimeFormat_ddMMMyyyy)</td>														
 														<td>@item.Remark</td>
 														@if (Model.Obj.Status == "NEW" || Model.Obj.Status == "INPROC")
 														{
