@@ -26,6 +26,8 @@ public partial class Properties : EntitiesBase
     public string? OwnerName { get; set; }
 
     public string? OwnerMobile { get; set; }
+    public string? City_Name { get; set; }
+    public string? Area_Name { get; set; }
 
     public string? BuilderName { get; set; }
     public string? Property_Type { get; set; }
