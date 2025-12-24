@@ -101,8 +101,14 @@ namespace Broker.Controllers
 
 			CommonViewModel.SelectListItems = new List<SelectListItem_Custom>();
 
-			var list = _context.Using<AreasMaster>().GetByCondition(x => x.Id > 1, x => x.City).OrderBy(x => x.Id)
-						.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name + ", " + x.City.Name, "L")).Distinct().ToList();
+			//var list = _context.Using<AreasMaster>().GetByCondition(x => x.Id > 1, x => x.City).OrderBy(x => x.Id)
+			//			.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name + ", " + x.City.Name, "L")).Distinct().ToList();
+			var list = (from area in _context.Using<AreasMaster>().GetByCondition(x => x.IsActive == true).ToList()
+						join city in _context.Using<City>().GetByCondition(x => x.IsActive == true).ToList()
+						  on area.CityId equals city.Id into cityGroup
+						from city in cityGroup.DefaultIfEmpty() // LEFT JOIN
+						orderby area.Id
+						select new SelectListItem_Custom(area.Id.ToString(), area.Name + (city != null ? ", " + city.Name : ""), "L")).Distinct().ToList();
 
 			if (list != null && list.Count() > 0) CommonViewModel.SelectListItems.AddRange(list);
 

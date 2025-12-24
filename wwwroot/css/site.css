@@ -16,3 +16,8 @@ html {
   position: relative;
   min-height: 100%;
 }
+
+.choices__list .is-selected {
+    color: #1e293b !important;
+    background-color: #f2f2f2 !important;
+}

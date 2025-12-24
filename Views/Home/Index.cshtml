@@ -86,7 +86,7 @@
 							<form class="card-body text-start shadow" style="border-radius: 26px; box-shadow: 0 3px 12px -9px rgba(0, 0, 0, 0.4); border: solid 1px #38bdf8; background-color: #ffffff;">
 								<div class="registration-form text-dark text-start">
 									<div class="row g-lg-0">
-										<div class="col-lg-3 col-md-6 col-12">
+										<div class="col-lg-4 col-md-6 col-12">
 											<div class="mb-3 text-start">
 												<label class="form-label fs-6">Location</label>
 												<div class="filter-search-form position-relative filter-border">
@@ -102,23 +102,6 @@
 												</div>
 											</div>
 										</div>
-										@* 
-										<div class="col-lg-3 col-md-6 col-12">
-											<div class="mb-3 text-start">
-												<label class="form-label fs-6">Category</label>
-												<div class="filter-search-form position-relative filter-border">
-													<select class="form-select choices-select" id="choices-PropertyCategory">
-														@if (Model.SelectListItems != null)
-														{
-															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PC"))
-															{
-																<option value="@item.Value">@item.Text</option>
-															}
-														}
-													</select>
-												</div>
-											</div>
-										</div> *@
 
 										<div class="col-lg-3 col-md-6 col-12">
 											<div class="mb-3 text-start">
@@ -154,7 +137,7 @@
 											</div>
 										</div>
 
-										<div class="col-lg-3 col-md-6 col-12 align-self-end justify-content-center">
+										<div class="col-lg-2 col-md-6 col-12 align-self-end justify-content-center">
 											<div class="mb-3 text-start">
 												<label class="form-label fs-6">&nbsp;</label>
 												<div class="filter-search-form position-relative">
@@ -381,7 +364,7 @@
 					return;
 				}
 			}
-
+			debugger;
 			// ---- BUILD URL ----
 			const query = $form.serialize();
 
@@ -397,7 +380,6 @@
 		fetch(url, { method: 'GET' })
 		.then(async response =>
 		{
-			debugger;
 			if (!response.ok) {
 				let errorBody = null;
 
