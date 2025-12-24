@@ -54,8 +54,8 @@ namespace Broker.Areas.Admin.Controllers
                     {
                         Value = Convert.ToString(dr["Id"]),
                         Text = Convert.ToString(dr["Name"]),
-                        Value2 = Convert.ToString(dr["Property_Count"]),
-                        Value3 = Convert.ToString(dr["Display_Seq_No"]),
+                        Value2 = Convert.ToString(dr["Property_Count"]),                      
+                        Value3 = dr["Display_Seq_No"] != DBNull.Value ? Convert.ToString(dr["Display_Seq_No"]) : "0"
                     };
 
                     list.Add(item);
