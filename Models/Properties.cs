@@ -47,4 +47,5 @@ public partial class Properties : EntitiesBase
     [NotMapped] public string? FurnishingStatus_TEXT { get; set; }
     [NotMapped] public string? AvailabilityStatus_TEXT { get; set; }
 	[NotMapped] public bool? IsFeatured { get; set; }
+	[NotMapped] public string? ImagePath { get; set; }
 }

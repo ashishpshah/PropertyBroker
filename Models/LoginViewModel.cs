@@ -35,7 +35,7 @@ namespace Broker
 		public string User_Type { get; set; }
 		public string Email { get; set; }
 	}
-	public class PropertySerch
+	public class PropertySearch
 	{
 		public string FirstName { get; set; }
 		public string LastName { get; set; }

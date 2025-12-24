@@ -160,9 +160,9 @@ namespace Broker.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult Properties([FromQuery] PropertySerch viewModel)
+		public IActionResult Properties([FromQuery] PropertySearch viewModel)
 		{
-			viewModel ??= new PropertySerch();
+			viewModel ??= new PropertySearch();
 
 			ResponseModel<Properties> responseModel = new ResponseModel<Properties>
 			{
@@ -217,6 +217,52 @@ namespace Broker.Controllers
 							.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name, x.ParentId.ToString(), 1, "PT")).Distinct().ToList();
 
 				if (list != null && list.Count() > 0) responseModel.SelectListItems.AddRange(list);
+
+				try
+				{
+					var parameters = new List<SqlParameter>();
+					parameters.Add(new SqlParameter("CategoryId", SqlDbType.BigInt) { Value = viewModel.PropertyCategory, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("TypeId", SqlDbType.BigInt) { Value = viewModel.PropertyType <= 0 ? viewModel.PropertyType_Parent : viewModel.PropertyType, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("CityId", SqlDbType.BigInt) { Value = 0, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("AreaId", SqlDbType.BigInt) { Value = viewModel.Location, Direction = ParameterDirection.Input, IsNullable = true });
+
+					var dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_Property_Get_Filter", parameters.ToList());
+
+					if (dt != null && dt.Rows.Count > 0)
+						foreach (DataRow dr in dt.Rows)
+							responseModel.ObjList.Add(new Properties()
+							{
+								Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
+								Title = dr["Title"] != DBNull.Value ? Convert.ToString(dr["Title"]) : "",
+								Description = dr["Description"] != DBNull.Value ? Convert.ToString(dr["Description"]) : "",
+								CityId = dr["CityId"] != DBNull.Value ? Convert.ToInt64(dr["CityId"]) : 0,
+								AreaId = dr["AreaId"] != DBNull.Value ? Convert.ToInt64(dr["AreaId"]) : 0,
+								Landmark = dr["Landmark"] != DBNull.Value ? Convert.ToString(dr["Landmark"]) : "",
+								CategoryId = dr["CategoryId"] != DBNull.Value ? Convert.ToInt64(dr["CategoryId"]) : 0,
+								TypeId = dr["TypeId"] != DBNull.Value ? Convert.ToInt64(dr["TypeId"]) : 0,
+								Property_Type = dr["Property_Type"] != DBNull.Value ? Convert.ToString(dr["Property_Type"]) : "",
+								Property_Category = dr["Property_Category"] != DBNull.Value ? Convert.ToString(dr["Property_Category"]) : "",
+								Price = dr["Price"] != DBNull.Value ? Convert.ToDecimal(dr["Price"]) : 0,
+								AreaSqft = dr["AreaSqft"] != DBNull.Value ? Convert.ToDecimal(dr["AreaSqft"]) : 0,
+								OwnerName = dr["OwnerName"] != DBNull.Value ? Convert.ToString(dr["OwnerName"]) : "",
+								OwnerMobile = dr["OwnerMobile"] != DBNull.Value ? Convert.ToString(dr["OwnerMobile"]) : "",
+								BuilderName = dr["BuilderName"] != DBNull.Value ? Convert.ToString(dr["BuilderName"]) : "",
+								FloorNo = dr["FloorNo"] != DBNull.Value ? Convert.ToInt32(dr["FloorNo"]) : 0,
+								TotalFloors = dr["TotalFloors"] != DBNull.Value ? Convert.ToInt32(dr["TotalFloors"]) : 0,
+								Facing = dr["Facing"] != DBNull.Value ? Convert.ToString(dr["Facing"]) : "",
+								FurnishingStatus = dr["FurnishingStatus"] != DBNull.Value ? Convert.ToString(dr["FurnishingStatus"]) : "",
+								FurnishingStatus_TEXT = dr["FurnishingStatus_TEXT"] != DBNull.Value ? Convert.ToString(dr["FurnishingStatus_TEXT"]) : "",
+								AvailabilityStatus = dr["AvailabilityStatus"] != DBNull.Value ? Convert.ToString(dr["AvailabilityStatus"]) : "",
+								AvailabilityStatus_TEXT = dr["AvailabilityStatus_TEXT"] != DBNull.Value ? Convert.ToString(dr["AvailabilityStatus_TEXT"]) : "",
+								City_Name = dr["City_Name"] != DBNull.Value ? Convert.ToString(dr["City_Name"]) : "",
+								Area_Name = dr["Area_Name"] != DBNull.Value ? Convert.ToString(dr["Area_Name"]) : "",
+								Remark = dr["Remark"] != DBNull.Value ? Convert.ToString(dr["Remark"]) : "",
+								IsFeatured = dr["IsFeatured"] != DBNull.Value ? Convert.ToBoolean(dr["IsFeatured"]) : false,
+								IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false,
+								ImagePath = dr["ImagePath"] != DBNull.Value ? Convert.ToString(dr["ImagePath"]) : ""
+							});
+				}
+				catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
 
 				return View(responseModel);
 			}

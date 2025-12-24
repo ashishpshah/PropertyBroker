@@ -67,7 +67,7 @@
 
 						@if (Model.SelectListItems != null)
 						{
-							var category = Model.SelectListItems.Where(x => x.Group == "PC").OrderBy(x => x.OrderBy).ToList();
+							var category = Model.SelectListItems.Where(x => x.Group == "PC").OrderBy(x => x.OrderBy == null || x.OrderBy == 0).ThenBy(x => x.OrderBy).ToList();
 
 							for (int i = 0; i < category.Count(); i++)
 							{
