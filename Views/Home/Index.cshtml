@@ -88,9 +88,9 @@
 									<div class="row g-lg-0">
 										<div class="col-lg-4 col-md-6 col-12">
 											<div class="mb-3 text-start">
-												<label class="form-label fs-6">Location</label>
 												<div class="filter-search-form position-relative filter-border">
 													<select class="form-select choices-select" id="choices-PropertyLocation">
+														<option value="0">Select Location</option>
 														@if (Model.SelectListItems != null)
 														{
 															foreach (var item in Model.SelectListItems.Where(x => x.Group == "L"))
@@ -105,9 +105,9 @@
 
 										<div class="col-lg-3 col-md-6 col-12">
 											<div class="mb-3 text-start">
-												<label class="form-label fs-6">Type</label>
 												<div class="filter-search-form position-relative filter-border">
 													<select class="form-select choices-select" id="choices-PropertyType_Parent">
+														<option value="0">Select Type</option>
 														@if (Model.SelectListItems != null)
 														{
 															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z <= 0))
@@ -122,9 +122,9 @@
 
 										<div class="col-lg-3 col-md-6 col-12">
 											<div class="mb-3 text-start">
-												<label class="form-label fs-6">&nbsp;</label>
 												<div class="filter-search-form position-relative">
 													<select class="form-select choices-select" id="choices-PropertyType">
+														<option value="0">Select Sub-Type</option>
 														@if (Model.SelectListItems != null)
 														{
 															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0))
@@ -139,7 +139,6 @@
 
 										<div class="col-lg-2 col-md-6 col-12 align-self-end justify-content-center">
 											<div class="mb-3 text-start">
-												<label class="form-label fs-6">&nbsp;</label>
 												<div class="filter-search-form position-relative">
 													<button type="button" class="btn btn-primary ms-md-5" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable"
 															style="height: 60px; font-size: 20px; font-weight: 600;">
@@ -170,10 +169,29 @@
 		<div class="row row-cols-lg-5 row-cols-md-3 row-cols-sm-2 row-cols-1 g-4 mt-0">
 			@if (Model.Data1 != null)
 			{
-				foreach (dynamic item in ((Model.Data1 as IList<PropertyType>)?.OrderBy(x => x.Display_Seq_No).ToList()))
+				foreach (PropertyType item in ((Model.Data1 as IList<PropertyType>)?.OrderBy(x => x.Display_Seq_No).ToList()))
 				{
-					<div class="col property-type" role="button" data-property-type-id="@item.Id" onclick="openPropertyModal(this)">
+					<div class="col property-type position-relative" role="button" id="itemProperty_@item.Id"
+						 onclick="@((Model.SelectListItems != null && Model.SelectListItems.Any(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0 && z == item.Id)) ? "openPropertyCollapse(this)" : $"openPropertyModal({@item.Id}, 0)")">
 						<div class="categories position-relative overflow-hidden rounded-3 shadow">
+							<div class="collapse collapse-horizontal w-100" data-bs-parent="#itemProperty_@item.Id" id="collapseWidthExample_@item.Id">
+								<div class="card card-body bg-transparent">
+									<ul class="list-unstyled property-icon">
+										@if (Model.SelectListItems != null && Model.SelectListItems.Any(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0 && z == item.Id))
+										{
+											foreach (var _item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0 && z == item.Id))
+											{
+												<li class="list-group-item d-flex justify-content-between align-items-start" onclick="openPropertyModal(@item.Id, @_item.Value)">
+													<div class="btn btn-sm btn-icon btn-primary m-1 me-auto w-100 ">
+														<div class="fw-bold">@_item.Text</div>
+													</div>
+													@* <span class="badge text-bg-primary rounded-pill">14</span> *@
+												</li>
+											}
+										}
+									</ul>
+								</div>
+							</div>
 							@if (!string.IsNullOrEmpty(item.ImagePath))
 							{
 								<img src="@Url.Content("~/" + item.ImagePath)" class="img-fluid" alt="" style="width:204px; height:140px">
@@ -312,15 +330,53 @@
 			}
 		});
 
-		function openPropertyModal(el) {
+
+		$(document).on('click',function (e) {
+			if ($(e.target).closest('.property-type').length > 0) { return; }
+
+			$('div[id^="collapseWidthExample_"]').each(function () {
+				$(this).removeClass('position-absolute');
+				$(this).removeClass('d-block');
+			});
+		});
+
+
+		function openPropertyCollapse(el) {
+			debugger;
+
+			$('div[id^="collapseWidthExample_"]').each(function () {
+				$(this).removeClass('position-absolute');
+				$(this).removeClass('d-block');
+			});
+
+			$(el).find('.collapse').addClass('position-absolute');
+			$(el).find('.collapse').addClass('d-block');
+
+		}
+
+
+		function openPropertyModal(ParentTypeId, TypeId) {
+			debugger;
+
 			const modalEl = document.getElementById('exampleModalCenteredScrollable');
 
 			modalEl.dataset.openSource = 'property-type';
-			modalEl.dataset.propertyTypeId = el.dataset.propertyTypeId;
+			modalEl.dataset.parentTypeId = ParentTypeId;
+			modalEl.dataset.typeId = TypeId;
 
 			const modal = new bootstrap.Modal(modalEl);
 			modal.show();
 		}
+
+		// function openPropertyModal(el) {
+		// 	const modalEl = document.getElementById('exampleModalCenteredScrollable');
+
+		// 	modalEl.dataset.openSource = 'property-type';
+		// 	modalEl.dataset.propertyTypeId = el.dataset.propertyTypeId;
+
+		// 	const modal = new bootstrap.Modal(modalEl);
+		// 	modal.show();
+		// }
 
 
 		function fnSubmitFormHere(formId) {
@@ -350,7 +406,8 @@
 			// ---- DIFFERENCE BASED ON SOURCE ----
 			if (source === 'property-type') {
 				// ✅ Type already selected
-				typeParent = modalEl.dataset.propertyTypeId;
+				typeParent = modalEl.dataset.parentTypeId;
+				type = modalEl.dataset.typeId;
 			} else {
 				// ✅ Search button flow → validate selects
 				typeParent = $('#choices-PropertyType_Parent').val();
@@ -368,18 +425,31 @@
 			// ---- BUILD URL ----
 			const query = $form.serialize();
 
-			const url =
-				`@Url.Action("Properties", "Home")?${query}` +
-				`&Location=${encodeURIComponent(location)}` +
-				`&PropertyCategory=${encodeURIComponent(category)}` +
-				`&PropertyType_Parent=${encodeURIComponent(typeParent)}` +
-				`&PropertyType=${encodeURIComponent(type)}`;
+			// const url =
+			// 	`@Url.Action("Properties", "Home")?${query}` +
+			// 	`&Location=${encodeURIComponent(location)}` +
+			// 	`&PropertyCategory=${encodeURIComponent(category)}` +
+			// 	`&PropertyType_Parent=${encodeURIComponent(typeParent)}` +
+			// 	`&PropertyType=${encodeURIComponent(type)}`;
 
+		const url = `@Url.Action("Properties", "Home")`;
 
-
-		fetch(url, { method: 'GET' })
+		fetch(url, { 
+			method: 'GET',
+			headers: {
+				'FirstName': $('#firstName').val() || '',
+				'LastName': $('#lastName').val() || '',
+				'Email': $('#email').val() || '',
+				'ContactNo': $('#ContactNo').val() || '',
+				'Location': location,
+				'PropertyCategory': category,
+				'PropertyType_Parent': typeParent,
+				'PropertyType': type
+			} 
+		})
 		.then(async response =>
 		{
+			debugger;
 			if (!response.ok) {
 				let errorBody = null;
 
@@ -394,7 +464,14 @@
 			}
 
 			// ✅ Response is OK → redirect
-			window.location.href = url;
+			//window.location.href = url;
+			else return response.text(); // HTML
+		})
+		.then(html => {
+			debugger;
+			document.open();
+			document.write(html);
+			document.close();
 		})
 		.catch(err => {debugger;
 			showToast('Opps!... Something went wrong', 'danger', 5000);
@@ -403,47 +480,6 @@
 
 
 		}
-
-				// function fnSubmitFormHere($id){
-				// 	//ShowLoader(true);
-
-				// 	var $form = $('#' + $id);
-
-				// 		$form.validate({
-				// 		  rules: {
-				// 			Location: { required: true },
-				// 			PropertyCategory: { required: true },
-				// 			PropertyType: { required: true }
-				// 		  }
-				// 		});
-
-				// 		const query = $form.serialize();
-
-				// 		if (!$form.valid()) { return; }
-
-				// 		const location = $('#choices-PropertyLocation').val();
-				// 		const category = $('#choices-PropertyCategory').val();
-				// 		const type_Parent = $('#choices-PropertyType_Parent').val();
-				// 		const type = $('#choices-PropertyType').val();
-
-				// 		const url =
-				// 		  `@Url.Action("Properties", "Home", new { area = "" })?${query}` +
-				// 		  `&Location=${encodeURIComponent(location)}` +
-				// 		  `&PropertyCategory=${encodeURIComponent(category)}` +
-				// 		  `&PropertyType_Parent=${encodeURIComponent(type_Parent)}` +
-				// 		  `&PropertyType=${encodeURIComponent(type)}`;
-
-				// 	debugger;
-				// 	try {
-				// 			window.location.href = url;
-				// 	} catch (err) {
-				// 		debugger;
-				// 		console.error("Redirect failed:", err);
-				// 	}
-
-
-
-				// }
 
 		document.querySelectorAll('.choices-select:not([data-choices-init])')
 		  .forEach(el => {

@@ -39,6 +39,7 @@
 
 						<div class="search-bar mt-2">
 							<select class="form-select choices-select" id="choices-PropertyLocation">
+								<option value="0">Select Location</option>
 								@if (Model.SelectListItems != null)
 								{
 									foreach (var item in Model.SelectListItems.Where(x => x.Group == "L"))
@@ -97,6 +98,7 @@
 					<div class="mt-4">
 						<h6 class="mb-0">Property Type</h6>
 						<select class="form-select choices-select" id="choices-PropertyType_Parent">
+							<option value="0">Select Type</option>
 							@if (Model.SelectListItems != null)
 							{
 								foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z <= 0))
@@ -114,19 +116,20 @@
 						</select>
 					</div>
 					<div class="mt-4">
-						<h6 class="mb-0 d-none">&nbsp;</h6>
+						<h6 class="mb-0 d-none">Property Sub-Type</h6>
 						<select class="form-select choices-select" id="choices-PropertyType">
+							<option value="0">Select Sub-Type</option>
 							@if (Model.SelectListItems != null)
 							{
 								foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0))
 								{
 									if (Convert.ToString(propertySearch.PropertyType) == item.Value)
 									{
-										<option value="@item.Value" selected>@item.Text</option>
+										<option value="@item.Value" selected data-parent="@item.Value2">@item.Text</option>
 									}
 									else
 									{
-										<option value="@item.Value">@item.Text</option>
+										<option value="@item.Value" data-parent="@item.Value2">@item.Text</option>
 									}
 								}
 							}
@@ -233,6 +236,8 @@
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 	<script type="text/javascript">
+		const _el = document.getElementById('choices-PropertyType_Parent');
+		_el.dispatchEvent(new Event('change', { bubbles: true }));
 
 		document.querySelectorAll('.choices-select:not([data-choices-init])')
 		  .forEach(el => {
@@ -274,8 +279,7 @@
 		  o.cloneNode(true)
 		);
 
-		document
-		.getElementById('choices-PropertyType_Parent')
+		document.getElementById('choices-PropertyType_Parent')
 		.addEventListener('change', function () {
 		  const selectedParent = this.value;
 

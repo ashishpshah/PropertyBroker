@@ -166,9 +166,19 @@ namespace Broker.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult Properties([FromQuery] PropertySearch viewModel)
+		public IActionResult Properties()
 		{
-			viewModel ??= new PropertySearch();
+			var viewModel = new PropertySearch()
+			{
+				FirstName = Request.Headers["firstname"].ToString(),
+				LastName = Request.Headers["lastname"].ToString(),
+				Email = Request.Headers["email"].ToString(),
+				ContactNo = Request.Headers["contactno"].ToString(),
+				Location = Convert.ToInt32(Request.Headers["location"]),
+				PropertyCategory = Convert.ToInt32(Request.Headers["propertycategory"]),
+				PropertyType_Parent = Convert.ToInt32(Request.Headers["propertytype_parent"]),
+				PropertyType = Convert.ToInt32(Request.Headers["propertytype"])
+			};
 
 			ResponseModel<Properties> responseModel = new ResponseModel<Properties>
 			{
