@@ -57,7 +57,8 @@
 					<ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
 						@foreach (var item in Model.SelectListItems
 											.Where(x => x.Group == "PropertyType")
-											.OrderBy(x => Convert.ToInt32(x.Value3)))
+											.OrderBy(x => Convert.ToInt32(x.Value3) == 0 ? 1 : 0)   // 0 goes last
+											.ThenBy(x => Convert.ToInt32(x.Value3)))              // normal order
 						{
 							long typeId = Convert.ToInt64(item.Value);
 							int count = Convert.ToInt32(item.Value2);
@@ -67,11 +68,11 @@
 							<li class="nav-item">
 								<a class="nav-link rounded-0 @(isActive ? "active" : "")"
 								   href="@Url.Action("PropertyList", "Home",
-							 		 new { area = "Admin", Type_Id = typeId })">
-									@item.Text (@count)
-								</a>
-							</li>
-						}
+								 new { area = "Admin", Type_Id = typeId })">
+							@item.Text (@count)
+						</a>
+					</li>
+										}
 					</ul>
 				}
 	
