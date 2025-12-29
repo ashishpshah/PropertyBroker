@@ -421,14 +421,14 @@ namespace Broker.Infra
 				entity.Property(e => e.ProjectDetailTypeAccess).HasMaxLength(500);
 			});
 
-            //modelBuilder.Entity<RoleMenuAccess>(entity =>
-            //{
-            //	entity
-            //		.HasNoKey()
-            //		.ToTable("RoleMenuAccess");
-            //});
-            modelBuilder.Entity<RoleMenuAccess>().HasKey(e => new { e.RoleId, e.MenuId, e.IsCreate, e.IsUpdate, e.IsRead, e.IsDelete });
-            modelBuilder.Entity<ServicesMaster>(entity =>
+			//modelBuilder.Entity<RoleMenuAccess>(entity =>
+			//{
+			//	entity
+			//		.HasNoKey()
+			//		.ToTable("RoleMenuAccess");
+			//});
+			modelBuilder.Entity<RoleMenuAccess>().HasKey(e => new { e.RoleId, e.MenuId, e.IsCreate, e.IsUpdate, e.IsRead, e.IsDelete });
+			modelBuilder.Entity<ServicesMaster>(entity =>
 			{
 				entity.HasKey(e => e.ServiceId).HasName("PK__Services__C51BB00AA6B29667");
 
@@ -466,17 +466,17 @@ namespace Broker.Infra
 					.HasNoKey()
 					.ToTable("UserMenuAccess");
 			});
-            //modelBuilder.Entity<RoleMenuAccess>(entity =>
-            //{
-            //	entity
-            //		.HasNoKey()
-            //		.ToTable("RoleMenuAccess");
-            //});
-            modelBuilder.Entity<UserMenuAccess>().ToTable("UserMenuAccess");
-            modelBuilder.Entity<RoleMenuAccess>().ToTable("RoleMenuAccess");
-            modelBuilder.Entity<UserMenuAccess>().HasKey(e => new { e.UserId, e.RoleId, e.MenuId, e.IsCreate, e.IsUpdate, e.IsRead, e.IsDelete });
-            modelBuilder.Entity<RoleMenuAccess>().HasKey(e => new { e.RoleId, e.MenuId, e.IsCreate, e.IsUpdate, e.IsRead, e.IsDelete });
-            modelBuilder.Entity<UserRoleMapping>(entity =>
+			//modelBuilder.Entity<RoleMenuAccess>(entity =>
+			//{
+			//	entity
+			//		.HasNoKey()
+			//		.ToTable("RoleMenuAccess");
+			//});
+			modelBuilder.Entity<UserMenuAccess>().ToTable("UserMenuAccess");
+			modelBuilder.Entity<RoleMenuAccess>().ToTable("RoleMenuAccess");
+			modelBuilder.Entity<UserMenuAccess>().HasKey(e => new { e.UserId, e.RoleId, e.MenuId, e.IsCreate, e.IsUpdate, e.IsRead, e.IsDelete });
+			modelBuilder.Entity<RoleMenuAccess>().HasKey(e => new { e.RoleId, e.MenuId, e.IsCreate, e.IsUpdate, e.IsRead, e.IsDelete });
+			modelBuilder.Entity<UserRoleMapping>(entity =>
 			{
 				entity.HasKey(e => e.Id).HasName("PK_UserRoleMapping_1");
 
@@ -1051,6 +1051,8 @@ namespace Broker.Infra
 							Display_Seq_No = dr["Display_Seq_No"] != DBNull.Value ? Convert.ToInt32(dr["Display_Seq_No"]) : 0,
 							ParentId = dr["ParentId"] != DBNull.Value ? Convert.ToInt64(dr["ParentId"]) : 0,
 							Name = dr["Name"] != DBNull.Value ? Convert.ToString(dr["Name"]) : "",
+							SelectedCategory = dr["CategoryNameList"] != DBNull.Value ? Convert.ToString(dr["CategoryNameList"]) : "",
+							SelectedCategoryId_Str = dr["CategoryIdList"] != DBNull.Value ? Convert.ToString(dr["CategoryIdList"]) : "",
 							IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
 						});
 			}
@@ -1059,7 +1061,35 @@ namespace Broker.Infra
 			return listObj;
 		}
 
-		public static List<Properties> Property_Get(long id = 0 , long  Type_Id = 0)
+		public static List<PropertyCategoryTypeMapping> PropertyCategoryType_Get(long CategoryId = 0, long TypeId = 0)
+		{
+			DateTime? nullDateTime = null;
+			var listObj = new List<PropertyCategoryTypeMapping>();
+
+			try
+			{
+				var parameters = new List<SqlParameter>();
+				parameters.Add(new SqlParameter("CategoryId", SqlDbType.BigInt) { Value = CategoryId, Direction = ParameterDirection.Input, IsNullable = true });
+				parameters.Add(new SqlParameter("TypeId", SqlDbType.BigInt) { Value = TypeId, Direction = ParameterDirection.Input, IsNullable = true });
+
+				var dt = ExecuteStoredProcedure_DataTable("SP_PropertyCategoryType_Get", parameters.ToList());
+
+				if (dt != null && dt.Rows.Count > 0)
+					foreach (DataRow dr in dt.Rows)
+						listObj.Add(new PropertyCategoryTypeMapping()
+						{
+							CategoryId = dr["CategoryId"] != DBNull.Value ? Convert.ToInt64(dr["CategoryId"]) : 0,
+							TypeId = dr["TypeId"] != DBNull.Value ? Convert.ToInt64(dr["TypeId"]) : 0,
+							CategoryName = dr["CategoryName"] != DBNull.Value ? Convert.ToString(dr["CategoryName"]) : "",
+							TypeName = dr["TypeName"] != DBNull.Value ? Convert.ToString(dr["TypeName"]) : ""
+						});
+			}
+			catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+			return listObj;
+		}
+
+		public static List<Properties> Property_Get(long id = 0, long Type_Id = 0)
 		{
 			DateTime? nullDateTime = null;
 			var listObj = new List<Properties>();
@@ -1098,8 +1128,8 @@ namespace Broker.Infra
 							FurnishingStatus_TEXT = dr["FurnishingStatus_TEXT"] != DBNull.Value ? Convert.ToString(dr["FurnishingStatus_TEXT"]) : "",
 							AvailabilityStatus = dr["AvailabilityStatus"] != DBNull.Value ? Convert.ToString(dr["AvailabilityStatus"]) : "",
 							AvailabilityStatus_TEXT = dr["AvailabilityStatus_TEXT"] != DBNull.Value ? Convert.ToString(dr["AvailabilityStatus_TEXT"]) : "",
-                            City_Name = dr["City_Name"] != DBNull.Value ? Convert.ToString(dr["City_Name"]) : "",
-                            Area_Name = dr["Area_Name"] != DBNull.Value ? Convert.ToString(dr["Area_Name"]) : "",
+							City_Name = dr["City_Name"] != DBNull.Value ? Convert.ToString(dr["City_Name"]) : "",
+							Area_Name = dr["Area_Name"] != DBNull.Value ? Convert.ToString(dr["Area_Name"]) : "",
 							Remark = dr["Remark"] != DBNull.Value ? Convert.ToString(dr["Remark"]) : "",
 							IsFeatured = dr["IsFeatured"] != DBNull.Value ? Convert.ToBoolean(dr["IsFeatured"]) : false,
 							IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
@@ -1110,180 +1140,180 @@ namespace Broker.Infra
 			return listObj;
 		}
 
-        public static List<Lead> Lead_Get(long id = 0 , string Status = "")
-        {
-            DateTime? nullDateTime = null;
-            var listObj = new List<Lead>();
+		public static List<Lead> Lead_Get(long id = 0, string Status = "")
+		{
+			DateTime? nullDateTime = null;
+			var listObj = new List<Lead>();
 
-            try
-            {
-                var parameters = new List<SqlParameter>();
-                parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = id, Direction = ParameterDirection.Input, IsNullable = true });
-                parameters.Add(new SqlParameter("Status", SqlDbType.VarChar) { Value = Status, Direction = ParameterDirection.Input, IsNullable = true });
+			try
+			{
+				var parameters = new List<SqlParameter>();
+				parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = id, Direction = ParameterDirection.Input, IsNullable = true });
+				parameters.Add(new SqlParameter("Status", SqlDbType.VarChar) { Value = Status, Direction = ParameterDirection.Input, IsNullable = true });
 
-                var dt = ExecuteStoredProcedure_DataTable("SP_Leads_Get", parameters.ToList());
+				var dt = ExecuteStoredProcedure_DataTable("SP_Leads_Get", parameters.ToList());
 
-                if (dt != null && dt.Rows.Count > 0)
-                    foreach (DataRow dr in dt.Rows)
-                        listObj.Add(new Lead()
-                        {
-                            Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
-                            Name = dr["Name"] != DBNull.Value ? Convert.ToString(dr["Name"]) : "",
-                            Mobile = dr["Mobile"] != DBNull.Value ? Convert.ToString(dr["Mobile"]) : "",
-                            Email = dr["Email"] != DBNull.Value ? Convert.ToString(dr["Email"]) : "",
-                            Requirement = dr["Requirement"] != DBNull.Value ? Convert.ToString(dr["Requirement"]) : "",
-                            Preferred_City_Id = dr["Preferred_City_Id"] != DBNull.Value ? Convert.ToInt64(dr["Preferred_City_Id"]) : 0,
-                            Preferred_Area_Id = dr["Preferred_Area_Id"] != DBNull.Value ? Convert.ToInt64(dr["Preferred_Area_Id"]) : 0,
-                            Landmark = dr["Landmark"] != DBNull.Value ? Convert.ToString(dr["Landmark"]) : "",
-                            AssignedTo_Text = dr["AssignedTo_Text"] != DBNull.Value ? Convert.ToString(dr["AssignedTo_Text"]) : "",
-                            AssignedTo = dr["AssignedTo"] != DBNull.Value ? Convert.ToInt64(dr["AssignedTo"]) : 0,
-                            PropertyType = dr["PropertyType"] != DBNull.Value ? Convert.ToInt64(dr["PropertyType"]) : 0,
-                            Property_Type_TEXT = dr["Property_Type_TEXT"] != DBNull.Value ? Convert.ToString(dr["Property_Type_TEXT"]) : "",
-                            LeadSource_Value = dr["LeadSource"] != DBNull.Value ? Convert.ToString(dr["LeadSource"]) : "",
-                            LeadSource_TEXT = dr["LeadSource_TEXT"] != DBNull.Value ? Convert.ToString(dr["LeadSource_TEXT"]) : "",
-                            Status = dr["Status"] != DBNull.Value ? Convert.ToString(dr["Status"]) : "",
-                            Status_TEXT = dr["Status_TEXT"] != DBNull.Value ? Convert.ToString(dr["Status_TEXT"]) : "",
-                            BudgetMin = dr["BudgetMin"] != DBNull.Value ? Convert.ToDecimal(dr["BudgetMin"]) : 0,
-                            BudgetMax = dr["BudgetMax"] != DBNull.Value ? Convert.ToDecimal(dr["BudgetMax"]) : 0,
-                            IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false,
-                            Next_FollowUp_Date = dr["Next_FollowUp_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Next_FollowUp_Date"]) : nullDateTime,
-                        });
-            }
-            catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+				if (dt != null && dt.Rows.Count > 0)
+					foreach (DataRow dr in dt.Rows)
+						listObj.Add(new Lead()
+						{
+							Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
+							Name = dr["Name"] != DBNull.Value ? Convert.ToString(dr["Name"]) : "",
+							Mobile = dr["Mobile"] != DBNull.Value ? Convert.ToString(dr["Mobile"]) : "",
+							Email = dr["Email"] != DBNull.Value ? Convert.ToString(dr["Email"]) : "",
+							Requirement = dr["Requirement"] != DBNull.Value ? Convert.ToString(dr["Requirement"]) : "",
+							Preferred_City_Id = dr["Preferred_City_Id"] != DBNull.Value ? Convert.ToInt64(dr["Preferred_City_Id"]) : 0,
+							Preferred_Area_Id = dr["Preferred_Area_Id"] != DBNull.Value ? Convert.ToInt64(dr["Preferred_Area_Id"]) : 0,
+							Landmark = dr["Landmark"] != DBNull.Value ? Convert.ToString(dr["Landmark"]) : "",
+							AssignedTo_Text = dr["AssignedTo_Text"] != DBNull.Value ? Convert.ToString(dr["AssignedTo_Text"]) : "",
+							AssignedTo = dr["AssignedTo"] != DBNull.Value ? Convert.ToInt64(dr["AssignedTo"]) : 0,
+							PropertyType = dr["PropertyType"] != DBNull.Value ? Convert.ToInt64(dr["PropertyType"]) : 0,
+							Property_Type_TEXT = dr["Property_Type_TEXT"] != DBNull.Value ? Convert.ToString(dr["Property_Type_TEXT"]) : "",
+							LeadSource_Value = dr["LeadSource"] != DBNull.Value ? Convert.ToString(dr["LeadSource"]) : "",
+							LeadSource_TEXT = dr["LeadSource_TEXT"] != DBNull.Value ? Convert.ToString(dr["LeadSource_TEXT"]) : "",
+							Status = dr["Status"] != DBNull.Value ? Convert.ToString(dr["Status"]) : "",
+							Status_TEXT = dr["Status_TEXT"] != DBNull.Value ? Convert.ToString(dr["Status_TEXT"]) : "",
+							BudgetMin = dr["BudgetMin"] != DBNull.Value ? Convert.ToDecimal(dr["BudgetMin"]) : 0,
+							BudgetMax = dr["BudgetMax"] != DBNull.Value ? Convert.ToDecimal(dr["BudgetMax"]) : 0,
+							IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false,
+							Next_FollowUp_Date = dr["Next_FollowUp_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Next_FollowUp_Date"]) : nullDateTime,
+						});
+			}
+			catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
 
-            return listObj;
-        }
+			return listObj;
+		}
 
-        public static List<Lead> Pending_Lead_FollowUp_Get()
-        {
-            DateTime? nullDateTime = null;
-            var listObj = new List<Lead>();
+		public static List<Lead> Pending_Lead_FollowUp_Get()
+		{
+			DateTime? nullDateTime = null;
+			var listObj = new List<Lead>();
 
-            try
-            {
-                //var parameters = new List<SqlParameter>();
-                //parameters.Add(new SqlParameter("Lead_Id", SqlDbType.BigInt) { Value = 0, Direction = ParameterDirection.Input, IsNullable = true });
+			try
+			{
+				//var parameters = new List<SqlParameter>();
+				//parameters.Add(new SqlParameter("Lead_Id", SqlDbType.BigInt) { Value = 0, Direction = ParameterDirection.Input, IsNullable = true });
 
-                var dt = ExecuteStoredProcedure_DataTable("SP_Dashbord_Pending_FollowUp_Get", null);
+				var dt = ExecuteStoredProcedure_DataTable("SP_Dashbord_Pending_FollowUp_Get", null);
 
-                if (dt != null && dt.Rows.Count > 0)
-                    foreach (DataRow dr in dt.Rows)
-                        listObj.Add(new Lead()
-                        {
-                            Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
-                            Name = dr["LeadName"] != DBNull.Value ? Convert.ToString(dr["LeadName"]) : "",
-                            Mobile = dr["Mobile"] != DBNull.Value ? Convert.ToString(dr["Mobile"]) : "",
-                            Email = dr["Email"] != DBNull.Value ? Convert.ToString(dr["Email"]) : "",
-                            Property_Type_TEXT = dr["Property_Type_TEXT"] != DBNull.Value ? Convert.ToString(dr["Property_Type_TEXT"]) : "",
-                            LeadSource_TEXT = dr["LeadSource_TEXT"] != DBNull.Value ? Convert.ToString(dr["LeadSource_TEXT"]) : "",
-                            Status = dr["Status"] != DBNull.Value ? Convert.ToString(dr["Status"]) : "",
-                            Status_TEXT = dr["Status_TEXT"] != DBNull.Value ? Convert.ToString(dr["Status_TEXT"]) : "",
-                            Next_FollowUp_Date = dr["Next_FollowUp_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Next_FollowUp_Date"]) : nullDateTime,
-                        });
-            }
-            catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+				if (dt != null && dt.Rows.Count > 0)
+					foreach (DataRow dr in dt.Rows)
+						listObj.Add(new Lead()
+						{
+							Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
+							Name = dr["LeadName"] != DBNull.Value ? Convert.ToString(dr["LeadName"]) : "",
+							Mobile = dr["Mobile"] != DBNull.Value ? Convert.ToString(dr["Mobile"]) : "",
+							Email = dr["Email"] != DBNull.Value ? Convert.ToString(dr["Email"]) : "",
+							Property_Type_TEXT = dr["Property_Type_TEXT"] != DBNull.Value ? Convert.ToString(dr["Property_Type_TEXT"]) : "",
+							LeadSource_TEXT = dr["LeadSource_TEXT"] != DBNull.Value ? Convert.ToString(dr["LeadSource_TEXT"]) : "",
+							Status = dr["Status"] != DBNull.Value ? Convert.ToString(dr["Status"]) : "",
+							Status_TEXT = dr["Status_TEXT"] != DBNull.Value ? Convert.ToString(dr["Status_TEXT"]) : "",
+							Next_FollowUp_Date = dr["Next_FollowUp_Date"] != DBNull.Value ? Convert.ToDateTime(dr["Next_FollowUp_Date"]) : nullDateTime,
+						});
+			}
+			catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
 
-            return listObj;
-        }
+			return listObj;
+		}
 
-        public static List<LeadFollowup> LeadFollowUp_Get(long id = 0, long LeadId = 0 , string Status = "")
-        {
-            DateTime? nullDateTime = null;
-            var listObj = new List<LeadFollowup>();
+		public static List<LeadFollowup> LeadFollowUp_Get(long id = 0, long LeadId = 0, string Status = "")
+		{
+			DateTime? nullDateTime = null;
+			var listObj = new List<LeadFollowup>();
 
-            try
-            {
-                var parameters = new List<SqlParameter>();
-                parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = id, Direction = ParameterDirection.Input, IsNullable = true });
-                parameters.Add(new SqlParameter("LeadId", SqlDbType.BigInt) { Value = LeadId, Direction = ParameterDirection.Input, IsNullable = true });
+			try
+			{
+				var parameters = new List<SqlParameter>();
+				parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = id, Direction = ParameterDirection.Input, IsNullable = true });
+				parameters.Add(new SqlParameter("LeadId", SqlDbType.BigInt) { Value = LeadId, Direction = ParameterDirection.Input, IsNullable = true });
 
-                var dt = ExecuteStoredProcedure_DataTable("SP_LeadFollowups_Get", parameters.ToList());
+				var dt = ExecuteStoredProcedure_DataTable("SP_LeadFollowups_Get", parameters.ToList());
 
-                if (dt != null && dt.Rows.Count > 0)
-                    foreach (DataRow dr in dt.Rows)
-                        listObj.Add(new LeadFollowup()
-                        {
-                            Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
-                            LeadId = dr["LeadId"] != DBNull.Value ? Convert.ToInt64(dr["LeadId"]) : 0,
-                            NextFollowupDate = dr["NextFollowupDate"] != DBNull.Value ? Convert.ToDateTime(dr["NextFollowupDate"]) : nullDateTime,                            
-                            Remark = dr["Remark"] != DBNull.Value ? Convert.ToString(dr["Remark"]) : "",
-                            IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false,
-                            Status = Status
-                        });
-            }
-            catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+				if (dt != null && dt.Rows.Count > 0)
+					foreach (DataRow dr in dt.Rows)
+						listObj.Add(new LeadFollowup()
+						{
+							Id = dr["Id"] != DBNull.Value ? Convert.ToInt64(dr["Id"]) : 0,
+							LeadId = dr["LeadId"] != DBNull.Value ? Convert.ToInt64(dr["LeadId"]) : 0,
+							NextFollowupDate = dr["NextFollowupDate"] != DBNull.Value ? Convert.ToDateTime(dr["NextFollowupDate"]) : nullDateTime,
+							Remark = dr["Remark"] != DBNull.Value ? Convert.ToString(dr["Remark"]) : "",
+							IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false,
+							Status = Status
+						});
+			}
+			catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
 
-            return listObj;
-        }
-        public static (bool, string, long) Leads_Save(Lead obj = null)
-        {
-            if (obj != null)
-                try
-                {
-                    var parameters = new List<SqlParameter>();
+			return listObj;
+		}
+		public static (bool, string, long) Leads_Save(Lead obj = null)
+		{
+			if (obj != null)
+				try
+				{
+					var parameters = new List<SqlParameter>();
 
-                    parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = obj.Id, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Name", SqlDbType.VarChar) { Value = obj.Name, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Mobile", SqlDbType.VarChar) { Value = obj.Mobile, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Email", SqlDbType.VarChar) { Value = obj.Email, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Requirement", SqlDbType.VarChar) { Value = obj.Requirement, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Preferred_City_Id", SqlDbType.BigInt) { Value = obj.Preferred_City_Id, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Preferred_Area_Id", SqlDbType.BigInt) { Value = obj.Preferred_Area_Id, Direction = ParameterDirection.Input, IsNullable = true });
-                    //parameters.Add(new SqlParameter("AssignedTo", SqlDbType.BigInt) { Value = obj.AssignedTo, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("PropertyType", SqlDbType.BigInt) { Value = obj.PropertyType, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Landmark", SqlDbType.VarChar) { Value = obj.Landmark, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("LeadSource", SqlDbType.VarChar) { Value = obj.LeadSource_Value, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("BudgetMin", SqlDbType.Decimal) { Value = obj.BudgetMin, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("BudgetMax", SqlDbType.Decimal) { Value = obj.BudgetMax, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.Id > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = obj.Id, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Name", SqlDbType.VarChar) { Value = obj.Name, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Mobile", SqlDbType.VarChar) { Value = obj.Mobile, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Email", SqlDbType.VarChar) { Value = obj.Email, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Requirement", SqlDbType.VarChar) { Value = obj.Requirement, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Preferred_City_Id", SqlDbType.BigInt) { Value = obj.Preferred_City_Id, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Preferred_Area_Id", SqlDbType.BigInt) { Value = obj.Preferred_Area_Id, Direction = ParameterDirection.Input, IsNullable = true });
+					//parameters.Add(new SqlParameter("AssignedTo", SqlDbType.BigInt) { Value = obj.AssignedTo, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("PropertyType", SqlDbType.BigInt) { Value = obj.PropertyType, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Landmark", SqlDbType.VarChar) { Value = obj.Landmark, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("LeadSource", SqlDbType.VarChar) { Value = obj.LeadSource_Value, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("BudgetMin", SqlDbType.Decimal) { Value = obj.BudgetMin, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("BudgetMax", SqlDbType.Decimal) { Value = obj.BudgetMax, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.Id > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });
 
-                    var response = ExecuteStoredProcedure("SP_Leads_Save", parameters.ToArray());
+					var response = ExecuteStoredProcedure("SP_Leads_Save", parameters.ToArray());
 
-                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
-                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
-                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+					var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+					var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+					var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
 
-                    return (msgtype.Contains("S"), message, Convert.ToInt64(strid));
+					return (msgtype.Contains("S"), message, Convert.ToInt64(strid));
 
-                }
-                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+				}
+				catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
 
-            return (false, ResponseStatusMessage.Error, 0);
-        }
+			return (false, ResponseStatusMessage.Error, 0);
+		}
 
-        public static (bool, string, long) LeadFollowUp_Save(LeadFollowup obj = null)
-        {
-            if (obj != null)
-                try
-                {
-                    var parameters = new List<SqlParameter>();
+		public static (bool, string, long) LeadFollowUp_Save(LeadFollowup obj = null)
+		{
+			if (obj != null)
+				try
+				{
+					var parameters = new List<SqlParameter>();
 
-                    parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = obj.Id, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("LeadId", SqlDbType.BigInt) { Value = obj.LeadId, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("NextFollowupDate", SqlDbType.DateTime) { Value = obj.NextFollowupDate, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Remark", SqlDbType.VarChar) { Value = obj.Remark, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.Id > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Id", SqlDbType.BigInt) { Value = obj.Id, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("LeadId", SqlDbType.BigInt) { Value = obj.LeadId, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("NextFollowupDate", SqlDbType.DateTime) { Value = obj.NextFollowupDate, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Remark", SqlDbType.VarChar) { Value = obj.Remark, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.Id > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });
 
-                    var response = ExecuteStoredProcedure("SP_LeadFollowups_Save", parameters.ToArray());
+					var response = ExecuteStoredProcedure("SP_LeadFollowups_Save", parameters.ToArray());
 
-                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
-                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
-                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+					var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+					var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+					var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
 
-                    return (msgtype.Contains("S"), message, Convert.ToInt64(strid));
+					return (msgtype.Contains("S"), message, Convert.ToInt64(strid));
 
-                }
-                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+				}
+				catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
 
-            return (false, ResponseStatusMessage.Error, 0);
-        }
-        public static List<PropertyType> Property_Sub_Type_Get(long id = 0, long Parent_Id = 0)
+			return (false, ResponseStatusMessage.Error, 0);
+		}
+		public static List<PropertyType> Property_Sub_Type_Get(long id = 0, long Parent_Id = 0)
 		{
 			DateTime? nullDateTime = null;
 			var listObj = new List<PropertyType>();
-			  
+
 			try
 			{
 				var parameters = new List<SqlParameter>();
@@ -1368,6 +1398,7 @@ namespace Broker.Infra
 					parameters.Add(new SqlParameter("Parent_Id", SqlDbType.BigInt) { Value = obj.ParentId, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("Display_Seq_No", SqlDbType.Int) { Value = obj.Display_Seq_No, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("Name", SqlDbType.VarChar) { Value = obj.Name, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("SelectedCategory", SqlDbType.VarChar) { Value = obj.SelectedCategoryId_Str, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("IsActive", SqlDbType.NVarChar) { Value = obj.IsActive, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.Id > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });
@@ -1454,32 +1485,32 @@ namespace Broker.Infra
 			return (false, ResponseStatusMessage.Error);
 		}
 
-        public static (bool, string) Lead_Status_Change(long Id = 0, string Remarks = "" , string Status = "")
-        {
-            if (Id > 0)
-                try
-                {
-                    var parameters = new List<SqlParameter>();
+		public static (bool, string) Lead_Status_Change(long Id = 0, string Remarks = "", string Status = "")
+		{
+			if (Id > 0)
+				try
+				{
+					var parameters = new List<SqlParameter>();
 
-                    parameters.Add(new SqlParameter("LeadId", SqlDbType.BigInt) { Value = Id, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Status", SqlDbType.VarChar) { Value = Status, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Remarks", SqlDbType.VarChar) { Value = Remarks, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("LeadId", SqlDbType.BigInt) { Value = Id, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Status", SqlDbType.VarChar) { Value = Status, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Remarks", SqlDbType.VarChar) { Value = Remarks, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
 
-                    var response = ExecuteStoredProcedure("SP_LeadFollowUp_Status_Change", parameters.ToArray());
+					var response = ExecuteStoredProcedure("SP_LeadFollowUp_Status_Change", parameters.ToArray());
 
-                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
-                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
-                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+					var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+					var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+					var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
 
-                    return (msgtype.Contains("S"), message);
+					return (msgtype.Contains("S"), message);
 
-                }
-                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+				}
+				catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
 
-            return (false, ResponseStatusMessage.Error);
-        }
-        public static (bool, string) Employee_Status(long Id = 0, long Logged_In_VendorId = 0, bool IsActive = false, bool IsDelete = false)
+			return (false, ResponseStatusMessage.Error);
+		}
+		public static (bool, string) Employee_Status(long Id = 0, long Logged_In_VendorId = 0, bool IsActive = false, bool IsDelete = false)
 		{
 			if (Id > 0)
 				try
@@ -1509,109 +1540,109 @@ namespace Broker.Infra
 		}
 
 
-        public static List<ServicesMaster> ServicesMaster_Get(long id = 0)
-        {
-            DateTime? nullDateTime = null;
-            var listObj = new List<ServicesMaster>();
+		public static List<ServicesMaster> ServicesMaster_Get(long id = 0)
+		{
+			DateTime? nullDateTime = null;
+			var listObj = new List<ServicesMaster>();
 
-            try
-            {
-                var parameters = new List<SqlParameter>();
-                parameters.Add(new SqlParameter("ServiceId", SqlDbType.BigInt) { Value = id, Direction = ParameterDirection.Input, IsNullable = true });
+			try
+			{
+				var parameters = new List<SqlParameter>();
+				parameters.Add(new SqlParameter("ServiceId", SqlDbType.BigInt) { Value = id, Direction = ParameterDirection.Input, IsNullable = true });
 
-                var dt = ExecuteStoredProcedure_DataTable("SP_ServiceMaster_Get", parameters.ToList());
+				var dt = ExecuteStoredProcedure_DataTable("SP_ServiceMaster_Get", parameters.ToList());
 
-                if (dt != null && dt.Rows.Count > 0)
-                    foreach (DataRow dr in dt.Rows)
-                        listObj.Add(new ServicesMaster()
-                        {
-                            ServiceId = dr["ServiceId"] != DBNull.Value ? Convert.ToInt64(dr["ServiceId"]) : 0,
-                            ServiceTitle = dr["ServiceTitle"] != DBNull.Value ? Convert.ToString(dr["ServiceTitle"]) : "",
-                            ShortDescription = dr["ShortDescription"] != DBNull.Value ? Convert.ToString(dr["ShortDescription"]) : "",
-                            FullDescription = dr["FullDescription"] != DBNull.Value ? Convert.ToString(dr["FullDescription"]) : "",
-                            ImageName = dr["ImageName"] != DBNull.Value ? Convert.ToString(dr["ImageName"]) : "",
-                            DisplayOrder = dr["DisplayOrder"] != DBNull.Value ? Convert.ToInt32(dr["DisplayOrder"]) : 0,
-                            IsFeatured = dr["IsFeatured"] != DBNull.Value ? Convert.ToBoolean(dr["IsFeatured"]) : false,
-                            ResumeFile = dr["ResumeFile"] != DBNull.Value ? (byte[])dr["ResumeFile"] : null,
-                            IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
-                        });
-            }
-            catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+				if (dt != null && dt.Rows.Count > 0)
+					foreach (DataRow dr in dt.Rows)
+						listObj.Add(new ServicesMaster()
+						{
+							ServiceId = dr["ServiceId"] != DBNull.Value ? Convert.ToInt64(dr["ServiceId"]) : 0,
+							ServiceTitle = dr["ServiceTitle"] != DBNull.Value ? Convert.ToString(dr["ServiceTitle"]) : "",
+							ShortDescription = dr["ShortDescription"] != DBNull.Value ? Convert.ToString(dr["ShortDescription"]) : "",
+							FullDescription = dr["FullDescription"] != DBNull.Value ? Convert.ToString(dr["FullDescription"]) : "",
+							ImageName = dr["ImageName"] != DBNull.Value ? Convert.ToString(dr["ImageName"]) : "",
+							DisplayOrder = dr["DisplayOrder"] != DBNull.Value ? Convert.ToInt32(dr["DisplayOrder"]) : 0,
+							IsFeatured = dr["IsFeatured"] != DBNull.Value ? Convert.ToBoolean(dr["IsFeatured"]) : false,
+							ResumeFile = dr["ResumeFile"] != DBNull.Value ? (byte[])dr["ResumeFile"] : null,
+							IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
+						});
+			}
+			catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
 
-            return listObj;
-        }
-
-
-        public static (bool, string, long) ServicesMaster_Save(ServicesMaster obj = null)
-        {
-            if (obj != null)
-                try
-                {
-                    var parameters = new List<SqlParameter>();
-
-                    parameters.Add(new SqlParameter("ServiceId", SqlDbType.BigInt) { Value = obj.ServiceId, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("ServiceTitle", SqlDbType.VarChar) { Value = obj.ServiceTitle, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("ShortDescription", SqlDbType.VarChar) { Value = obj.ShortDescription, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("FullDescription", SqlDbType.VarChar) { Value = obj.FullDescription, Direction = ParameterDirection.Input, IsNullable = true });
-
-                    parameters.Add(new SqlParameter("ImageName", SqlDbType.VarChar, 255)
-                    {
-                        Value = (object)obj.ImageName ?? DBNull.Value
-                    });
-
-                    parameters.Add(new SqlParameter("ResumeFile", SqlDbType.VarBinary)
-                    {
-                        Value = (object)obj.ResumeFile ?? DBNull.Value
-                    });
-
-                    parameters.Add(new SqlParameter("DisplayOrder", SqlDbType.Int) { Value = obj.DisplayOrder, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("IsFeatured", SqlDbType.Bit)
-                    {
-                        Value = obj.IsFeatured
-                    });
-                    //parameters.Add(new SqlParameter("IsActive", SqlDbType.NVarChar) { Value = obj.IsActive, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.ServiceId > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });
-
-                    var response = ExecuteStoredProcedure("SP_ServicesMaster_Save", parameters.ToArray());
-
-                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
-                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
-                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
-
-                    return (msgtype.Contains("S"), message, Convert.ToInt64(strid));
-
-                }
-                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
-
-            return (false, ResponseStatusMessage.Error, 0);
-        }
+			return listObj;
+		}
 
 
-        public static (bool, string) ServicesMaster_Delete(long Id = 0)
-        {
-            if (Id > 0)
-                try
-                {
-                    var parameters = new List<SqlParameter>();
+		public static (bool, string, long) ServicesMaster_Save(ServicesMaster obj = null)
+		{
+			if (obj != null)
+				try
+				{
+					var parameters = new List<SqlParameter>();
 
-                    parameters.Add(new SqlParameter("ServiceId", SqlDbType.BigInt) { Value = Id, Direction = ParameterDirection.Input, IsNullable = true });
-                    parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("ServiceId", SqlDbType.BigInt) { Value = obj.ServiceId, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("ServiceTitle", SqlDbType.VarChar) { Value = obj.ServiceTitle, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("ShortDescription", SqlDbType.VarChar) { Value = obj.ShortDescription, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("FullDescription", SqlDbType.VarChar) { Value = obj.FullDescription, Direction = ParameterDirection.Input, IsNullable = true });
 
-                    var response = ExecuteStoredProcedure("sp_ServicesMaster_Delete", parameters.ToArray());
+					parameters.Add(new SqlParameter("ImageName", SqlDbType.VarChar, 255)
+					{
+						Value = (object)obj.ImageName ?? DBNull.Value
+					});
 
-                    var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
-                    var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
-                    var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+					parameters.Add(new SqlParameter("ResumeFile", SqlDbType.VarBinary)
+					{
+						Value = (object)obj.ResumeFile ?? DBNull.Value
+					});
 
-                    return (msgtype.Contains("S"), message);
+					parameters.Add(new SqlParameter("DisplayOrder", SqlDbType.Int) { Value = obj.DisplayOrder, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("IsFeatured", SqlDbType.Bit)
+					{
+						Value = obj.IsFeatured
+					});
+					//parameters.Add(new SqlParameter("IsActive", SqlDbType.NVarChar) { Value = obj.IsActive, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.ServiceId > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });
 
-                }
-                catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+					var response = ExecuteStoredProcedure("SP_ServicesMaster_Save", parameters.ToArray());
 
-            return (false, ResponseStatusMessage.Error);
-        }
+					var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+					var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+					var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
 
-    }
+					return (msgtype.Contains("S"), message, Convert.ToInt64(strid));
+
+				}
+				catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+			return (false, ResponseStatusMessage.Error, 0);
+		}
+
+
+		public static (bool, string) ServicesMaster_Delete(long Id = 0)
+		{
+			if (Id > 0)
+				try
+				{
+					var parameters = new List<SqlParameter>();
+
+					parameters.Add(new SqlParameter("ServiceId", SqlDbType.BigInt) { Value = Id, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
+
+					var response = ExecuteStoredProcedure("sp_ServicesMaster_Delete", parameters.ToArray());
+
+					var msgtype = response.Split('|').Length > 0 ? response.Split('|')[0] : "";
+					var message = response.Split('|').Length > 1 ? response.Split('|')[1].Replace("\"", "") : "";
+					var strid = response.Split('|').Length > 2 ? response.Split('|')[2].Replace("\"", "") ?? "0" : "0";
+
+					return (msgtype.Contains("S"), message);
+
+				}
+				catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
+
+			return (false, ResponseStatusMessage.Error);
+		}
+
+	}
 
 }

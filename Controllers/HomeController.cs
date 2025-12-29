@@ -166,6 +166,15 @@ namespace Broker.Controllers
 		}
 
 		[HttpGet]
+		public IActionResult PropertyCategoryType_Get(long CategoryId = 0, long TypeId = 0)
+		{
+			List<PropertyCategoryTypeMapping> data = DataContext_Command.PropertyCategoryType_Get(CategoryId).ToList();
+
+			return Json(data);
+		}
+
+
+		[HttpGet]
 		public IActionResult Properties()
 		{
 			var viewModel = new PropertySearch()

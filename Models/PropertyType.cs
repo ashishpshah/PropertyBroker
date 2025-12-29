@@ -15,6 +15,9 @@ public partial class PropertyType : EntitiesBase
 
     [NotMapped] public int PropertyCount { get; set; } = 0;
 
+	[NotMapped] public string SelectedCategory { get; set; } = null;
+
+	[NotMapped] public string SelectedCategoryId_Str { get; set; } = null;
 
 	//public virtual ICollection<Lead> Leads { get; set; } = new List<Lead>();
 
