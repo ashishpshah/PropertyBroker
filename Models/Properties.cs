@@ -14,6 +14,8 @@ public partial class Properties : EntitiesBase
 
 	public long? TypeId { get; set; }
 
+	public long? SubTypeId { get; set; }
+
 	public long? CategoryId { get; set; }
 
 	public decimal? Price { get; set; }
@@ -39,6 +41,7 @@ public partial class Properties : EntitiesBase
 	[NotMapped] public string? City_Name { get; set; }
 	[NotMapped] public string? Area_Name { get; set; }
 	[NotMapped] public string? Property_Type { get; set; }
+	[NotMapped] public string? Property_SubType { get; set; }
 	[NotMapped] public string? Property_Category { get; set; }
 	[NotMapped] public int? FloorNo { get; set; }
 	[NotMapped] public int? TotalFloors { get; set; }
