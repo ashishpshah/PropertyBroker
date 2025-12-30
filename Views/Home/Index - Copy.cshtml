@@ -35,10 +35,6 @@
 			background: transparent !important;
 			color: #38bdf8 !important;
 		}
-
-		.choices__inner {
-			padding: 13px 6px 15px 15px !important;
-		}
 	</style>
 }
 
@@ -93,7 +89,7 @@
 										<div class="col-lg-6 col-md-6 col-12">
 											<div class="mb-3 text-start">
 												<div class="filter-search-form position-relative filter-border">
-													<select class="form-select choices-select" id="choices-PropertyLocation" data-placeholder="Select Location">
+													<select class="form-select choices-select" id="choices-PropertyLocation">
 														<option value="0">Select Location</option>
 														@if (Model.SelectListItems != null)
 														{
@@ -106,7 +102,7 @@
 												</div>
 											</div>
 										</div>
-										@* 
+
 										<div class="col-lg-4 col-md-6 col-12">
 											<div class="mb-3 text-start">
 												<div class="filter-search-form position-relative filter-border">
@@ -123,11 +119,11 @@
 												</div>
 											</div>
 										</div>
- *@
+
 										<div class="col-lg-3 col-md-6 col-12">
 											<div class="mb-3 text-start">
 												<div class="filter-search-form position-relative">
-													<select class="form-select choices-select" id="choices-PropertyType" data-placeholder="Select Property Type">
+													<select class="form-select choices-select" id="choices-PropertyType">
 														<option value="0">Select Sub-Type</option>
 														@if (Model.SelectListItems != null)
 														{
@@ -142,9 +138,9 @@
 										</div>
 
 										<div class="col-lg-3 col-md-6 col-12 align-self-end justify-content-center">
-											<div class="mb-3 text-start mx-3">
+											<div class="mb-3 text-start">
 												<div class="filter-search-form position-relative">
-													<button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable"
+													<button type="button" class="btn btn-primary ms-md-5" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable"
 															style="height: 60px; font-size: 20px; font-weight: 600;">
 														Search
 													</button>
@@ -176,47 +172,46 @@
 				foreach (PropertyType item in ((Model.Data1 as IList<PropertyType>)?.OrderBy(x => x.Display_Seq_No).ToList()))
 				{
 					<div class="col property-type position-relative" role="button" id="itemProperty_@item.Id"
-						 @* onclick="@((Model.SelectListItems != null && Model.SelectListItems.Any(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0 && z == item.Id)) ? "openPropertyCollapse(this)" : $"openPropertyModal({@item.Id}, 0)")"> *@
-						 onclick="openPropertyModal(@item.Id)">
+						 onclick="@((Model.SelectListItems != null && Model.SelectListItems.Any(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0 && z == item.Id)) ? "openPropertyCollapse(this)" : $"openPropertyModal({@item.Id}, 0)")">
 						<div class="categories position-relative overflow-hidden rounded-3 shadow">
-							@* <div class="collapse collapse-horizontal w-100" data-bs-parent="#itemProperty_@item.Id" id="collapseWidthExample_@item.Id">
+							<div class="collapse collapse-horizontal w-100" data-bs-parent="#itemProperty_@item.Id" id="collapseWidthExample_@item.Id">
 								<div class="card card-body bg-transparent">
 									<ul class="list-unstyled property-icon">
 										@if (Model.SelectListItems != null && Model.SelectListItems.Any(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0 && z == item.Id))
 										{
 											foreach (var _item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0 && z == item.Id))
 											{
-												@* <li class="list-group-item d-flex justify-content-between align-items-start" onclick="openPropertyModal(@item.Id, @_item.Value)"> @
 												<li class="list-group-item d-flex justify-content-between align-items-start" onclick="openPropertyModal(@item.Id, @_item.Value)">
 													<div class="btn btn-sm btn-icon btn-primary m-1 me-auto w-100 ">
 														<div class="fw-bold">@_item.Text</div>
 													</div>
-							</li>
-						}
-					}
-					</ul>
-				</div>
-			</div> *@
-			@if (!string.IsNullOrEmpty(item.ImagePath))
-			{
-				<img src="@Url.Content("~/" + item.ImagePath)" class="img-fluid" alt="" style="width:204px; height:140px">
-			}
-			else
-			{
-				<img src="~/no_image_available.png" class="img-fluid" alt="" style="width:204px; height:140px">
-			}
+													@* <span class="badge text-bg-primary rounded-pill">14</span> *@
+												</li>
+											}
+										}
+									</ul>
+								</div>
+							</div>
+							@if (!string.IsNullOrEmpty(item.ImagePath))
+							{
+								<img src="@Url.Content("~/" + item.ImagePath)" class="img-fluid" alt="" style="width:204px; height:140px">
+							}
+							else
+							{
+								<img src="~/no_image_available.png" class="img-fluid" alt="" style="width:204px; height:140px">
+							}
 
-			<div class="p-3">
-				<span class="title text-dark fs-5 fw-medium">@item.Name</span>
-				<p class="text-muted small mb-0">@item.PropertyCount @(item.PropertyCount > 1 ? "Properties" : "Property")</p>
-			</div>
+							<div class="p-3">
+								<span class="title text-dark fs-5 fw-medium">@item.Name</span>
+								<p class="text-muted small mb-0">@item.PropertyCount @(item.PropertyCount > 1 ? "Properties" : "Property")</p>
+							</div>
+
+						</div>
+					</div>
+				}
+			}
 
 		</div>
-	</div>
-	}
-	}
-
-	</div>
 	</div>
 
 	<div class="container mt-100 mt-60">
@@ -325,16 +320,10 @@
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 	<script type="text/javascript">
-
+		
 		$(document).ready(function () {
 			$('#pills-tab .nav-link.active').trigger('click');
 		});
-
-		document.querySelectorAll('.choices-select:not([data-choices-init])').forEach(el => {
-			const instance = new Choices(el, { searchEnabled: true, removeItemButton: true, placeholder: true, placeholderValue: el.getAttribute('data-placeholder') || 'Select an option', });
-			el._choicesInstance = instance;
-			el.setAttribute('data-choices-init', 'true');
-		  });
 
 		const modalEl = document.getElementById('exampleModalCenteredScrollable');
 
@@ -358,6 +347,7 @@
 
 
 		function openPropertyCollapse(el) {
+			debugger;
 
 			$('div[id^="collapseWidthExample_"]').each(function () {
 				$(this).removeClass('position-absolute');
@@ -370,12 +360,13 @@
 		}
 
 
-		function openPropertyModal(TypeId) {
-		//function openPropertyModal(ParentTypeId, TypeId) {
+		function openPropertyModal(ParentTypeId, TypeId) {
+			debugger;
+
 			const modalEl = document.getElementById('exampleModalCenteredScrollable');
 
 			modalEl.dataset.openSource = 'property-type';
-			//modalEl.dataset.parentTypeId = ParentTypeId;
+			modalEl.dataset.parentTypeId = ParentTypeId;
 			modalEl.dataset.typeId = TypeId;
 
 			const modal = new bootstrap.Modal(modalEl);
@@ -420,11 +411,11 @@
 			// ---- DIFFERENCE BASED ON SOURCE ----
 			if (source === 'property-type') {
 				// ✅ Type already selected
-				//typeParent = modalEl.dataset.parentTypeId;
+				typeParent = modalEl.dataset.parentTypeId;
 				type = modalEl.dataset.typeId;
 			} else {
 				// ✅ Search button flow → validate selects
-				//typeParent = $('#choices-PropertyType_Parent').val();
+				typeParent = $('#choices-PropertyType_Parent').val();
 				type = $('#choices-PropertyType').val();
 
 				location = $('#choices-PropertyLocation').val();
@@ -435,7 +426,7 @@
 					return;
 				}
 			}
-
+			debugger;
 			// ---- BUILD URL ----
 			const query = $form.serialize();
 
@@ -457,13 +448,13 @@
 				'ContactNo': $('#ContactNo').val() || '',
 				'Location': location,
 				'PropertyCategory': category,
-				//'PropertyType_Parent': typeParent,
+				'PropertyType_Parent': typeParent,
 				'PropertyType': type
 			}
 		})
 		.then(async response =>
 		{
-
+			debugger;
 			if (!response.ok) {
 				let errorBody = null;
 
@@ -482,12 +473,12 @@
 			else return response.text(); // HTML
 		})
 		.then(html => {
-
+			debugger;
 			document.open();
 			document.write(html);
 			document.close();
 		})
-		.catch(err => {
+		.catch(err => {debugger;
 			showToast('Opps!... Something went wrong', 'danger', 5000);
 		});
 
@@ -495,23 +486,39 @@
 
 		}
 
-		//let childChoices;
+		document.querySelectorAll('.choices-select:not([data-choices-init])')
+		  .forEach(el => {
+			const instance = new Choices(el, {
+			  searchEnabled: true,
+			  removeItemButton: true,
+			});
 
-		// const childSelect = document.getElementById('choices-PropertyType');
-		// const originalOptions = Array.from(childSelect.options).map(o => o.cloneNode(true) );
+			el._choicesInstance = instance;
 
-		// document.getElementById('choices-PropertyType_Parent').addEventListener('change', function () {
-		//   const selectedParent = this.value;
+			el.setAttribute('data-choices-init', 'true');
+		  });
 
-		//   var filterd = originalOptions.filter(o => o.dataset.parent === selectedParent).map(o => ({ value: o.value, label: o.text, }));
+		let childChoices;
 
-		// 	const choices = childSelect._choicesInstance;
+		const childSelect = document.getElementById('choices-PropertyType');
+		const originalOptions = Array.from(childSelect.options).map(o =>
+		  o.cloneNode(true)
+		);
 
-		// 	choices.clearChoices();
-		// 	choices.removeActiveItems();
-		// 	choices.setChoices(filterd, 'value', 'label', true );
+		document
+		.getElementById('choices-PropertyType_Parent')
+		.addEventListener('change', function () {
+		  const selectedParent = this.value;
 
-		// });
+		  var filterd = originalOptions.filter(o => o.dataset.parent === selectedParent).map(o => ({ value: o.value, label: o.text, }));
+
+			const choices = childSelect._choicesInstance;
+
+			choices.clearChoices();
+			choices.removeActiveItems();
+			choices.setChoices(filterd, 'value', 'label', true );
+
+		});
 
 
 		$(document).on('click', '#pills-tab .nav-link', function (e) {
@@ -524,7 +531,7 @@
 			choices.removeActiveItems();
 
 			let categoryId = $(e.target).attr('id');
-			debugger;
+
 			$.ajax({
 				type: 'GET',
 				url: '@Url.Action("PropertyCategoryType_Get", "Home")?CategoryId='+categoryId,
@@ -534,11 +541,12 @@
 				processData: false,
 				dataType: "json",
 				success: function (response) {
-					var filterd = response.map(o => ({ value: o.TypeId, label: o.TypeName, }));
 					debugger;
+
+					var filterd = response.map(o => ({ value: o.TypeId, label: o.TypeName, }));
+
 					choices.setChoices(filterd, 'value', 'label', true );
 
-					choices.setChoiceByValue('ipsum');
 				},
 				error: function (xhr) {
 					console.error("Error:", xhr.responseText);

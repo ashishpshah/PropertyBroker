@@ -18,6 +18,10 @@
 	  <Compile Remove="Models\Property.cs" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Content Remove="Views\Home\Index - Copy.cshtml" />
+	</ItemGroup>
+
 	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
