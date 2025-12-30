@@ -27,15 +27,17 @@ namespace Broker
 		public string ConfirmPassword { get; set; }
 		public string Role { get; set; }
 	}
-	public class ForgotPassword
-	{
-		public string User_Id { get; set; }
-		public string User_Name { get; set; }
-		public string Password { get; set; }
-		public string User_Type { get; set; }
-		public string Email { get; set; }
-	}
-	public class PropertySearch
+    public class ForgotPassword
+    {
+        public long Id { get; set; }
+        public string Email { get; set; }
+        public string OTP { get; set; }
+
+        // Add these properties to match your table
+        public DateTime CreatedAt { get; set; }
+        public bool IsUsed { get; set; }
+    }
+    public class PropertySearch
 	{
 		public string FirstName { get; set; }
 		public string LastName { get; set; }

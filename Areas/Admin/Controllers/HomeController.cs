@@ -4,6 +4,7 @@ using Broker.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Data;
 
 namespace Broker.Areas.Admin.Controllers
@@ -229,5 +230,90 @@ namespace Broker.Areas.Admin.Controllers
 			return RedirectToAction("Account", "Home", new { Area = "Admin" });
 		}
 
-	}
+        [HttpGet]
+        public PartialViewResult ForgotPassword()
+        {
+            return PartialView("_Partial_ForgotPassword", new ResponseModel<ForgotPassword>());
+        }
+
+
+        private static Dictionary<string, (string OTP, DateTime Expiry)> _otpStore
+    = new Dictionary<string, (string OTP, DateTime Expiry)>();
+
+        [HttpPost]
+        public JsonResult ForgotPassword_SendOTP(string email)
+        {
+            var userExists = _context.Using<User>().Any(u => u.Email == email);
+            if (!userExists)
+                return Json(new { IsSuccess = false, Message = "Email does not exist." });
+
+            // Generate OTP
+            var newOtp = new Random().Next(100000, 999999).ToString();
+
+            // Store in memory for 10 minutes
+            _otpStore[email] = (newOtp, DateTime.Now.AddMinutes(10));
+
+            // Send Email
+            Common.SendEmail(
+                "Your OTP Code",
+                email,
+                true,
+                "",
+                "otp_message",
+                JsonConvert.SerializeObject(new { otp = newOtp })
+            );
+
+            return Json(new { IsSuccess = true, Message = "OTP sent to email." });
+        }
+
+
+
+
+        [HttpPost]
+        public JsonResult ForgotPassword_VerifyOTP(string email, string otp)
+        {
+            //  Get latest OTP for user that is not used
+            if (!_otpStore.ContainsKey(email))
+                return Json(new { IsSuccess = false, Message = "OTP expired or not found." });
+
+            var entry = _otpStore[email];
+            if (entry.Expiry < DateTime.Now)
+            {
+                _otpStore.Remove(email);
+                return Json(new { IsSuccess = false, Message = "OTP expired." });
+            }
+
+            if (entry.OTP != otp)
+                return Json(new { IsSuccess = false, Message = "Invalid OTP." });
+
+            // OTP verified — remove it
+            _otpStore.Remove(email);
+
+            return Json(new { IsSuccess = true, Message = "OTP verified." });
+
+        }
+
+
+        // Step 3: Reset Password
+        [HttpPost]
+        public JsonResult ForgotPassword_ResetPassword(string email, string newPassword)
+        {
+            // Load the existing user from DB
+            var user = _context.Using<User>().GetByCondition(u => u.Email == email).FirstOrDefault();
+            if (user == null)
+                return Json(new { IsSuccess = false, Message = "User not found." });
+
+            // Update password only
+            user.Password = Common.Encrypt(newPassword);
+
+            // Use your existing Update method
+            _context.Using<User>().Update(user);
+
+            return Json(new { IsSuccess = true, Message = "Password reset successfully." });
+        }
+
+
+
+
+    }
 }

@@ -25,7 +25,7 @@ namespace Broker.Infra
 
 		public virtual DbSet<ErrorLog> ErrorLogs { get; set; }
 
-		public virtual DbSet<ForgetPassword> ForgetPasswords { get; set; }
+		public virtual DbSet<ForgotPassword> ForgotPasswords { get; set; } = null!;
 
 		public virtual DbSet<Lead> Leads { get; set; }
 
@@ -169,20 +169,20 @@ namespace Broker.Infra
 					.IsUnicode(false);
 			});
 
-			modelBuilder.Entity<ForgetPassword>(entity =>
-			{
-				entity.HasKey(e => e.Id).HasName("PK__ForgetPa__3214EC07155ECC49");
+			//modelBuilder.Entity<ForgotPassword>(entity =>
+			//{
+			//	entity.HasKey(e => e.Id).HasName("PK__ForgetPa__3214EC07155ECC49");
 
-				entity.ToTable("ForgetPassword");
+			//	entity.ToTable("ForgetPassword");
 
-				entity.Property(e => e.CreatedAt)
-					.HasDefaultValueSql("(getdate())")
-					.HasColumnType("datetime");
-				entity.Property(e => e.Email).HasMaxLength(256);
-				entity.Property(e => e.Otp)
-					.HasMaxLength(10)
-					.HasColumnName("OTP");
-			});
+			//	entity.Property(e => e.CreatedAt)
+			//		.HasDefaultValueSql("(getdate())")
+			//		.HasColumnType("datetime");
+			//	entity.Property(e => e.Email).HasMaxLength(256);
+			//	entity.Property(e => e.Otp)
+			//		.HasMaxLength(10)
+			//		.HasColumnName("OTP");
+			//});
 
 			modelBuilder.Entity<Lead>(entity =>
 			{
@@ -510,40 +510,45 @@ namespace Broker.Infra
 							//&& (entry.Entity.ToString() != (typeof(Doctor_Department_Mapping)).FullName)
 							select entry).ToList();
 
-			var user = Common.LoggedUser_Id();
 
-			if (user == null || user <= 0)
-				throw new InvalidOperationException("Opps...! An unexpected error occurred while saving.");
-			else
+			if (entities.Any())
 			{
-				foreach (var entity in entities)
-				{
-					if (entity.State == EntityState.Added)
-					{
-						((EntitiesBase)entity.Entity).IsActive = true;
-						((EntitiesBase)entity.Entity).IsDeleted = false;
-						((EntitiesBase)entity.Entity).CreatedDate = DateTime.Now;
-						((EntitiesBase)entity.Entity).CreatedBy = ((EntitiesBase)entity.Entity).CreatedBy == 0 ? user : ((EntitiesBase)entity.Entity).CreatedBy;
-						((EntitiesBase)entity.Entity).LastModifiedDate = DateTime.Now;
-						((EntitiesBase)entity.Entity).LastModifiedBy = ((EntitiesBase)entity.Entity).CreatedBy == 0 ? user : ((EntitiesBase)entity.Entity).CreatedBy;
-					}
+                var user = Common.LoggedUser_Id();
 
-					if (entity.State == EntityState.Modified)
-					{
-						((EntitiesBase)entity.Entity).LastModifiedDate = DateTime.Now;
-						((EntitiesBase)entity.Entity).LastModifiedBy = user;
-					}
+                if (user == null || user <= 0)
+                    //throw new InvalidOperationException("Opps...! An unexpected error occurred while saving.");
+                    user = 1;
+                else
+                {
+                    foreach (var entity in entities)
+                    {
+                        if (entity.State == EntityState.Added)
+                        {
+                            ((EntitiesBase)entity.Entity).IsActive = true;
+                            ((EntitiesBase)entity.Entity).IsDeleted = false;
+                            ((EntitiesBase)entity.Entity).CreatedDate = DateTime.Now;
+                            ((EntitiesBase)entity.Entity).CreatedBy = ((EntitiesBase)entity.Entity).CreatedBy == 0 ? user : ((EntitiesBase)entity.Entity).CreatedBy;
+                            ((EntitiesBase)entity.Entity).LastModifiedDate = DateTime.Now;
+                            ((EntitiesBase)entity.Entity).LastModifiedBy = ((EntitiesBase)entity.Entity).CreatedBy == 0 ? user : ((EntitiesBase)entity.Entity).CreatedBy;
+                        }
 
-					if (entity.State == EntityState.Deleted)
-					{
-						((EntitiesBase)entity.Entity).IsActive = false;
-						((EntitiesBase)entity.Entity).IsDeleted = true;
-						((EntitiesBase)entity.Entity).LastModifiedDate = DateTime.Now;
-						((EntitiesBase)entity.Entity).LastModifiedBy = user;
-					}
+                        if (entity.State == EntityState.Modified)
+                        {
+                            ((EntitiesBase)entity.Entity).LastModifiedDate = DateTime.Now;
+                            ((EntitiesBase)entity.Entity).LastModifiedBy = user;
+                        }
 
-				}
-			}
+                        if (entity.State == EntityState.Deleted)
+                        {
+                            ((EntitiesBase)entity.Entity).IsActive = false;
+                            ((EntitiesBase)entity.Entity).IsDeleted = true;
+                            ((EntitiesBase)entity.Entity).LastModifiedDate = DateTime.Now;
+                            ((EntitiesBase)entity.Entity).LastModifiedBy = user;
+                        }
+
+                    }
+                }
+            }
 
 			return base.SaveChanges();
 		}
