@@ -72,24 +72,22 @@ namespace Broker.Areas.Admin.Controllers
                 }
             }
             dt = new DataTable();
-            //sqlParameters = new List<SqlParameter>();
-            //sqlParameters.Add(new SqlParameter("@Id", SqlDbType.VarChar) { Value = 0 });
-            dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_Property_Type_Combo", null, true);
+			//sqlParameters = new List<SqlParameter>();
+			//sqlParameters.Add(new SqlParameter("@Id", SqlDbType.VarChar) { Value = 0 });
+			//dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_Property_Type_Combo", null, true);
 
-            if (dt != null && dt.Rows.Count > 0)
-            {
-                foreach (DataRow dr in dt.Rows)
-                {
-                    list.Add(new SelectListItem_Custom(Convert.ToString(dr["TypeId"]), Convert.ToString(dr["PropertyType"]), "PropertyType")
-                    {
-                        Value = dr["TypeId"] != DBNull.Value ? Convert.ToString(dr["TypeId"]) : "",
-                        Text = dr["PropertyType"] != DBNull.Value ? Convert.ToString(dr["PropertyType"]) : "",
+			//if (dt != null && dt.Rows.Count > 0)
+			//    foreach (DataRow dr in dt.Rows)
+			//        list.Add(new SelectListItem_Custom(Convert.ToString(dr["TypeId"]), Convert.ToString(dr["PropertyType"]), "PropertyType"));
 
-                    });
-                }
-            }
 
-            dt = new DataTable();
+			var listPropertyType = _context.Using<PropertyType>().GetByCondition(x => x.IsActive == true).OrderBy(x => x.Name)
+						.Select(x => new SelectListItem_Custom(x.Id.ToString(), x.Name, x.ParentId.ToString(), "PropertyType")).Distinct().ToList();
+
+			if (listPropertyType != null && listPropertyType.Count() > 0) list.AddRange(listPropertyType);
+
+
+			dt = new DataTable();
             sqlParameters = new List<SqlParameter>();
             sqlParameters.Add(new SqlParameter("@Lov_Column", SqlDbType.VarChar) { Value = "FURNISHINGSTATUS" });
             dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_Multiple_Lov_Combo", sqlParameters, true);

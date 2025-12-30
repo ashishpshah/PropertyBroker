@@ -94,7 +94,6 @@
 											<div class="mb-3 text-start">
 												<div class="filter-search-form position-relative filter-border">
 													<select class="form-select choices-select" id="choices-PropertyLocation" data-placeholder="Select Location">
-														<option value="0">Select Location</option>
 														@if (Model.SelectListItems != null)
 														{
 															foreach (var item in Model.SelectListItems.Where(x => x.Group == "L"))
@@ -127,16 +126,7 @@
 										<div class="col-lg-3 col-md-6 col-12">
 											<div class="mb-3 text-start">
 												<div class="filter-search-form position-relative">
-													<select class="form-select choices-select" id="choices-PropertyType" data-placeholder="Select Property Type">
-														<option value="0">Select Sub-Type</option>
-														@if (Model.SelectListItems != null)
-														{
-															foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0))
-															{
-																<option value="@item.Value" data-parent="@item.Value2">@item.Text</option>
-															}
-														}
-													</select>
+													<select class="form-select choices-select" id="choices-PropertyType" data-placeholder="Select Property Type"></select>
 												</div>
 											</div>
 										</div>
@@ -334,7 +324,7 @@
 			const instance = new Choices(el, { searchEnabled: true, removeItemButton: true, placeholder: true, placeholderValue: el.getAttribute('data-placeholder') || 'Select an option', });
 			el._choicesInstance = instance;
 			el.setAttribute('data-choices-init', 'true');
-		  });
+		 });
 
 		const modalEl = document.getElementById('exampleModalCenteredScrollable');
 

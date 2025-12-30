@@ -38,7 +38,7 @@
 						<h6 class="mb-0">Search Properties</h6>
 
 						<div class="search-bar mt-2">
-							<select class="form-select choices-select" id="choices-PropertyLocation" data-placeholder="Select Location">
+							<select class="form-select choices-select" id="choices-PropertyLocation">
 								<option value="0">Select Location</option>
 								@if (Model.SelectListItems != null)
 								{
@@ -63,23 +63,8 @@
 						<!-- TYPE -->
 						<div class="mt-4">
 							<h6 class="mb-0">Choose Category</h6>
-							<select class="form-select choices-select" id="choices-PropertyCategory" data-placeholder="Select Category">
-								@if (Model.SelectListItems != null)
-								{
-									foreach (var item in Model.SelectListItems.Where(x => x.Group == "PC"))
-									{
-										if (Convert.ToString(propertySearch.PropertyCategory) == item.Value)
-										{
-											<option value="@item.Value" selected>@item.Text</option>
-										}
-										else
-										{
-											<option value="@item.Value">@item.Text</option>
-										}
-									}
-								}
-							</select>
-							@* <ul class="list-unstyled mt-2 mb-0">
+
+							<ul class="list-unstyled mt-2 mb-0">
 								@foreach (var item in Model.SelectListItems.Where(x => x.Group == "PC"))
 								{
 									if (Convert.ToString(propertySearch.PropertyCategory) == item.Value)
@@ -105,12 +90,12 @@
 										</li>
 									}
 								}
-							</ul> *@
+							</ul>
 						</div>
 						<!-- TYPE -->
 					}
 
-					@* <div class="mt-4">
+					<div class="mt-4">
 						<h6 class="mb-0">Property Type</h6>
 						<select class="form-select choices-select" id="choices-PropertyType_Parent">
 							<option value="0">Select Type</option>
@@ -129,13 +114,14 @@
 								}
 							}
 						</select>
-					</div> *@
+					</div>
 					<div class="mt-4">
-						<h6 class="mb-0 d-none">Property Type</h6>
-						<select class="form-select choices-select" id="choices-PropertyType" data-placeholder="Select Type">
+						<h6 class="mb-0 d-none">Property Sub-Type</h6>
+						<select class="form-select choices-select" id="choices-PropertyType">
+							<option value="0">Select Sub-Type</option>
 							@if (Model.SelectListItems != null)
 							{
-								foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT"))
+								foreach (var item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0))
 								{
 									if (Convert.ToString(propertySearch.PropertyType) == item.Value)
 									{
@@ -159,7 +145,7 @@
 
 			<div class="col-lg-8 col-md-6 col-12">
 				<div class="row g-4">
-					@if (Model.ObjList != null && Model.ObjList.Count() > 0)
+					@if (Model.ObjList != null)
 					{
 						for (int i = 0; i < Model.ObjList.Count(); i++)
 						{
@@ -250,22 +236,26 @@
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 	<script type="text/javascript">
-
-		const _el = document.getElementById('choices-PropertyCategory');
+		const _el = document.getElementById('choices-PropertyType_Parent');
 		_el.dispatchEvent(new Event('change', { bubbles: true }));
 
-		document.querySelectorAll('.choices-select:not([data-choices-init])').forEach(el => {
-			const instance = new Choices(el, { searchEnabled: true, removeItemButton: true, placeholder: true, placeholderValue: el.getAttribute('data-placeholder') || 'Select an option', });
-			el._choicesInstance = instance;
-			el.setAttribute('data-choices-init', 'true');
-		 });
+		document.querySelectorAll('.choices-select:not([data-choices-init])')
+		  .forEach(el => {
+			const instance = new Choices(el, {
+			  searchEnabled: true,
+			  removeItemButton: true,
+			});
 
+			el._choicesInstance = instance;
+
+			el.setAttribute('data-choices-init', 'true');
+		  });
 
 				function fnSubmitFormHere(){
 					const checkedId = $('input[name="flexRadioDefault"]:checked').attr('id');
 					const location = $('#choices-PropertyLocation').val();
 					const category = $('#choices-PropertyCategory').val();
-					//const type_Parent = $('#choices-PropertyType_Parent').val();
+					const type_Parent = $('#choices-PropertyType_Parent').val();
 					const type = $('#choices-PropertyType').val();
 
 					const url =
@@ -273,7 +263,7 @@
 					  `&PropertyFor=${encodeURIComponent(checkedId)}` +
 					  `&Location=${encodeURIComponent(location)}` +
 					  `&PropertyCategory=${encodeURIComponent(category)}` +
-					  //`&PropertyType_Parent=${encodeURIComponent(type_Parent)}` +
+					  `&PropertyType_Parent=${encodeURIComponent(type_Parent)}` +
 					  `&PropertyType=${encodeURIComponent(type)}`;
 
 					debugger;
@@ -285,37 +275,20 @@
 		let childChoices;
 
 		const childSelect = document.getElementById('choices-PropertyType');
-		const originalOptions = Array.from(childSelect.options).map(o => o.cloneNode(true) );
+		const originalOptions = Array.from(childSelect.options).map(o =>
+		  o.cloneNode(true)
+		);
 
-		document.getElementById('choices-PropertyCategory')
+		document.getElementById('choices-PropertyType_Parent')
 		.addEventListener('change', function () {
-			const childSelect = document.getElementById('choices-PropertyType');
+		  const selectedParent = this.value;
+
 			const choices = childSelect._choicesInstance;
 
 			choices.clearChoices();
+			choices.setChoices(originalOptions.filter(o => o.dataset.parent === selectedParent).map(o => ({ value: o.value, label: o.text, })), 'value', 'label', true );
+
 			choices.removeActiveItems();
-
-			let categoryId = this.value;
-			debugger;
-			$.ajax({
-				type: 'GET',
-				url: '@Url.Action("PropertyCategoryType_Get", "Home")?CategoryId='+categoryId,
-				data: null,
-				cache: false,
-				contentType: false,
-				processData: false,
-				dataType: "json",
-				success: function (response) {
-					var filterd = response.map(o => ({ value: o.TypeId, label: o.TypeName, }));
-					debugger;
-					choices.setChoices(filterd, 'value', 'label', true );
-
-					choices.setChoiceByValue('ipsum');
-				},
-				error: function (xhr) {
-					console.error("Error:", xhr.responseText);
-				}
-			});
 		});
 	</script>
 }

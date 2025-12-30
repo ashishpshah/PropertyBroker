@@ -23,6 +23,7 @@ public partial class Lead : EntitiesBase
 	public string? Landmark { get; set; }
 
 	public long? PropertyType { get; set; }
+	public long? PropertySubType { get; set; }
 
 	public string? Status { get; set; }
 
