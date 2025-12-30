@@ -58,6 +58,19 @@
 					}
 
 					<div class="form-group row">
+						<label for="DisplayInHomePage" class="col-2 col-form-label text-end">Display In Homepage ? </label>
+						<div class="col-sm-4">
+							<div class="form-check form-check-inline form-control border-0">
+								<input type="checkbox" class="form-check-input"
+									   id="switch_DisplayInHomePage" name="DisplayInHomePage" @(Model.Obj == null || Model.Obj.DisplayInHomePage == true || Model.Obj.Id == 0 ? "checked" : "")
+									   onchange="fnChange_Switch(this, 'label_Switch_DisplayInHomePage')">
+								<label class="form-check-label" for="switch_DisplayInHomePage" id="label_Switch_DisplayInHomePage" 
+								data-true="Yes" data-false="No">@((Model.Obj != null && Model.Obj.DisplayInHomePage == true) || Model.Obj == null || Model.Obj.Id == 0 ? "Yes" : "No")</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group row">
 						<label for="IsActive" class="col-2 col-form-label text-end">Status</label>
 						<div class="col-sm-4">
 							<div class="form-check form-check-inline form-control border-0">

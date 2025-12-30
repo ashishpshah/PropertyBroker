@@ -1053,6 +1053,7 @@ namespace Broker.Infra
 							Name = dr["Name"] != DBNull.Value ? Convert.ToString(dr["Name"]) : "",
 							SelectedCategory = dr["CategoryNameList"] != DBNull.Value ? Convert.ToString(dr["CategoryNameList"]) : "",
 							SelectedCategoryId_Str = dr["CategoryIdList"] != DBNull.Value ? Convert.ToString(dr["CategoryIdList"]) : "",
+							DisplayInHomePage = dr["DisplayInHomePage"] != DBNull.Value ? Convert.ToBoolean(dr["DisplayInHomePage"]) : false,
 							IsActive = dr["IsActive"] != DBNull.Value ? Convert.ToBoolean(dr["IsActive"]) : false
 						});
 			}
@@ -1399,6 +1400,7 @@ namespace Broker.Infra
 					parameters.Add(new SqlParameter("Display_Seq_No", SqlDbType.Int) { Value = obj.Display_Seq_No, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("Name", SqlDbType.VarChar) { Value = obj.Name, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("SelectedCategory", SqlDbType.VarChar) { Value = obj.SelectedCategoryId_Str, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("DisplayInHomePage", SqlDbType.NVarChar) { Value = obj.DisplayInHomePage, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("IsActive", SqlDbType.NVarChar) { Value = obj.IsActive, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("Operated_By", SqlDbType.BigInt) { Value = Common.Get_Session_Int(SessionKey.KEY_USER_ID), Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("Action", SqlDbType.NVarChar) { Value = obj.Id > 0 ? "UPDATE" : "INSERT", Direction = ParameterDirection.Input, IsNullable = true });

@@ -55,6 +55,7 @@
 											<tr>
 												<th>Sr.No</th>
 												<th>Property Categary Name</th>
+												<th width="5%">Status</th>
 												<th>Action</th>
 											</tr>
 										</thead>
@@ -66,6 +67,7 @@
 													<tr>
 														<td></td>
 														<td>@item.Name</td>
+														<td class="text-center"><span class="badge bg-@(item.IsActive == true ? "success" : "danger")">@(item.IsActive == true ? "Active" : "Inactive")</span></td>
 													    <td>
 															<div class="btn-group">
 																

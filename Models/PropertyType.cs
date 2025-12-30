@@ -12,6 +12,7 @@ public partial class PropertyType : EntitiesBase
     public string? Name { get; set; }
     public string? ImagePath { get; set; }
     public int? Display_Seq_No { get; set; } = 0;
+    public bool DisplayInHomePage { get; set; } 
 
     [NotMapped] public int PropertyCount { get; set; } = 0;
 
