@@ -168,7 +168,7 @@ namespace Broker.Controllers
 		[HttpGet]
 		public IActionResult PropertyCategoryType_Get(long CategoryId = 0, long TypeId = 0)
 		{
-			List<PropertyCategoryTypeMapping> data = DataContext_Command.PropertyCategoryType_Get(CategoryId).ToList();
+			List<PropertyCategoryTypeMapping> data = DataContext_Command.PropertyCategoryType_Get(CategoryId, TypeId).ToList();
 
 			return Json(data);
 		}

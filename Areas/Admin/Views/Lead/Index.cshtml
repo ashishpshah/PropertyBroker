@@ -193,7 +193,7 @@
 					data: {},
 					dataType: "json",
 					success: function (response) {
-						debugger;
+						
 						ShowLoader(false);
 						$.each(response, function (index, state) {
 							Dropdown.append('<option value="' + state.Value + '">' + state.Text + '</option>');

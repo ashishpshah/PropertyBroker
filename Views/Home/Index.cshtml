@@ -514,7 +514,7 @@
 			choices.removeActiveItems();
 
 			let categoryId = $(e.target).attr('id');
-			debugger;
+			
 			$.ajax({
 				type: 'GET',
 				url: '@Url.Action("PropertyCategoryType_Get", "Home")?CategoryId='+categoryId,
@@ -525,7 +525,7 @@
 				dataType: "json",
 				success: function (response) {
 					var filterd = response.map(o => ({ value: o.TypeId, label: o.TypeName, }));
-					debugger;
+					
 					choices.setChoices(filterd, 'value', 'label', true );
 
 					choices.setChoiceByValue('ipsum');

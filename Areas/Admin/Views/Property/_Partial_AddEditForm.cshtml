@@ -81,7 +81,7 @@
 					<div class="form-group row" style=" padding-top: 20px;">
 						<label for="Name" class="col-2 col-form-label text-end">Property Category<span style="color:red">*</span></label>
 						<div class="col-sm-2">
-							<select class="form-control  show-tick select2" id="CategoryId" name="CategoryId">
+							<select class="form-control  show-tick select2" id="CategoryId" name="CategoryId" onchange="fnChange_Category(this , '#TypeId')">
 								<option value="0">-- Select --</option>
 								@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
 								{
@@ -101,7 +101,7 @@
 						</div>
 						<label for="Name" class="col-2 col-form-label text-end">Property Type<span style="color:red">*</span></label>
 						<div class="col-sm-2">
-							<select class="form-control  show-tick select2" id="TypeId" name="TypeId">
+							<select class="form-control  show-tick select2" id="TypeId" name="TypeId" onchange="fnChange_Type(this , '#SubTypeId')">
 								<option value="0">-- Select --</option>
 								@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
 								{

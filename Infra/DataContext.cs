@@ -1082,7 +1082,8 @@ namespace Broker.Infra
 							CategoryId = dr["CategoryId"] != DBNull.Value ? Convert.ToInt64(dr["CategoryId"]) : 0,
 							TypeId = dr["TypeId"] != DBNull.Value ? Convert.ToInt64(dr["TypeId"]) : 0,
 							CategoryName = dr["CategoryName"] != DBNull.Value ? Convert.ToString(dr["CategoryName"]) : "",
-							TypeName = dr["TypeName"] != DBNull.Value ? Convert.ToString(dr["TypeName"]) : ""
+							TypeName = dr["TypeName"] != DBNull.Value ? Convert.ToString(dr["TypeName"]) : "",
+							ParentId = dr["ParentId"] != DBNull.Value ? Convert.ToInt64(dr["ParentId"]) : 0,
 						});
 			}
 			catch (Exception ex) { /*LogService.LogInsert(GetCurrentAction(), "", ex);*/ }
@@ -1435,6 +1436,7 @@ namespace Broker.Infra
 					parameters.Add(new SqlParameter("AreaId", SqlDbType.BigInt) { Value = obj.AreaId, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("CategoryId", SqlDbType.BigInt) { Value = obj.CategoryId, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("TypeId", SqlDbType.BigInt) { Value = obj.TypeId, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("SubTypeId", SqlDbType.BigInt) { Value = obj.SubTypeId, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("Landmark", SqlDbType.VarChar) { Value = obj.Landmark, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("Price", SqlDbType.Decimal) { Value = obj.Price, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("AreaSqft", SqlDbType.Decimal) { Value = obj.AreaSqft, Direction = ParameterDirection.Input, IsNullable = true });

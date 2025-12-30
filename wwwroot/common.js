@@ -564,7 +564,7 @@ function ajaxPost($url, $data) {
 
             try {
                 ShowLoader(false);
-                debugger
+                
                 if (response.StatusCode === 10) {
                     showAutoHideAlert(response.Message);
                     try { fnSubmitForm_Success(response, 'AJAX'); } catch { }
@@ -1996,7 +1996,7 @@ function fnLoadCommonTable_Buttons($selector) {
 function fnView_File($filePath, $title) {
     if (typeof $filePath != 'undefined' && $filePath != null && $filePath != '' && $filePath.trim().length > 0) {
         ShowLoader(true);
-        debugger;
+        
         if ($('#largeModal').hasClass('show')) {
             $('#largeModal .modal-body').hide();
             $('#largeModal .modal-body-embed').show().html(`

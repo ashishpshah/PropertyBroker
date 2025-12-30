@@ -123,23 +123,6 @@
 			if (typeof $selector != 'undefined' && $selector != null && $selector.length > 0) {
 				ShowLoader(true);
 
-				 // if (typeof $type != 'undefined' && $type != null && $type.length > 0 && $type == 'STATE') {
-					// $('#District_Id').empty().append('<option value="0">-- Select --</option>');
-					// $('#Taluka_Id').empty().append('<option value="0">-- Select --</option>');
-					// $('#Village_Id').empty().append('<option value="0">-- Select --</option>');
-				 // }
-				 // else if (typeof $type != 'undefined' && $type != null && $type.length > 0 && $type == 'DISTRICT') {
-					// $('#Taluka_Id').empty().append('<option value="0">-- Select --</option>');
-					// $('#Village_Id').empty().append('<option value="0">-- Select --</option>');
-
-				 // }
-				 // else if (typeof $type != 'undefined' && $type != null && $type.length > 0 && $type == 'TALUKA') {
-					// $('#Village_Id').empty().append('<option value="0">-- Select --</option>');
-				 // }
-
-
-
-
 				var Dropdown = $($selector);
 				Dropdown.empty();
 				Dropdown.append('<option value="0">-- Select --</option>');
@@ -152,7 +135,7 @@
 					data: {},
 					dataType: "json",
 					success: function (response) {
-						debugger;
+						
 						ShowLoader(false);
 						$.each(response, function (index, state) {
 							Dropdown.append('<option value="' + state.Value + '">' + state.Text + '</option>');
@@ -161,6 +144,71 @@
 					},
 					failure: function () { ShowLoader(false); CommonAlert_Error(null); },
 					error: function () { ShowLoader(false); CommonAlert_Error(null); }
+				});
+			}
+
+		}
+
+		function fnChange_Category($this,$selector) {
+
+			if (typeof $selector != 'undefined' && $selector != null && $selector.length > 0) {
+				ShowLoader(true);
+
+				$($selector).empty();
+				$($selector).append('<option value="0">-- Select --</option>');
+
+				$.ajax({
+					type: 'GET',
+					url: '@Url.Action("PropertyCategoryType_Get", "Home", new { Area = ""})?CategoryId='+$($this).val(),
+					data: null,
+					cache: false,
+					contentType: false,
+					processData: false,
+					dataType: "json",
+					success: function (response) {
+						
+						$.each(response, function (index, state) {
+							$($selector).append('<option value="' + state.TypeId + '">' + state.TypeName + '</option>');
+						});
+
+						$($selector).trigger('change');
+					},
+					error: function (xhr) {
+						console.error("Error:", xhr.responseText);
+					}
+				});
+			}
+
+		}
+
+		function fnChange_Type($this,$selector) {
+
+			if (typeof $selector != 'undefined' && $selector != null && $selector.length > 0) {
+				ShowLoader(true);
+
+				$($selector).empty();
+				$($selector).append('<option value="0">-- Select --</option>');
+
+				$.ajax({
+					type: 'GET',
+					url: '@Url.Action("PropertyCategoryType_Get", "Home", new { Area = "" })?TypeId='+$($this).val(),
+					data: null,
+					cache: false,
+					contentType: false,
+					processData: false,
+					dataType: "json",
+					success: function (response) {
+						
+						ShowLoader(false);
+						$.each(response, function (index, state) {
+							$($selector).append('<option value="' + state.TypeId + '">' + state.TypeName + '</option>');
+						});
+
+						$($selector).trigger('change');
+					},
+					error: function (xhr) {
+						console.error("Error:", xhr.responseText);
+					}
 				});
 			}
 
