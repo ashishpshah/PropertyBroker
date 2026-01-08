@@ -15,12 +15,165 @@ namespace Broker.Areas.Admin.Controllers
 	public class PropertyController : BaseController<ResponseModel<Properties>>
 	{
 		public PropertyController(IRepositoryWrapper repository) : base(repository) { }
+
 		public ActionResult Index()
 		{
 			CommonViewModel.ObjList = new List<Properties>();
 			CommonViewModel.ObjList = DataContext_Command.Property_Get(0).ToList();
 
 			return View(CommonViewModel);
+		}
+
+		public ActionResult Search()
+		{
+			var list = new List<SelectListItem_Custom>();
+			var dt = new DataTable();
+			var sqlParameters = new List<SqlParameter>();
+
+			dt = new DataTable();
+			sqlParameters = new List<SqlParameter>();
+			sqlParameters.Add(new SqlParameter("@Id", SqlDbType.VarChar) { Value = 0 });
+			dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_PropertyCategories_Get", sqlParameters, true);
+
+			if (dt != null && dt.Rows.Count > 0)
+				foreach (DataRow dr in dt.Rows)
+				{
+					string name = Convert.ToString(dr["Name"]);
+					name = name.Equals("Buy", StringComparison.OrdinalIgnoreCase) ? "Sell" : name.Equals("Sell", StringComparison.OrdinalIgnoreCase) ? "Buy" : name;
+
+					list.Add(new SelectListItem_Custom(Convert.ToString(dr["Id"]), name, "PropertyCategory"));
+				}
+
+
+			dt = new DataTable();
+			sqlParameters = new List<SqlParameter>();
+			sqlParameters.Add(new SqlParameter("@Lov_Column", SqlDbType.VarChar) { Value = "FURNISHINGSTATUS" });
+			dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_Multiple_Lov_Combo", sqlParameters, true);
+
+			if (dt != null && dt.Rows.Count > 0)
+				foreach (DataRow dr in dt.Rows)
+					list.Add(new SelectListItem_Custom(Convert.ToString(dr["Lov_Code"]), Convert.ToString(dr["Lov_Desc"]), Convert.ToString(dr["Lov_Column"])));
+
+			dt = new DataTable();
+			sqlParameters = new List<SqlParameter>();
+			sqlParameters.Add(new SqlParameter("@Id", SqlDbType.VarChar) { Value = 0 });
+			dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_Cities_Get", null, true);
+
+			if (dt != null && dt.Rows.Count > 0)
+				foreach (DataRow dr in dt.Rows)
+					list.Add(new SelectListItem_Custom(Convert.ToString(dr["Id"]), Convert.ToString(dr["Name"]), "City"));
+
+			CommonViewModel.SelectListItems = list;
+
+			return View(CommonViewModel);
+		}
+
+		[HttpPost]
+		public ActionResult GetData_PropertyList(JqueryDatatableParam param)
+		{
+			if (Request.Form.ContainsKey("draw"))
+				param.sEcho = Request.Form["draw"];
+
+			if (Request.Form.ContainsKey("search[value]"))
+				param.sSearch = Request.Form["search[value]"];
+
+			if (Request.Form.ContainsKey("length"))
+				param.iDisplayLength = Convert.ToInt32(Request.Form["length"]);
+
+			if (Request.Form.ContainsKey("start"))
+				param.iDisplayStart = Convert.ToInt32(Request.Form["start"]);
+
+			if (Request.Form.ContainsKey("order[0][column]"))
+				param.iSortCol_0 = Convert.ToInt32(Request.Form["order[0][column]"]);
+
+			if (Request.Form.ContainsKey("order[0][dir]"))
+				param.sSortDir_0 = Request.Form["order[0][dir]"];
+
+			param.iDisplayLength = param.iDisplayLength <= 0 ? 10 : param.iDisplayLength;
+			param.sSortDir_0 = string.IsNullOrEmpty(param.sSortDir_0) ? "asc" : param.sSortDir_0;
+
+			long CityId = long.TryParse(Request.Form["CityId"], out var c) ? c : 0;
+			long AreaId = long.TryParse(Request.Form["AreaId"], out var a) ? a : 0;
+			long CategoryId = long.TryParse(Request.Form["CategoryId"], out var cat) ? cat : 0;
+			long TypeId = long.TryParse(Request.Form["TypeId"], out var t) ? t : 0;
+			long SubTypeId = long.TryParse(Request.Form["SubTypeId"], out var st) ? st : 0;
+
+			decimal MinPrice = decimal.TryParse(Request.Form["MinPrice"], out var minP) ? minP : 0;
+			decimal MaxPrice = decimal.TryParse(Request.Form["MaxPrice"], out var maxP) ? maxP : 0;
+			decimal MinArea = decimal.TryParse(Request.Form["MinAreaSqft"], out var minA) ? minA : 0;
+			decimal MaxArea = decimal.TryParse(Request.Form["MaxAreaSqft"], out var maxA) ? maxA : 0;
+
+			List<Properties> list = DataContext_Command.Property_Get(0).ToList();
+
+			int recordsTotal = list.Count;
+
+			IEnumerable<Properties> query = list;
+
+			if (CityId > 0)
+				query = query.Where(x => x.CityId == CityId);
+
+			if (AreaId > 0)
+				query = query.Where(x => x.AreaId == AreaId);
+
+			if (CategoryId > 0)
+				query = query.Where(x => x.CategoryId == CategoryId);
+
+			if (TypeId > 0)
+				query = query.Where(x => x.TypeId == TypeId);
+
+			if (SubTypeId > 0)
+				query = query.Where(x => x.SubTypeId == SubTypeId);
+
+			if (MinPrice > 0)
+				query = query.Where(x => x.Price >= MinPrice);
+
+			if (MaxPrice > 0)
+				query = query.Where(x => x.Price <= MaxPrice);
+
+			if (MinArea > 0)
+				query = query.Where(x => x.AreaSqft >= MinArea);
+
+			if (MaxArea > 0)
+				query = query.Where(x => x.AreaSqft <= MaxArea);
+
+			if (!string.IsNullOrWhiteSpace(param.sSearch))
+			{
+				string search = param.sSearch.Trim().ToLower();
+
+				query = query.Where(x =>
+					(x.Title ?? "").ToLower().Contains(search) ||
+					(x.OwnerName ?? "").ToLower().Contains(search) ||
+					(x.OwnerMobile ?? "").ToLower().Contains(search) ||
+					(x.BuilderName ?? "").ToLower().Contains(search)
+				);
+			}
+
+			int recordsFiltered = query.Count();
+
+			bool asc = param.sSortDir_0 == "asc";
+
+			query = param.iSortCol_0 switch
+			{
+				1 => asc ? query.OrderBy(x => x.Property_Category) : query.OrderByDescending(x => x.Property_Category),
+				2 => asc ? query.OrderBy(x => x.Property_Type) : query.OrderByDescending(x => x.Property_Type),
+				3 => asc ? query.OrderBy(x => x.Title) : query.OrderByDescending(x => x.Title),
+				4 => asc ? query.OrderBy(x => x.Price) : query.OrderByDescending(x => x.Price),
+				5 => asc ? query.OrderBy(x => x.AreaSqft) : query.OrderByDescending(x => x.AreaSqft),
+				_ => query.OrderByDescending(x => x.Id)
+			};
+
+			var data = query
+				.Skip(param.iDisplayStart)
+				.Take(param.iDisplayLength)
+				.ToList();
+
+			return Json(new
+			{
+				draw = param.sEcho,
+				recordsTotal = recordsTotal,
+				recordsFiltered = recordsFiltered,
+				data = data
+			});
 		}
 
 
@@ -71,14 +224,8 @@ namespace Broker.Areas.Admin.Controllers
 					});
 				}
 			}
-			dt = new DataTable();
-			//sqlParameters = new List<SqlParameter>();
-			//sqlParameters.Add(new SqlParameter("@Id", SqlDbType.VarChar) { Value = 0 });
-			//dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_Property_Type_Combo", null, true);
 
-			//if (dt != null && dt.Rows.Count > 0)
-			//    foreach (DataRow dr in dt.Rows)
-			//        list.Add(new SelectListItem_Custom(Convert.ToString(dr["TypeId"]), Convert.ToString(dr["PropertyType"]), "PropertyType"));
+			dt = new DataTable();
 
 			var listPropertyType = new List<PropertyCategoryTypeMapping>();
 
@@ -105,7 +252,7 @@ namespace Broker.Areas.Admin.Controllers
 				if (_listPropertyType != null && _listPropertyType.Count() > 0) list.AddRange(_listPropertyType);
 			}
 
-				dt = new DataTable();
+			dt = new DataTable();
 			sqlParameters = new List<SqlParameter>();
 			sqlParameters.Add(new SqlParameter("@Lov_Column", SqlDbType.VarChar) { Value = "FURNISHINGSTATUS" });
 			dt = DataContext_Command.ExecuteStoredProcedure_DataTable("SP_Multiple_Lov_Combo", sqlParameters, true);

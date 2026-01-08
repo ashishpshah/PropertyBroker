@@ -1,0 +1,469 @@
+﻿@model ResponseModel<Properties>
+
+@{
+	ViewBag.Title = "Index";
+	Layout = "~/Areas/Admin/Views/Shared/_Layout_Admin.cshtml";
+
+}
+
+
+@section Styles {
+	<style type="text/css">
+		.select2-container .select2-selection--multiple .select2-selection__rendered {
+			display: contents !important;
+		}
+
+		.white-space-pre-line {
+			white-space: pre-line;
+		}
+	</style>
+}
+
+<!-- start page title -->
+<div class="row">
+	<div class="col-12">
+		<div class="page-title-box">
+			<div class="page-title-right"> </div>
+			<h4 class="page-title">Search Properties</h4>
+		</div>
+	</div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-header p-0">
+				<div class="row no-gutters">
+
+					<div class="col-md-12">
+						<div class="card card-info">
+
+							<div class="card-body form-horizontal">
+								<div class="row no-gutters">
+									<div class="col-12">
+										<div class="form-group row" style=" padding-top: 20px;">
+											<label for="CityId" class="col-2 col-form-label text-end">City</label>
+											<div class="col-sm-2">
+												<select class="form-control  show-tick select2" id="CityId" name="CityId" onchange="fnChange_Area(this , '#AreaId')">
+													<option value="0">-- Select --</option>
+													@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
+													{
+														foreach (SelectListItem_Custom item in Model.SelectListItems.Where(x => x.Group == "City"))
+														{
+															<option value="@item.Value">@item.Text</option>
+														}
+													}
+												</select>
+
+											</div>
+											<label for="AreaId" class="col-2 col-form-label text-end">Area</label>
+											<div class="col-sm-2">
+												<select class="form-control  show-tick select2" id="AreaId" name="AreaId">
+													<option value="0">-- Select --</option>
+													@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
+													{
+														foreach (SelectListItem_Custom item in Model.SelectListItems.Where(x => x.Group == "Area"))
+														{
+															<option value="@item.Value">@item.Text</option>
+														}
+													}
+												</select>
+
+											</div>
+										</div>
+
+										<div class="form-group row" style=" padding-top: 20px;">
+											<label for="CategoryId" class="col-2 col-form-label text-end">Property Category</label>
+											<div class="col-sm-2">
+												<select class="form-control  show-tick select2" id="CategoryId" name="CategoryId" onchange="fnChange_Category(this , '#TypeId')">
+													<option value="0">-- Select --</option>
+													@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
+													{
+														foreach (SelectListItem_Custom item in Model.SelectListItems.Where(x => x.Group == "PropertyCategory"))
+														{
+															<option value="@item.Value">@item.Text</option>
+														}
+													}
+												</select>
+											</div>
+											<label for="TypeId" class="col-2 col-form-label text-end">Property Type</label>
+											<div class="col-sm-2">
+												<select class="form-control  show-tick select2" id="TypeId" name="TypeId" onchange="fnChange_Type(this , '#SubTypeId')">
+													<option value="0">-- Select --</option>
+													@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
+													{
+														foreach (SelectListItem_Custom item in Model.SelectListItems.Where(x => x.Group == "PropertyType"))
+														{
+															<option value="@item.Value">@item.Text</option>
+														}
+													}
+												</select>
+
+											</div>
+											<label for="SubTypeId" class="col-2 col-form-label text-end">Property Sub-Type</label>
+											<div class="col-sm-2">
+												<select class="form-control  show-tick select2" id="SubTypeId" name="SubTypeId">
+													<option value="0">-- Select --</option>
+													@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
+													{
+														foreach (SelectListItem_Custom item in Model.SelectListItems.Where(x => x.Group == "PropertyType"))
+														{
+															<option value="@item.Value">@item.Text</option>
+														}
+													}
+												</select>
+
+											</div>
+										</div>
+										<div class="form-group row" style=" padding-top: 20px;">
+											<label for="MinPrice" class="col-2 col-form-label text-end">Min Price </label>
+											<div class="col-sm-2">
+												<input type="text" class="form-control  isNumberKey_Decimal" id="MinPrice" name="MinPrice"
+													   placeholder="Price" maxlength="10" autocomplete="off">
+											</div>
+											<label for="MaxPrice" class="col-2 col-form-label text-end">Max Price </label>
+											<div class="col-sm-2">
+												<input type="text" class="form-control  isNumberKey_Decimal" id="MaxPrice" name="MaxPrice"
+													   placeholder="Price" maxlength="10" autocomplete="off">
+											</div>
+										</div>
+										<div class="form-group row" style=" padding-top: 20px;">
+											<label for="MinAreaSqft" class="col-2 col-form-label text-end">Min Area Square Ft</label>
+											<div class="col-sm-2">
+												<input type="text" class="form-control  isNumberKey_Decimal" id="MinAreaSqft" name="MinAreaSqft"
+													   placeholder="Area Square Ft" autocomplete="off" maxlength="12">
+											</div>
+											<label for="MaxAreaSqft" class="col-2 col-form-label text-end">Max Area Square Ft</label>
+											<div class="col-sm-2">
+												<input type="text" class="form-control  isNumberKey_Decimal" id="MaxAreaSqft" name="MaxAreaSqft"
+													   placeholder="Area Square Ft" autocomplete="off" maxlength="12">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="card-footer">
+								<div class="row no-gutters">
+									<div class="col-sm-1">&nbsp;</div>
+									<div class="col-sm-6 text-left">
+										<button type="button" class="btn btn-success" onclick="SearchData()">Search</button>
+										<button type="button" class="btn btn-danger" onclick="ResetFilters()">Reset</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="card-body">
+				<div class="row no-gooters">
+					<div class="col-md-12 my-1">
+						<div id="filterMessage" class="alert alert-info white-space-pre-line py-2">No filters applied</div>
+					</div>
+				</div>
+				<div class="row no-gooters">
+					<div class="col-md-12 my-1">
+						<div class="responsive-table-plugin">
+							<div class="table-rep-plugin">
+								<div class="table-responsive" data-pattern="priority-columns">
+									<table class="table table-sm table-bordered table-striped dt-responsive nowrap w-100 table_Common_SrNo_Custom">
+										<thead>
+											<tr>
+												<th>SrNo</th>
+												<th>Properties Category</th>
+												<th>Properties Type</th>
+												<th>Title</th>
+												<th>Price</th>
+												<th>Area Square Ft</th>
+												<th>Owner Name</th>
+												<th>Owner Mobile</th>
+												<th>Builder Name</th>
+												<th>Availability Status</th>
+											</tr>
+										</thead>
+										<tbody></tbody>
+									</table>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+					<div class="clearfix"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@section Scripts {
+	<script type="text/javascript">
+		var dataTable_Custom = {};
+		let isResetting = false;
+
+		$(document).ready(function () {
+
+			if ($.fn.DataTable.isDataTable('.table_Common_SrNo_Custom')) {
+				$('.table_Common_SrNo_Custom').DataTable().destroy();
+			}
+
+			 dataTable_Custom = $('.table_Common_SrNo_Custom').DataTable({
+				scrollX: true,
+				destroy: true,
+				ajax: {
+					url: "@Url.Content("~/")@ViewContext.RouteData.Values["area"].ToString()/@ViewContext.RouteData.Values["Controller"].ToString()/GetData_PropertyList",
+					type: "POST", // IMPORTANT
+					data: function (d) {
+						d.CityId       = $('#CityId').val();
+						d.AreaId       = $('#AreaId').val();
+						d.CategoryId   = $('#CategoryId').val();
+						d.TypeId       = $('#TypeId').val();
+						d.SubTypeId    = $('#SubTypeId').val();
+						d.MinPrice     = $('#MinPrice').val();
+						d.MaxPrice     = $('#MaxPrice').val();
+						d.MinAreaSqft  = $('#MinAreaSqft').val();
+						d.MaxAreaSqft  = $('#MaxAreaSqft').val();
+					}
+				},
+				bServerSide: true,
+				bProcessing: true,
+				bSearchable: true,
+				paging: true,
+				lengthChange: true,
+				searching: true,
+				ordering: true,
+				info: true,
+				autoWidth: true,
+				responsive: true,
+				pageLength: 25,
+				order: [[0, 'desc']],
+				search: { return: true },
+				lengthMenu: [
+					[10, 25, 50, -1],
+					[10, 25, 50, 'All']
+				],
+				columnDefs: [
+					{ targets: "_all", "autoWidth": false },
+					{ "targets": 1, "className": "text-center", "width": "3%", "autoWidth": false, "searchable": false, "orderable": false },
+					{ "targets": 2, "className": "text-center", "width": "3%", "autoWidth": false },
+					{ "targets": -1, "className": "text-center", "width": "3%", "autoWidth": false, "searchable": false, "orderable": false }
+				],
+				fixedColumns: true,
+				language: { "emptyTable": "No record found.", "processing": '<i class="fa fa-spinner fa-spin fa-3x fa-fw" style="color:#2a2b2b;"></i><span class="sr-only">Loading...</span> ' },
+				fnServerParams: function (aoData) {
+					//aoData.push( { "name": "ProdCode", "value": "" + $('#ddlProdCode option:selected').val() } );
+				},
+				columns: [
+					{ title: "Sr No", data: null, render: (d,t,r,m) => m.row + 1, orderable: false, searchable: false, className: "text-center" },
+					{ title: "Property Category", data: "Property_Category", render: d => d ?? "-" },
+					{ title: "Property Type", data: "Property_Type", render: d => d ?? "-" },
+					{ title: "Title", data: "Title", render: d => d ?? "-" },
+					{ title: "Price", data: "Price", className: "text-end", render: d => d != null ? Number(d).toLocaleString() : "-" },
+					{ title: "Area Sq Ft", data: "AreaSqft", className: "text-end", render: d => d != null ? d : "-" },
+					{ title: "Owner Name", data: "OwnerName", render: d => d ?? "-" },
+					{ title: "Owner Mobile", data: "OwnerMobile", render: d => d ?? "-" },
+					{ title: "Builder Name", data: "BuilderName", render: d => d ?? "-" },
+					{ title: "Availability Status", data: "AvailabilityStatus_TEXT", className: "text-center", render: d => `<span class="badge bg-${d === "Available" ? "success" : "secondary"}">${d ?? "-"}</span>` }
+				],
+				dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+					"<'row'<'col-sm-12'tr>>" +
+					"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
+			});
+
+			$(".table_Common_SrNo_Custom thead th.no_sorting").removeClass('sorting');
+			$(".table_Common_SrNo_Custom thead th.no_sorting").removeClass('sorting_asc');
+			$(".table_Common_SrNo_Custom thead th.no_sorting").removeClass('sorting_desc');
+
+		});
+
+		function SearchData() {
+			$('#filterMessage').html(getFilterMessage().replace(/\n/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;'));
+			dataTable_Custom.ajax.reload(); 
+		}
+
+		function ResetFilters() {
+			isResetting = true;
+
+			$('#filterMessage').text('No filters applied');
+
+			$('#CityId').val(0).trigger('change');
+			$('#AreaId').val(0).trigger('change');
+			$('#CategoryId').val(0).trigger('change');
+			$('#TypeId').val(0).trigger('change');
+			$('#SubTypeId').val(0).trigger('change');
+
+			$('#MinPrice').val('');
+			$('#MaxPrice').val('');
+			$('#MinAreaSqft').val('');
+			$('#MaxAreaSqft').val('');
+
+			isResetting = false;
+
+			dataTable_Custom.ajax.reload();
+		}
+
+
+		function fnChange_Area($this,$selector) {
+
+			if (typeof $selector != 'undefined' && $selector != null && $selector.length > 0) {
+				ShowLoader(true);
+
+				var Dropdown = $($selector);
+				Dropdown.empty();
+				Dropdown.append('<option value="0">-- Select --</option>');
+
+				var $url = '@Url.Action("GetArea", "Property")?&Id=' + $($this).val();
+
+				$.ajax({
+					url: $url,
+					type: 'GET',
+					data: {},
+					dataType: "json",
+					success: function (response) {
+
+						ShowLoader(false);
+						$.each(response, function (index, state) {
+							Dropdown.append('<option value="' + state.Value + '">' + state.Text + '</option>');
+						});
+
+					},
+					failure: function () { ShowLoader(false); CommonAlert_Error(null); },
+					error: function () { ShowLoader(false); CommonAlert_Error(null); }
+				});
+			}
+
+		}
+
+		function fnChange_Category($this,$selector) {
+
+			if (typeof $selector != 'undefined' && $selector != null && $selector.length > 0) {
+				ShowLoader(true);
+
+				$($selector).empty();
+				$($selector).append('<option value="0">-- Select --</option>');
+
+				$.ajax({
+					type: 'GET',
+					url: '@Url.Action("PropertyCategoryType_Get", "Home", new { Area = "" })?CategoryId='+$($this).val(),
+					data: null,
+					cache: false,
+					contentType: false,
+					processData: false,
+					dataType: "json",
+					success: function (response) {
+
+						$.each(response, function (index, state) {
+							$($selector).append('<option value="' + state.TypeId + '">' + state.TypeName + '</option>');
+						});
+
+						$($selector).trigger('change');
+					},
+					error: function (xhr) {
+						console.error("Error:", xhr.responseText);
+					}
+				});
+			}
+
+		}
+
+		function fnChange_Type($this,$selector) {
+
+			if (typeof $selector != 'undefined' && $selector != null && $selector.length > 0) {
+				ShowLoader(true);
+
+				$($selector).empty();
+				$($selector).append('<option value="0">-- Select --</option>');
+
+				$.ajax({
+					type: 'GET',
+					url: '@Url.Action("PropertyCategoryType_Get", "Home", new { Area = "" })?TypeId='+$($this).val(),
+					data: null,
+					cache: false,
+					contentType: false,
+					processData: false,
+					dataType: "json",
+					success: function (response) {
+
+						ShowLoader(false);
+						$.each(response, function (index, state) {
+							$($selector).append('<option value="' + state.TypeId + '">' + state.TypeName + '</option>');
+						});
+
+						$($selector).trigger('change');
+					},
+					error: function (xhr) {
+						console.error("Error:", xhr.responseText);
+					}
+				});
+			}
+
+		}
+
+		function getFilterMessage() {
+			let messages = [];
+
+			$('.card.card-info').find('input, select')
+				.each(function () {
+
+					let $el = $(this);
+					let id = $el.attr('id');
+					let value = $el.val();
+
+					// ignore empty / default values
+					if (!id || value === null || value === "" || value === "0") return;
+
+					// get label using for=""
+					let label = $(`label[for="${id}"]`).text().trim();
+					if (!label) return;
+
+					// for select, use selected text
+					if ($el.is('select')) {
+						value = $el.find('option:selected').text().trim();
+						if (value === "-- Select --") return;
+					}
+
+					messages.push(`${label} : ${value}`);
+				});
+
+			return messages.length ? `Filters Applied => \n${messages.join('\t\t')}` : "No filters applied";
+		}
+
+		// function fnChange_Select($id) {
+
+
+		// 	var selectedValue = $('#select' + $id).val();
+
+		// 	if (typeof selectedValue != 'undefined' && selectedValue != null && selectedValue != '' && selectedValue.length > 0)
+		// 		$('#input' + $id).val(selectedValue.join(','));
+		// 	else
+		// 		$('#input' + $id).val('');
+
+		// 	$('#input' + $id).trigger('change');
+		// }
+
+		//function fnChange_Checkbox($this) {
+		//
+
+		//    var selectedValue = $('#selectedMenu').val();
+
+		//    if (selectedValue == 'undefined' || selectedValue == null)
+		//        selectedValue = "";
+
+		//    if ($this.checked && selectedValue.indexOf($this.value) == -1) {
+		//        selectedValue = selectedValue + $this.value + ",";
+		//    }
+		//    else if (!$this.checked && selectedValue.indexOf($this.value) > -1) {
+		//        selectedValue = selectedValue.replace($this.value + ",", "");
+		//        selectedValue = selectedValue.replace($this.value, "");
+		//    }
+
+		//    $('#selectedMenu').val(selectedValue);
+		//    $('#selectedMenu').trigger('change');
+		//}
+
+	</script>
+}
+
+
