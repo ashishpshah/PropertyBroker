@@ -296,6 +296,16 @@ namespace Broker.Areas.Admin.Controllers
 
 			return PartialView("_Partial_AddEditForm", CommonViewModel);
 		}
+
+		public ActionResult Partial_PropertyDetail(long Id = 0)
+		{
+			CommonViewModel.Obj = new Properties();
+
+			CommonViewModel.Obj = DataContext_Command.Property_Get(Id, 0).FirstOrDefault();
+
+			return PartialView("_Partial_PropertyDetail", CommonViewModel);
+		}
+
 		public IActionResult GetArea(long Id = 0)
 		{
 			var list = new List<SelectListItem_Custom>();

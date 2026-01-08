@@ -1,0 +1,133 @@
+﻿@model ResponseModel<Properties>
+
+@{
+	Layout = null;
+
+	// bool IsVendor = Common.Get_Session_Int(SessionKey.KEY_IS_VENDOR) == 1;
+	// bool IsCustomer = Common.Get_Session_Int(SessionKey.KEY_IS_CUSTOMER) == 1;
+	// bool IsEmployee = Common.Get_Session_Int(SessionKey.KEY_IS_EMPLOYEE) == 1;
+
+	// string UserType = Common.Get_Session("Employee_UserType");
+}
+
+<div class="container-fluid">
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+            <!-- BASIC INFO -->
+            <h6 class="text-primary mb-3">Basic Information</h6>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Title</label>
+                    <input class="form-control" value="@Model.Obj.Title" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Description</label>
+                    <input class="form-control" value="@Model.Obj.Description" readonly>
+                </div>
+            </div>
+
+            <!-- LOCATION -->
+            <h6 class="text-primary mb-3">Location</h6>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">City</label>
+                    <input class="form-control" value="@Model.Obj.City_Name" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Area</label>
+                    <input class="form-control" value="@Model.Obj.Area_Name" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Landmark</label>
+                    <input class="form-control" value="@Model.Obj.Landmark" readonly>
+                </div>
+            </div>
+
+            <!-- PROPERTY DETAILS -->
+            <h6 class="text-primary mb-3">Property Details</h6>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">Property Category</label>
+                    <input class="form-control" value="@Model.Obj.Property_Category" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Property Type</label>
+                    <input class="form-control" value="@Model.Obj.Property_Type" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Price</label>
+                    <input class="form-control" value="@Model.Obj.Price" readonly>
+                </div>
+            </div>
+
+            <!-- SIZE & STRUCTURE -->
+            <h6 class="text-primary mb-3">Size & Structure</h6>
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">Area (Sq Ft)</label>
+                    <input class="form-control" value="@Model.Obj.AreaSqft" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Floor No</label>
+                    <input class="form-control" value="@Model.Obj.FloorNo" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Total Floors</label>
+                    <input class="form-control" value="@Model.Obj.TotalFloors" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Facing</label>
+                    <input class="form-control" value="@Model.Obj.Facing" readonly>
+                </div>
+            </div>
+
+            <!-- OWNER & BUILDER -->
+            <h6 class="text-primary mb-3">Owner & Builder</h6>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">Owner Name</label>
+                    <input class="form-control" value="@Model.Obj.OwnerName" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Owner Mobile</label>
+                    <input class="form-control" value="@Model.Obj.OwnerMobile" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Builder Name</label>
+                    <input class="form-control" value="@Model.Obj.BuilderName" readonly>
+                </div>
+            </div>
+
+            <!-- OTHER -->
+            <h6 class="text-primary mb-3">Other Details</h6>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Furnishing Status</label>
+                    <input class="form-control" value="@Model.Obj.FurnishingStatus_TEXT" readonly>
+                </div>               
+            </div>
+            <div class="row mb-3">                
+                <div class="col-md-10">
+                    <label class="form-label">Remarks</label>
+                    <textarea class="form-control" rows="3" readonly>@Model.Obj.Remark</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer text-center">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+	<script type="text/javascript">
+		$(document).ready(function () {
+
+		});
+
+	</script>
+}
