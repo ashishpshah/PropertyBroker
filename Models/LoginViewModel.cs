@@ -47,6 +47,7 @@ namespace Broker
 		public int PropertyCategory { get; set; }
 		public int PropertyType_Parent { get; set; }
 		public int PropertyType { get; set; }
+		public int PropertySubType { get; set; }
 
 	}
 }

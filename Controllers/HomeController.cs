@@ -122,6 +122,11 @@ namespace Broker.Controllers
 
 			if (list != null && list.Count() > 0) CommonViewModel.SelectListItems.AddRange(list);
 
+			list = _context.Using<AreasMaster>().GetByCondition(x => x.IsActive == true && !string.IsNullOrEmpty(x.Zone)).GroupBy(x => x.Zone)
+						.Select(x => new SelectListItem_Custom(x.Key, x.Key, string.Join(",", x.Select(x => x.Id + "|" + x.Name)), "ZONE")).Distinct().ToList();
+
+			if (list != null && list.Count() > 0) CommonViewModel.SelectListItems.AddRange(list);
+
 			//CommonViewModel.Data1 = (from parent in _context.Using<PropertyType>().GetByCondition(x => x.IsActive == true).ToList()
 			//						 where parent.IsActive && parent.ParentId == 0
 			//						 select new
@@ -183,10 +188,11 @@ namespace Broker.Controllers
 				LastName = Request.Headers["lastname"].ToString(),
 				Email = Request.Headers["email"].ToString(),
 				ContactNo = Request.Headers["contactno"].ToString(),
-				Location = Convert.ToInt32(Request.Headers["location"]),
-				PropertyCategory = Convert.ToInt32(Request.Headers["propertycategory"]),
-				PropertyType_Parent = Convert.ToInt32(Request.Headers["propertytype_parent"]),
-				PropertyType = Convert.ToInt32(Request.Headers["propertytype"])
+				Location = (Request.Headers.ContainsKey("location") && int.TryParse(Request.Headers["location"], out var loc) ? loc : 0),
+				PropertyCategory = Request.Headers.ContainsKey("propertycategory") && int.TryParse(Request.Headers["propertycategory"], out var pc) ? pc : 0,
+				PropertyType_Parent = Request.Headers.ContainsKey("propertytype_parent") && int.TryParse(Request.Headers["propertytype_parent"], out var ptp) ? ptp : 0,
+				PropertyType = Request.Headers.ContainsKey("propertytype") && int.TryParse(Request.Headers["propertytype"], out var pt) ? pt : 0,
+				PropertySubType = Request.Headers.ContainsKey("propertysubtype") && int.TryParse(Request.Headers["propertysubtype"], out var pst) ? pst : 0
 			};
 
 			ResponseModel<Properties> responseModel = new ResponseModel<Properties>
@@ -248,6 +254,7 @@ namespace Broker.Controllers
 					var parameters = new List<SqlParameter>();
 					parameters.Add(new SqlParameter("CategoryId", SqlDbType.BigInt) { Value = viewModel.PropertyCategory, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("TypeId", SqlDbType.BigInt) { Value = viewModel.PropertyType <= 0 ? viewModel.PropertyType_Parent : viewModel.PropertyType, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("SubTypeId", SqlDbType.BigInt) { Value = viewModel.PropertySubType, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("CityId", SqlDbType.BigInt) { Value = 0, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("AreaId", SqlDbType.BigInt) { Value = viewModel.Location, Direction = ParameterDirection.Input, IsNullable = true });
 

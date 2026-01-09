@@ -758,12 +758,12 @@ video:focus {
   color: #38bdf8;
   background-color: transparent;
 }
-.btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active, .btn-outline-primary.active, .btn-outline-primary.focus, .btn-outline-primary:not(:disabled):not(.disabled):active {
-  background-color: #38bdf8;
-  border-color: #38bdf8;
-  color: #ffffff !important;
-  box-shadow: 0 3px 5px 0 rgba(56, 189, 248, 0.1);
-}
+    .btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active, .btn-outline-primary.active, .btn-outline-primary.focus, .btn-outline-primary:not(:disabled):not(.disabled):active {
+        background-color: #38bdf8;
+        border-color: #38bdf8;
+        color: #38bdf8 !important;
+        box-shadow: 0 3px 5px 0 rgba(56, 189, 248, 0.1);
+    }
 
 .btn-link.primary {
   padding: 0 !important;

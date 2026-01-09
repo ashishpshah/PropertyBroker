@@ -39,12 +39,20 @@
 		.choices__inner {
 			padding: 13px 6px 15px 15px !important;
 		}
+
+		.btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active {
+			background-color: #38bdf8 !important;
+			border-color: #38bdf8 !important;
+			color: #fff !important;
+			box-shadow: 0 3px 5px 0 rgba(56, 189, 248, 0.1);
+		}
+
 	</style>
 }
 
 <section class="position-relative mt-5 pt-4">
-	<div class="container-fluid px-md-4 px-2 mt-2">
-		<div class="bg-home-one d-table w-100 shadow rounded-3 overflow-hidden" id="home">
+	<div class="container-fluid px-0 mt-2">
+		<div class="bg-home-one d-table w-100 shadow overflow-hidden" id="home">
 			<div class="bg-overlay image-wrap" id="hero-images"></div>
 			<div class="bg-overlay bg-black opacity-50"></div>
 
@@ -80,7 +88,6 @@
 										@category[i].Text
 									</a>
 								</li>
-
 							}
 						}
 					</ul>
@@ -153,6 +160,42 @@
 	</div>
 
 	<div class="container mt-100 mt-60">
+		<div class="row align-items-center">
+			<div class="col-lg-6 col-md-6">
+				<div class="row g-3 align-items-center">
+					<div class="col-lg-7 col-6">
+						<img src="~/images/hero.jpg" class="img-fluid rounded-3" alt="work-image">
+					</div>
+
+					<div class="col-lg-5 col-6">
+						<div class="row g-3">
+							<div class="col-lg-12 col-md-12">
+								<img src="~/images/1.jpg" class="img-fluid rounded-3" alt="work-image">
+							</div>
+
+							<div class="col-lg-12 col-md-12">
+								<img src="~/images/logo-icon.png" class="img-fluid" alt="work-image">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-6 col-md-6 mt-4 mt-sm-0 pt-2 pt-sm-0">
+				<div class="section-title ms-lg-5">
+					<h6 class="text-primary fw-medium mb-2">Our story: Broker</h6>
+					<h4 class="title mb-3">Efficiency. <br> Transparency. Control.</h4>
+					<p class="text-muted para-desc mb-0">
+						Broker developed a platform for the Real Estate marketplace that allows buyers and sellers to easily execute a transaction on their own.
+						<br /> The platform drives efficiency, cost transparency and control into the hands of the consumers. Towntor is Real Estate Redefined.
+					</p>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container mt-100 mt-60">
 		<div class="row justify-content-center">
 			<div class="col">
 				<div class="section-title mb-4 pb-2">
@@ -165,48 +208,235 @@
 			{
 				foreach (PropertyType item in ((Model.Data1 as IList<PropertyType>)?.OrderBy(x => x.Display_Seq_No).ToList()))
 				{
-					<div class="col property-type position-relative" role="button" id="itemProperty_@item.Id"
-						 @* onclick="@((Model.SelectListItems != null && Model.SelectListItems.Any(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0 && z == item.Id)) ? "openPropertyCollapse(this)" : $"openPropertyModal({@item.Id}, 0)")"> *@
-						 onclick="openPropertyModal(@item.Id)">
+					<div class="col property-type position-relative" role="button" id="itemProperty_@item.Id" onclick="openPropertyModal(@item.Id, 0, 0)">
 						<div class="categories position-relative overflow-hidden rounded-3 shadow">
-							@* <div class="collapse collapse-horizontal w-100" data-bs-parent="#itemProperty_@item.Id" id="collapseWidthExample_@item.Id">
-								<div class="card card-body bg-transparent">
-									<ul class="list-unstyled property-icon">
-										@if (Model.SelectListItems != null && Model.SelectListItems.Any(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0 && z == item.Id))
-										{
-											foreach (var _item in Model.SelectListItems.Where(x => x.Group == "PT" && int.TryParse(x.Value2, out var z) && z > 0 && z == item.Id))
-											{
-												@* <li class="list-group-item d-flex justify-content-between align-items-start" onclick="openPropertyModal(@item.Id, @_item.Value)"> @
-												<li class="list-group-item d-flex justify-content-between align-items-start" onclick="openPropertyModal(@item.Id, @_item.Value)">
-													<div class="btn btn-sm btn-icon btn-primary m-1 me-auto w-100 ">
-														<div class="fw-bold">@_item.Text</div>
-													</div>
-							</li>
-						}
-					}
-					</ul>
-				</div>
-			</div> *@
-			@if (!string.IsNullOrEmpty(item.ImagePath))
-			{
-				<img src="@Url.Content("~/" + item.ImagePath)" class="img-fluid" alt="" style="width:204px; height:140px">
-			}
-			else
-			{
-				<img src="~/no_image_available.png" class="img-fluid" alt="" style="width:204px; height:140px">
-			}
+							@if (!string.IsNullOrEmpty(item.ImagePath))
+							{
+								<img src="@Url.Content("~/" + item.ImagePath)" class="img-fluid" alt="" style="width:204px; height:140px">
+							}
+							else
+							{
+								<img src="~/no_image_available.png" class="img-fluid" alt="" style="width:204px; height:140px">
+							}
 
-			<div class="p-3">
-				<span class="title text-dark fs-5 fw-medium">@item.Name</span>
-				<p class="text-muted small mb-0">@item.PropertyCount @(item.PropertyCount > 1 ? "Properties" : "Property")</p>
-			</div>
+							<div class="p-3">
+								<span class="title text-dark fs-5 fw-medium">@item.Name</span>
+								<p class="text-muted small mb-0">@item.PropertyCount @(item.PropertyCount > 1 ? "Properties" : "Property")</p>
+							</div>
+
+						</div>
+					</div>
+				}
+			}
 
 		</div>
 	</div>
-	}
-	}
 
+	<div class="container mt-100 mt-60">
+		<div class="row justify-content-center">
+			<div class="col">
+				<div class="section-title mb-4 pb-2">
+					<h4 class="title mb-3">Find Properies in Ahmedabad</h4>
+				</div>
+			</div>
+		</div>
+		<div class="row g-4">
+			<div class="col-12">
+				<ul class="nav nav-pills nav-justified bg-white rounded-3 shadow p-3 mb-0 sticky-bar" id="pills-tab" role="tablist">
+					@if (Model.SelectListItems != null)
+					{
+						var zones = Model.SelectListItems.Where(x => x.Group == "ZONE").ToList();
+
+						for (int i = 0; i < zones.Count(); i++)
+						{
+							var zone = zones[i];
+
+							<li class="nav-item">
+								<a class="nav-link rounded-3 @(i == 0 ? "show active" : "")" id="@(zone.Text)-space" data-bs-toggle="pill" href="#pills-@(zone.Text)" role="tab" aria-controls="pills-@(zone.Text)" aria-selected="false">
+									<div class="text-center pt-1 pb-1">
+										<h6 class="title fw-normal mb-0">Ahmedabad @(zone.Text)</h6>
+									</div>
+								</a>
+							</li>
+						}
+					}
+
+				</ul>
+			</div>
+		</div>
+		<div class="row g-4 mt-2">
+			<div class="col-12">
+				<div class="tab-content" id="pills-tabContent">
+					@if (Model.SelectListItems != null)
+					{
+						var zones = Model.SelectListItems.Where(x => x.Group == "ZONE").ToList();
+
+						for (int i = 0; i < zones.Count(); i++)
+						{
+							var zone = zones[i];
+
+							<div class="tab-pane fade bg-white @(i == 0 ? "show active" : "")" id="pills-@(zone.Text)" role="tabpanel" aria-labelledby="@(zone.Text)-space">
+
+								<div class="row">
+									<div class="col-12">
+										<div class="tiny-slide-three" id="slide-@(zone.Text)">
+											@{
+												var areas = zone.Value2.Split(",");
+
+												for (int j = 0; j < areas.Count(); j++)
+												{
+													var id = areas[j].Split("|")[0];
+													var area = areas[j].Split("|")[1];
+
+													<div class="tiny-slide">
+														<div class="card property border-0 shadow position-relative overflow-hidden rounded-3 m-3">
+															<div class="property-image position-relative overflow-hidden shadow">
+																<img src="~/images/property/@(j + 1).jpg" class="img-fluid" alt="">
+															</div>
+															<div class="card-body content p-4">
+																<a href="javascript:void(0)" role="button" id="itemArea_@id"
+																   onclick="openPropertyModal(0, @id, 0)" class="title fs-5 text-dark fw-medium">
+																	@area
+																</a>
+															</div>
+														</div>
+													</div>
+												}
+
+											}
+										</div>
+									</div>
+								</div>
+							</div>
+						}
+					}
+
+				</div>
+			</div>
+		</div>
 	</div>
+
+	<div class="container mt-100 mt-60">
+		<div class="row g-4 mt-0">
+
+			<div class="col-lg-3 col-md-6 col-12">
+				<div class="card property border-0 shadow position-relative overflow-hidden rounded-3" onclick="openPropertyModal(0, 0, 1)">
+					<div class="property-image position-relative overflow-hidden shadow">
+						<img src="~/images/property/1.jpg" class="img-fluid" alt="">
+					</div>
+					<div class="card-body content p-4">
+						<a href="javascript:void(0)" class="title fs-5 text-dark fw-medium">1 BHK</a>
+
+						<ul class="list-unstyled mt-3 py-3 border-top border-bottom d-flex align-items-center justify-content-between">
+							<li class="d-flex align-items-center me-3">
+								<i class="mdi mdi-arrow-expand-all fs-5 me-2 text-primary"></i>
+								<span class="text-muted">8000sqf</span>
+							</li>
+
+							<li class="d-flex align-items-center me-3">
+								<i class="mdi mdi-bed fs-5 me-2 text-primary"></i>
+								<span class="text-muted">4 Beds</span>
+							</li>
+
+							<li class="d-flex align-items-center">
+								<i class="mdi mdi-shower fs-5 me-2 text-primary"></i>
+								<span class="text-muted">4 Baths</span>
+							</li>
+						</ul>
+						
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-3 col-md-6 col-12">
+				<div class="card property border-0 shadow position-relative overflow-hidden rounded-3" onclick="openPropertyModal(0, 0, 2)">
+					<div class="property-image position-relative overflow-hidden shadow">
+						<img src="~/images/property/1.jpg" class="img-fluid" alt="">
+					</div>
+					<div class="card-body content p-4">
+						<a href="javascript:void(0)" class="title fs-5 text-dark fw-medium">2 BHK</a>
+
+						<ul class="list-unstyled mt-3 py-3 border-top border-bottom d-flex align-items-center justify-content-between">
+							<li class="d-flex align-items-center me-3">
+								<i class="mdi mdi-arrow-expand-all fs-5 me-2 text-primary"></i>
+								<span class="text-muted">8000sqf</span>
+							</li>
+
+							<li class="d-flex align-items-center me-3">
+								<i class="mdi mdi-bed fs-5 me-2 text-primary"></i>
+								<span class="text-muted">4 Beds</span>
+							</li>
+
+							<li class="d-flex align-items-center">
+								<i class="mdi mdi-shower fs-5 me-2 text-primary"></i>
+								<span class="text-muted">4 Baths</span>
+							</li>
+						</ul>
+						
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-3 col-md-6 col-12">
+				<div class="card property border-0 shadow position-relative overflow-hidden rounded-3" onclick="openPropertyModal(0, 0, 3)">
+					<div class="property-image position-relative overflow-hidden shadow">
+						<img src="~/images/property/1.jpg" class="img-fluid" alt="">
+					</div>
+					<div class="card-body content p-4">
+						<a href="javascript:void(0)" class="title fs-5 text-dark fw-medium">3 BHK</a>
+
+						<ul class="list-unstyled mt-3 py-3 border-top border-bottom d-flex align-items-center justify-content-between">
+							<li class="d-flex align-items-center me-3">
+								<i class="mdi mdi-arrow-expand-all fs-5 me-2 text-primary"></i>
+								<span class="text-muted">8000sqf</span>
+							</li>
+
+							<li class="d-flex align-items-center me-3">
+								<i class="mdi mdi-bed fs-5 me-2 text-primary"></i>
+								<span class="text-muted">4 Beds</span>
+							</li>
+
+							<li class="d-flex align-items-center">
+								<i class="mdi mdi-shower fs-5 me-2 text-primary"></i>
+								<span class="text-muted">4 Baths</span>
+							</li>
+						</ul>
+						
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-3 col-md-6 col-12">
+				<div class="card property border-0 shadow position-relative overflow-hidden rounded-3" onclick="openPropertyModal(0, 0, 4)">
+					<div class="property-image position-relative overflow-hidden shadow">
+						<img src="~/images/property/1.jpg" class="img-fluid" alt="">
+					</div>
+					<div class="card-body content p-4">
+						<a href="javascript:void(0)" class="title fs-5 text-dark fw-medium">4 BHK</a>
+
+						<ul class="list-unstyled mt-3 py-3 border-top border-bottom d-flex align-items-center justify-content-between">
+							<li class="d-flex align-items-center me-3">
+								<i class="mdi mdi-arrow-expand-all fs-5 me-2 text-primary"></i>
+								<span class="text-muted">8000sqf</span>
+							</li>
+
+							<li class="d-flex align-items-center me-3">
+								<i class="mdi mdi-bed fs-5 me-2 text-primary"></i>
+								<span class="text-muted">4 Beds</span>
+							</li>
+
+							<li class="d-flex align-items-center">
+								<i class="mdi mdi-shower fs-5 me-2 text-primary"></i>
+								<span class="text-muted">4 Baths</span>
+							</li>
+						</ul>
+						
+					</div>
+				</div>
+			</div>
+
+		</div>
+
 	</div>
 
 	<div class="container mt-100 mt-60">
@@ -270,8 +500,7 @@
 		</div>
 	</div>
 
-</section><!--end section-->
-<!-- End -->
+</section>
 
 <div class="modal fade" id="exampleModalCenteredScrollable" tabindex="-1" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -283,6 +512,26 @@
 			<div class="modal-body">
 				<form id="formUserData" action="@Url.Action("Search", "Home", new { area = "" })" class="needs-validation" novalidate="">
 					<div class="row g-3">
+						<div class="col-sm-12">
+							<div class="action justify-content-start">
+								@if (Model.SelectListItems != null)
+								{
+									var category = Model.SelectListItems.Where(x => x.Group == "PC").OrderBy(x => x.OrderBy == null || x.OrderBy == 0).ThenBy(x => x.OrderBy).ToList();
+
+									for (int i = 0; i < category.Count(); i++)
+									{
+										<div class="form-check-inline radio-style mb-20">
+											<input type="radio" class="btn-check" name="flexRadioDefault" id="radio-@category[i].Value" value="@category[i].Value" autocomplete="off">
+											<label class="btn btn-outline-primary" for="radio-@category[i].Value">
+												@category[i].Text
+											</label>
+										</div>
+									}
+								}
+							</div>
+						</div>
+					</div>
+					<div class="row g-3 mt-3">
 						<div class="col-sm-6">
 							<label for="firstName" class="form-label">First name</label>
 							<input type="text" class="form-control" name="FirstName" id="firstName" data-required data-msg="Please enter First name" tabindex="1">
@@ -316,8 +565,57 @@
 	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 	<script type="text/javascript">
 
+			easy_background("#hero-images",
+				{
+					slide: ["/images/bg/01.jpg", "/images/bg/02.jpg", "/images/bg/03.jpg", "/images/bg/04.jpg", "/images/bg/05.jpg"],
+					delay: [10000, 10000, 10000]
+				}
+			);
+
+
 		$(document).ready(function () {
 			$('#pills-tab .nav-link.active').trigger('click');
+
+			var sliders = document.getElementsByClassName('tiny-slide-three');
+
+			for (var i = 0; i < sliders.length; i++) {
+
+			// Make sure element has an ID
+			if (!sliders[i].id) continue;
+
+			tns({
+				container: '#' + sliders[i].id,
+					controls: true,
+					mouseDrag: true,
+					loop: true,
+					rewind: true,
+					autoplay: true,
+					autoplayButtonOutput: false,
+					autoplayTimeout: 3000,
+					navPosition: "bottom",
+					controlsText: ['<i class="mdi mdi-chevron-left "></i>', '<i class="mdi mdi-chevron-right"></i>'],
+					nav: false,
+					speed: 400,
+					gutter: 0,
+					responsive: {
+						1025: {
+							items: 3
+						},
+
+						992: {
+							items: 2
+						},
+
+						767: {
+							items: 2
+						},
+
+						320: {
+							items: 1
+						},
+					},
+				});
+			}
 		});
 
 		document.querySelectorAll('.choices-select:not([data-choices-init])').forEach(el => {
@@ -331,8 +629,13 @@
 		modalEl.addEventListener('show.bs.modal', function (event) {
 
 			if (event.relatedTarget) {
-				modalEl.dataset.openSource =
-					event.relatedTarget.dataset.openSource || 'search-button';
+				modalEl.dataset.openSource = event.relatedTarget.dataset.openSource || 'search-button';
+
+
+				var category = $('#pills-tab .nav-link.active').attr('id');
+				if (!category) category = "1";
+				$('input[type="radio"][id="radio-'+category+'"]').prop("checked", true);
+
 			}
 		});
 
@@ -360,13 +663,19 @@
 		}
 
 
-		function openPropertyModal(TypeId) {
+		function openPropertyModal(TypeId, Location, SubTypeId) {
 		//function openPropertyModal(ParentTypeId, TypeId) {
 			const modalEl = document.getElementById('exampleModalCenteredScrollable');
 
 			modalEl.dataset.openSource = 'property-type';
 			//modalEl.dataset.parentTypeId = ParentTypeId;
 			modalEl.dataset.typeId = TypeId;
+			modalEl.dataset.location = Location;
+			modalEl.dataset.subtypeId = SubTypeId;
+
+			var category = $('#pills-tab .nav-link.active').attr('id');
+			if (!category) category = "1";
+			$('input[type="radio"][id="radio-'+category+'"]').prop("checked", true);
 
 			const modal = new bootstrap.Modal(modalEl);
 			modal.show();
@@ -406,25 +715,30 @@
 			let category = '';
 			let typeParent = '';
 			let type = '';
+			let subtype = '';
 
 			// ---- DIFFERENCE BASED ON SOURCE ----
 			if (source === 'property-type') {
 				// ✅ Type already selected
 				//typeParent = modalEl.dataset.parentTypeId;
 				type = modalEl.dataset.typeId;
+				location = modalEl.dataset.location;
+				subtype = modalEl.dataset.subtypeId;
 			} else {
 				// ✅ Search button flow → validate selects
 				//typeParent = $('#choices-PropertyType_Parent').val();
 				type = $('#choices-PropertyType').val();
 
 				location = $('#choices-PropertyLocation').val();
-				category = $('#pills-tab .nav-link.active').attr('id');
+				//category = $('#pills-tab .nav-link.active').attr('id');
+			}
+
+				category = $('input[name="flexRadioDefault"]:checked').val();
 
 				if (!location || !category || !type) {
 					showToast('Please select all search filters', 'danger', 5000);
 					return;
 				}
-			}
 
 			// ---- BUILD URL ----
 			const query = $form.serialize();
@@ -437,7 +751,7 @@
 			// 	`&PropertyType=${encodeURIComponent(type)}`;
 
 		const url = `@Url.Action("Properties", "Home")`;
-
+		debugger;
 		fetch(url, {
 			method: 'GET',
 			headers: {
@@ -448,7 +762,8 @@
 				'Location': location,
 				'PropertyCategory': category,
 				//'PropertyType_Parent': typeParent,
-				'PropertyType': type
+				'PropertyType': type,
+				'PropertySubType': subtype
 			}
 		})
 		.then(async response =>
@@ -514,7 +829,7 @@
 			choices.removeActiveItems();
 
 			let categoryId = $(e.target).attr('id');
-			
+
 			$.ajax({
 				type: 'GET',
 				url: '@Url.Action("PropertyCategoryType_Get", "Home")?CategoryId='+categoryId,
@@ -525,7 +840,7 @@
 				dataType: "json",
 				success: function (response) {
 					var filterd = response.map(o => ({ value: o.TypeId, label: o.TypeName, }));
-					
+
 					choices.setChoices(filterd, 'value', 'label', true );
 
 					choices.setChoiceByValue('ipsum');

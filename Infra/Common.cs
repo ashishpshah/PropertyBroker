@@ -405,6 +405,11 @@ namespace Broker.Infra
 
 			return age;
 		}
+
+		public static int GetHeaderInt(IHeaderDictionary headers, string key, int defaultValue = 0)
+		{
+			return int.TryParse(headers[key], out var value) ? value : defaultValue;
+		}
 	}
 
 	public static class CurrentUser

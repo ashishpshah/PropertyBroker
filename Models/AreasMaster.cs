@@ -11,6 +11,7 @@ public partial class AreasMaster : EntitiesBase
 	public long CityId { get; set; }
 
 	public string? Name { get; set; }
+	public string? Zone { get; set; }
 	[NotMapped] public string CityName { get; set; }
 
 	public virtual City City { get; set; } = null!;
