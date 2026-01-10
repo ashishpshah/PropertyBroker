@@ -141,6 +141,10 @@
 									{
 										<option value="@item.Value" selected data-parent="@item.Value2">@item.Text</option>
 									}
+									else if (Convert.ToString(propertySearch.PropertyType) == item.Value)
+									{
+										<option value="@item.Value" selected data-parent="@item.Value2">@item.Text</option>
+									}
 									else
 									{
 										<option value="@item.Value" data-parent="@item.Value2">@item.Text</option>

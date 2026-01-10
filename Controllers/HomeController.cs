@@ -192,7 +192,7 @@ namespace Broker.Controllers
 				PropertyCategory = Request.Headers.ContainsKey("propertycategory") && int.TryParse(Request.Headers["propertycategory"], out var pc) ? pc : 0,
 				PropertyType_Parent = Request.Headers.ContainsKey("propertytype_parent") && int.TryParse(Request.Headers["propertytype_parent"], out var ptp) ? ptp : 0,
 				PropertyType = Request.Headers.ContainsKey("propertytype") && int.TryParse(Request.Headers["propertytype"], out var pt) ? pt : 0,
-				PropertySubType = Request.Headers.ContainsKey("propertysubtype") && int.TryParse(Request.Headers["propertysubtype"], out var pst) ? pst : 0
+				PropertySubType = Request.Headers.ContainsKey("propertysubtype") ? Convert.ToString(Request.Headers["propertysubtype"]) : ""
 			};
 
 			ResponseModel<Properties> responseModel = new ResponseModel<Properties>
@@ -254,7 +254,7 @@ namespace Broker.Controllers
 					var parameters = new List<SqlParameter>();
 					parameters.Add(new SqlParameter("CategoryId", SqlDbType.BigInt) { Value = viewModel.PropertyCategory, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("TypeId", SqlDbType.BigInt) { Value = viewModel.PropertyType <= 0 ? viewModel.PropertyType_Parent : viewModel.PropertyType, Direction = ParameterDirection.Input, IsNullable = true });
-					parameters.Add(new SqlParameter("SubTypeId", SqlDbType.BigInt) { Value = viewModel.PropertySubType, Direction = ParameterDirection.Input, IsNullable = true });
+					parameters.Add(new SqlParameter("SubTypeId", SqlDbType.NVarChar) { Value = viewModel.PropertySubType, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("CityId", SqlDbType.BigInt) { Value = 0, Direction = ParameterDirection.Input, IsNullable = true });
 					parameters.Add(new SqlParameter("AreaId", SqlDbType.BigInt) { Value = viewModel.Location, Direction = ParameterDirection.Input, IsNullable = true });
 
