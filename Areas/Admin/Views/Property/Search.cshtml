@@ -43,37 +43,6 @@
 								<div class="row no-gutters">
 									<div class="col-12">
 										<div class="form-group row" style=" padding-top: 20px;">
-											<label for="CityId" class="col-2 col-form-label text-end">City</label>
-											<div class="col-sm-2">
-												<select class="form-control  show-tick select2" id="CityId" name="CityId" onchange="fnChange_Area(this , '#AreaId')">
-													<option value="0">-- Select --</option>
-													@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
-													{
-														foreach (SelectListItem_Custom item in Model.SelectListItems.Where(x => x.Group == "City"))
-														{
-															<option value="@item.Value">@item.Text</option>
-														}
-													}
-												</select>
-
-											</div>
-											<label for="AreaId" class="col-2 col-form-label text-end">Area</label>
-											<div class="col-sm-2">
-												<select class="form-control  show-tick select2" id="AreaId" name="AreaId">
-													<option value="0">-- Select --</option>
-													@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
-													{
-														foreach (SelectListItem_Custom item in Model.SelectListItems.Where(x => x.Group == "Area"))
-														{
-															<option value="@item.Value">@item.Text</option>
-														}
-													}
-												</select>
-
-											</div>
-										</div>
-
-										<div class="form-group row" style=" padding-top: 20px;">
 											<label for="CategoryId" class="col-2 col-form-label text-end">Property Category</label>
 											<div class="col-sm-2">
 												<select class="form-control  show-tick select2" id="CategoryId" name="CategoryId" onchange="fnChange_Category(this , '#TypeId')">
@@ -140,6 +109,38 @@
 													   placeholder="Area Square Ft" autocomplete="off" maxlength="12">
 											</div>
 										</div>
+
+										<div class="form-group row" style=" padding-top: 20px;">
+											<label for="CityId" class="col-2 col-form-label text-end">City</label>
+											<div class="col-sm-2">
+												<select class="form-control  show-tick select2" id="CityId" name="CityId" onchange="fnChange_Area(this , '#AreaId')">
+													<option value="0">-- Select --</option>
+													@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
+													{
+														foreach (SelectListItem_Custom item in Model.SelectListItems.Where(x => x.Group == "City"))
+														{
+															<option value="@item.Value">@item.Text</option>
+														}
+													}
+												</select>
+
+											</div>
+											<label for="AreaId" class="col-2 col-form-label text-end">Area</label>
+											<div class="col-sm-2">
+												<select class="form-control  show-tick select2" id="AreaId" name="AreaId">
+													<option value="0">-- Select --</option>
+													@if (Model.SelectListItems != null && Model.SelectListItems.Count > 0)
+													{
+														foreach (SelectListItem_Custom item in Model.SelectListItems.Where(x => x.Group == "Area"))
+														{
+															<option value="@item.Value">@item.Text</option>
+														}
+													}
+												</select>
+
+											</div>
+										</div>
+
 									</div>
 								</div>
 							</div>
