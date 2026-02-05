@@ -1,5 +1,6 @@
-using Broker.Infra;
+﻿using Broker.Infra;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
@@ -16,7 +17,11 @@ internal class Program
 
 		builder.Services.AddHttpContextAccessor();
 
-		builder.Services.Configure<RequestLocalizationOptions>(options =>
+        builder.Services.AddDbContext<DataContext>(db => db.UseSqlServer(builder.Configuration.GetConnectionString("DataConnection")), ServiceLifetime.Singleton);
+
+        builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+
+        builder.Services.Configure<RequestLocalizationOptions>(options =>
 		{
 			var cultureInfo = new CultureInfo("en-IN");
 			cultureInfo.DateTimeFormat.ShortDatePattern = "dd/MM/yyyy";
@@ -33,11 +38,36 @@ internal class Program
 			options.SupportedUICultures = supportedCultures;
 		});
 
-		builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromMinutes(30); });
+        // ✅ REQUIRED for FTP hosting
+        builder.Services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders =
+                ForwardedHeaders.XForwardedFor |
+                ForwardedHeaders.XForwardedProto;
+        });
 
-		builder.Services.AddDbContext<DataContext>(db => db.UseSqlServer(builder.Configuration.GetConnectionString("DataConnection")), ServiceLifetime.Singleton);
+        // ✅ SQL session
+        builder.Services.AddDistributedSqlServerCache(options =>
+        {
+            options.ConnectionString =
+                builder.Configuration.GetConnectionString("DataConnection");
+            options.SchemaName = "dbo";
+            options.TableName = "AppSessions";
+        });
 
-		builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+        builder.Services.AddSession(options =>
+        {
+            options.IdleTimeout = TimeSpan.FromDays(1);
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+            options.Cookie.SameSite = SameSiteMode.Lax;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        });
+
+
+       
+
+
 
 		var app = builder.Build();
 
@@ -51,16 +81,27 @@ internal class Program
 			app.UseHsts();
 		}
 
-		app.UseHttpsRedirection();
-		app.UseStaticFiles();
 
-		app.UseRouting();
+        app.UseForwardedHeaders();
 
-		app.UseAuthorization();
 
-		app.UseSession();
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
 
-		app.MapControllerRoute(name: "areas", pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+        app.UseRequestLocalization();
+
+        app.UseRouting();
+
+        // ✅ AUTH FIRST
+        app.UseAuthentication();
+
+        // ✅ SESSION AFTER AUTH
+        app.UseSession();
+
+        app.UseAuthorization();
+
+
+        app.MapControllerRoute(name: "areas", pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 		app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 
