@@ -70,12 +70,18 @@ using System.Globalization;
 
                     builder.Services.AddSession(options =>
                     {
-                        options.IdleTimeout = TimeSpan.FromDays(1);   // ⏳ 24 hours
+                        options.IdleTimeout = TimeSpan.FromDays(1);
                         options.Cookie.HttpOnly = true;
                         options.Cookie.IsEssential = true;
+
+                        options.Cookie.Name = ".Broker.Session";
+
+                        // 🔥 IMPORTANT FIXES
+                        options.Cookie.Path = "/";
+                        options.Cookie.Domain = "vd1.padhyasoft.com";
+
                         options.Cookie.SameSite = SameSiteMode.Lax;
                         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                        options.Cookie.Name = ".Broker.Session";
                     });
 
 
@@ -105,8 +111,9 @@ var app = builder.Build();
 
         app.UseRouting();
 
-        app.UseSession();       // ✅ MUST be BEFORE Authentication
+             // ✅ MUST be BEFORE Authentication
         app.UseAuthentication();
+        app.UseSession();
         app.UseAuthorization();
 
         app.MapControllerRoute(
