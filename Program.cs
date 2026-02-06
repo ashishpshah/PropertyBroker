@@ -11,7 +11,7 @@ using System.Globalization;
         // Add services to the container.
         builder.Services.AddHttpClient();
         builder.Services.AddHttpContextAccessor();
-        builder.Services.AddAuthentication();
+       
         // ✅ FIXED DbContext
         builder.Services.AddDbContext<DataContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DataConnection"))
@@ -70,20 +70,14 @@ using System.Globalization;
 
                     builder.Services.AddSession(options =>
                     {
-                        options.IdleTimeout = TimeSpan.FromDays(1);
+                        options.IdleTimeout = TimeSpan.FromHours(24);
+                                               
                         options.Cookie.HttpOnly = true;
                         options.Cookie.IsEssential = true;
 
-                        options.Cookie.Name = ".Broker.Session";
-
-                        // 🔥 IMPORTANT FIXES
-                        options.Cookie.Path = "/";
-                        options.Cookie.Domain = "vd1.padhyasoft.com";
-
-                        options.Cookie.SameSite = SameSiteMode.Lax;
+                        options.Cookie.SameSite = SameSiteMode.None; // 🔥 Hostinger fix
                         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                     });
-
 
 
 
@@ -112,7 +106,7 @@ var app = builder.Build();
         app.UseRouting();
 
              // ✅ MUST be BEFORE Authentication
-        app.UseAuthentication();
+       
         app.UseSession();
         app.UseAuthorization();
 
