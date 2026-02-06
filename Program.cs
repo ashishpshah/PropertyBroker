@@ -1,5 +1,6 @@
 ﻿using Broker.Infra;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
@@ -10,17 +11,32 @@ internal class Program
 	{
 		var builder = WebApplication.CreateBuilder(args);
 
-		// Add services to the container.
-		builder.Services.AddControllersWithViews().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+        // Add services to the container.
+        builder.Services.AddHttpClient();
+        builder.Services.AddHttpContextAccessor();
 
-		builder.Services.AddHttpClient();
-
-		builder.Services.AddHttpContextAccessor();
-
-        builder.Services.AddDbContext<DataContext>(db => db.UseSqlServer(builder.Configuration.GetConnectionString("DataConnection")), ServiceLifetime.Singleton);
+        // ✅ FIXED DbContext
+        builder.Services.AddDbContext<DataContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DataConnection"))
+        );
 
         builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
+        builder.WebHost.ConfigureKestrel(options =>
+        {
+            options.Limits.MaxRequestLineSize = 16 * 1024;
+            options.Limits.MaxRequestHeadersTotalSize = 32 * 1024;
+        });
+
+        builder.Services.Configure<FormOptions>(o =>
+        {
+            o.ValueCountLimit = int.MaxValue;
+            o.ValueLengthLimit = int.MaxValue;
+            o.MultipartBodyLengthLimit = long.MaxValue;
+        });
+
+        builder.Services.AddControllersWithViews()
+            .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
         builder.Services.Configure<RequestLocalizationOptions>(options =>
 		{
 			var cultureInfo = new CultureInfo("en-IN");
