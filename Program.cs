@@ -61,20 +61,21 @@ internal class Program
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
             options.Cookie.SameSite = SameSiteMode.Lax;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
         });
 
 
-       
 
 
 
-		var app = builder.Build();
+
+        var app = builder.Build();
 
 		AppHttpContextAccessor.Configure(((IApplicationBuilder)app).ApplicationServices.GetRequiredService<IHttpContextAccessor>(), ((IApplicationBuilder)app).ApplicationServices.GetRequiredService<IHostEnvironment>(), builder.Environment, ((IApplicationBuilder)app).ApplicationServices.GetRequiredService<IDataProtectionProvider>(), ((IApplicationBuilder)app).ApplicationServices.GetRequiredService<IConfiguration>(), ((IApplicationBuilder)app).ApplicationServices.GetRequiredService<IHttpClientFactory>());
-
-		// Configure the HTTP request pipeline.
-		if (!app.Environment.IsDevelopment())
+        
+        app.UseForwardedHeaders();
+        // Configure the HTTP request pipeline.
+        if (!app.Environment.IsDevelopment())
 		{
 			app.UseExceptionHandler("/Home/Error");
 			// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
@@ -82,7 +83,7 @@ internal class Program
 		}
 
 
-        app.UseForwardedHeaders();
+       
 
 
         app.UseHttpsRedirection();
