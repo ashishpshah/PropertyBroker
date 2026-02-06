@@ -92,12 +92,12 @@ internal class Program
 
 
         app.UseRouting();
-        // ✅ SESSION AFTER AUTH
-        app.UseSession();
+       
         // ✅ AUTH FIRST
         app.UseAuthentication();
 
-      
+        // ✅ SESSION AFTER AUTH
+        app.UseSession();
 
         app.UseAuthorization();
 
