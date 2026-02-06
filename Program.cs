@@ -5,20 +5,17 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
-internal class Program
-{
-	private static void Main(string[] args)
-	{
+
 		var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
         builder.Services.AddHttpClient();
         builder.Services.AddHttpContextAccessor();
-
+        builder.Services.AddAuthentication();
         // ✅ FIXED DbContext
         builder.Services.AddDbContext<DataContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DataConnection"))
-        );
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("DataConnection"))
+                );
 
         builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
@@ -62,30 +59,31 @@ internal class Program
                 ForwardedHeaders.XForwardedProto;
         });
 
-        // ✅ SQL session
-        builder.Services.AddDistributedSqlServerCache(options =>
-        {
-            options.ConnectionString =
-                builder.Configuration.GetConnectionString("DataConnection");
-            options.SchemaName = "dbo";
-            options.TableName = "AppSessions";
-        });
+// ✅ SQL session
+                    builder.Services.AddDistributedSqlServerCache(options =>
+                    {
+                        options.ConnectionString =
+                            builder.Configuration.GetConnectionString("DataConnection");
+                        options.SchemaName = "dbo";
+                        options.TableName = "AppSessions";
+                    });
 
-        builder.Services.AddSession(options =>
-        {
-            options.IdleTimeout = TimeSpan.FromDays(1);
-            options.Cookie.HttpOnly = true;
-            options.Cookie.IsEssential = true;
-            options.Cookie.SameSite = SameSiteMode.Lax;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-        });
-
-
-
+                    builder.Services.AddSession(options =>
+                    {
+                        options.IdleTimeout = TimeSpan.FromDays(1);   // ⏳ 24 hours
+                        options.Cookie.HttpOnly = true;
+                        options.Cookie.IsEssential = true;
+                        options.Cookie.SameSite = SameSiteMode.Lax;
+                        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                        options.Cookie.Name = ".Broker.Session";
+                    });
 
 
 
-        var app = builder.Build();
+
+
+
+var app = builder.Build();
 
 		AppHttpContextAccessor.Configure(((IApplicationBuilder)app).ApplicationServices.GetRequiredService<IHttpContextAccessor>(), ((IApplicationBuilder)app).ApplicationServices.GetRequiredService<IHostEnvironment>(), builder.Environment, ((IApplicationBuilder)app).ApplicationServices.GetRequiredService<IDataProtectionProvider>(), ((IApplicationBuilder)app).ApplicationServices.GetRequiredService<IConfiguration>(), ((IApplicationBuilder)app).ApplicationServices.GetRequiredService<IHttpClientFactory>());
         
@@ -99,30 +97,25 @@ internal class Program
 		}
 
 
-       
+
 
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
-        app.UseRequestLocalization();
-
-
         app.UseRouting();
-       
-        // ✅ AUTH FIRST
+
+        app.UseSession();       // ✅ MUST be BEFORE Authentication
         app.UseAuthentication();
-
-        // ✅ SESSION AFTER AUTH
-        app.UseSession();
-
         app.UseAuthorization();
 
+        app.MapControllerRoute(
+            name: "areas",
+            pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-        app.MapControllerRoute(name: "areas", pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+        app.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id?}");
 
-		app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
-
-		app.Run();
-	}
-}
+        app.Run();
+   
