@@ -171,8 +171,9 @@ namespace Broker.Areas.Admin.Controllers
 												  select new UserMenuAccess() { MenuId = y.Id, ParentMenuId = y.ParentId, Area = y.Area, Controller = y.Controller, Url = y.Url, MenuName = y.Name, IsCreate = x.IsCreate, IsUpdate = x.IsUpdate, IsRead = x.IsRead, IsDelete = x.IsDelete, IsActive = x.IsActive, IsDeleted = x.IsDeleted }).ToList();
 
 						Common.Configure_UserMenuAccess(listMenuAccess.Where(x => x.IsActive == true && x.IsDeleted == false).ToList(), listMenuPermission.Where(x => x.IsActive == true && x.IsDeleted == false).ToList());
-
-						Common.Set_Session_Int(SessionKey.KEY_USER_ID, obj.Id);
+                        Common.Set_Session(SessionKey.KEY_USER_MENUACCESS, JsonConvert.SerializeObject(listMenuAccess));
+                        Common.Set_Session(SessionKey.KEY_USER_MENUPERMISSION, JsonConvert.SerializeObject(listMenuPermission));
+                        Common.Set_Session_Int(SessionKey.KEY_USER_ID, obj.Id);
 						Common.Set_Session_Int(SessionKey.KEY_USER_ROLE_ID, obj.RoleId);
 
 						Common.Set_Session(SessionKey.KEY_USER_NAME, obj.UserName);

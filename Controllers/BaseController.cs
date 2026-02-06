@@ -2,6 +2,7 @@
 using Broker.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Newtonsoft.Json;
 using NuGet.Protocol.Core.Types;
 
 namespace Broker.Controllers
@@ -74,9 +75,9 @@ namespace Broker.Controllers
 
 				if (string.IsNullOrEmpty(AreaName)) AreaName = Convert.ToString(context.RouteData.Values["area"]);
 
-				List<UserMenuAccess> listMenuAccess = Common.GetUserMenuPermission();
+                List<UserMenuAccess> listMenuAccess = JsonConvert.DeserializeObject<List<UserMenuAccess>>(Common.Get_Session(SessionKey.KEY_USER_MENUPERMISSION));
 
-				if (listMenuAccess != null && listMenuAccess.Count > 0)
+                if (listMenuAccess != null && listMenuAccess.Count > 0)
 				{
 					if (listMenuAccess.FindIndex(x => x.Controller == ControllerName) > -1)
 					{
