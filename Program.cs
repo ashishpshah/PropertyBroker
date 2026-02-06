@@ -61,7 +61,7 @@ internal class Program
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
             options.Cookie.SameSite = SameSiteMode.Lax;
-            options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         });
 
 
@@ -90,13 +90,14 @@ internal class Program
 
         app.UseRequestLocalization();
 
-        app.UseRouting();
 
+        app.UseRouting();
+        // ✅ SESSION AFTER AUTH
+        app.UseSession();
         // ✅ AUTH FIRST
         app.UseAuthentication();
 
-        // ✅ SESSION AFTER AUTH
-        app.UseSession();
+      
 
         app.UseAuthorization();
 
